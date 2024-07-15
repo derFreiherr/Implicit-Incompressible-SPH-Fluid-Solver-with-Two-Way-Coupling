@@ -60,11 +60,11 @@ int var_fluidpart = var_nx * var_ny * var_nz;
 int var_MaxParticles = var_nx * var_ny * var_nz + (var_oneway * var_oneway * 12);
 //constants__________________________________________________________________
 float pi_F = glm::pi<float>();
-const float h = 0.05;
+const float h = 1;
 const float p0 = 1000;
 const float alpha = 1 / (4 * pi_F * h * h * h); //8 / (pi_F*h*h*h);// 
 const float alphaTwoD = 5 / (14 * pi_F * h * h);
-const float m = (p0 * h * h );
+const float m = (p0 * h * h *h);
 float deltaT = 0.01;
 float viscosity = 0.7;
 float visc_fluid = 0.7;// 0.0000011;

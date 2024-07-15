@@ -42,7 +42,7 @@ public:
 	glm::vec3 presA = glm::vec3(0, 0, 0);
 	unsigned char r = 44, g = 2, b = 25, a = 10; // Color
 	float size = h, density = p0, pressure = 0, predictedDens = 0, densityerror = 0, pressureiter = 0, sf = 0, Aff = 0, AP = 0;
-	float m = (p0 * h * h );
+	float m = (p0 * h * h *h);
 	//float cameradistance; // *Squared* distance to the camera. if dead : -1.0f
 	std::vector<float>Kernel;
 	std::vector<glm::vec3> KernelDer;

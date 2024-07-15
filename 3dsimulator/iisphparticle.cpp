@@ -6,7 +6,7 @@ void iisphparticle::resetvalues() {
 	vel = glm::vec3(0,0,0), acc = glm::vec3(0, 0, 0), nonpresA = glm::vec3(0, 0, 0), predictedVel = glm::vec3(0, 0, 0), presA = glm::vec3(0, 0, 0);
 	r = 44, g = 2, b = 25; // Color
 	size = h, density = p0, pressure = 0, predictedDens = 0, densityerror = 0, pressureiter = 0, sf = 0, Aff = 0, AP = 0;
-	m = (p0 * h * h );
+	m = (p0 * h * h*h );
 	Kernel.clear();
 	KernelDer.clear();
 	IdNdistNsub.clear();
