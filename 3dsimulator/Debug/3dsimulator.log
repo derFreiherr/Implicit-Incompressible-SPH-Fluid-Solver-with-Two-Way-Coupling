@@ -1,0 +1,5 @@
+﻿LINK : warning LNK4075: /INCREMENTAL wird aufgrund der Angabe von /OPT:REF ignoriert.
+imgui.obj : warning LNK4075: /EDITANDCONTINUE wird aufgrund der Angabe von /OPT:ICF ignoriert.
+Debug\part.obj : warning LNK4042: Objekt mehrmals angegeben; zusätzliche Objekte werden ignoriert.
+LINK : warning LNK4098: Standardbibliothek "MSVCRT" steht in Konflikt mit anderen Bibliotheken; /NODEFAULTLIB:Bibliothek verwenden.
+  3dsimulator.vcxproj -> D:\bachelorarbeit\Debug\3dsimulator.exe

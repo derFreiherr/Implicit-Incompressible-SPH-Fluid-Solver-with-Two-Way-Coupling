@@ -1,0 +1,156 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Rückgabewert wird ignoriert: \"sscanf\"."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3_loader.h"
+                },
+                "region": {
+                  "startLine": 707,
+                  "startColumn": 13,
+                  "endLine": 707,
+                  "endColumn": 65
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "parse_version",
+                  "decoratedName": "parse_version",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Rückgabewert wird ignoriert: \"sscanf\"."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3.cpp"
+                },
+                "region": {
+                  "startLine": 306,
+                  "startColumn": 9,
+                  "endLine": 306,
+                  "endColumn": 50
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui_ImplOpenGL3_Init",
+                  "decoratedName": "?ImGui_ImplOpenGL3_Init@@YA_NPBD@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Rückgabewert wird ignoriert: \"sscanf\"."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3.cpp"
+                },
+                "region": {
+                  "startLine": 761,
+                  "startColumn": 5,
+                  "endLine": 761,
+                  "endColumn": 51
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui_ImplOpenGL3_CreateDeviceObjects",
+                  "decoratedName": "?ImGui_ImplOpenGL3_CreateDeviceObjects@@YA_NXZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.39.33521.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3_loader.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "1cbbbca692740621cf8a3791b3f4c76f637269ace30097d8949fc3428d172c2d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "fcf673fb096b719f6136cac479316ff20b62e660e4ff28ef6f58c6de2263bd19"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "52a624ec22f961bf4570a6859449394466376bc059d76d1e303f8f631570f58e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "a253e82c1960f8aa7594a51a8ac606a6235738c923f12d67a7742e88bf07ed63"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imgui_impl_opengl3.h"
+          },
+          "hashes": {
+            "sha-256": "b296402bdcc77324008254a5cb883d2882d57c0eef3e490d4bed5e87c05465da"
+          }
+        }
+      ]
+    }
+  ]
+}

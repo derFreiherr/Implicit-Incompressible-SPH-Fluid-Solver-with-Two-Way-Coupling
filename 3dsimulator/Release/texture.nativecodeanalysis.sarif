@@ -1,0 +1,583 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Rückgabewert wird ignoriert: \"getchar\"."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                },
+                "region": {
+                  "startLine": 27,
+                  "startColumn": 3,
+                  "endLine": 27,
+                  "endColumn": 10
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "loadBMP_custom",
+                  "decoratedName": "?loadBMP_custom@@YAIPBD@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6031",
+          "message": {
+            "text": "Rückgabewert wird ignoriert: \"getchar\"."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                },
+                "region": {
+                  "startLine": 137,
+                  "startColumn": 117,
+                  "endLine": 137,
+                  "endColumn": 124
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "loadDDS",
+                  "decoratedName": "?loadDDS@@YAIPBD@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6054",
+          "message": {
+            "text": "Die Zeichenfolge \"filecode\" endet möglicherweise nicht auf 0 (null)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                },
+                "region": {
+                  "startLine": 144,
+                  "startColumn": 6,
+                  "endLine": 144,
+                  "endColumn": 38
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "loadDDS",
+                  "decoratedName": "?loadDDS@@YAIPBD@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 130,
+                            "startColumn": 16
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 132,
+                            "startColumn": 8
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 135,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 136,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 142,
+                            "startColumn": 7
+                          }
+                        },
+                        "message": {
+                          "text": "Dieser Ausdruck darf \"filecode\" nicht mit 0 (null) beenden."
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 143,
+                            "startColumn": 7
+                          }
+                        },
+                        "message": {
+                          "text": "\"filecode\" ist eine Ausgabe von \"fread\" (in c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\ucrt\\stdio.h:239 deklariert)"
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 144,
+                            "startColumn": 35
+                          }
+                        },
+                        "message": {
+                          "text": "\"filecode\" sollte mit 0 (null) beendet werden, jedoch ist dies möglicherweise nicht der Fall."
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6387",
+          "message": {
+            "text": "\"buffer\" könnte \"0\" sein:  dies entspricht nicht der Spezifikation für Funktion \"fread\". "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                },
+                "region": {
+                  "startLine": 164,
+                  "startColumn": 2,
+                  "endLine": 164,
+                  "endColumn": 28
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "loadDDS",
+                  "decoratedName": "?loadDDS@@YAIPBD@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 130,
+                            "startColumn": 16
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 132,
+                            "startColumn": 8
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 135,
+                            "startColumn": 5
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 136,
+                            "startColumn": 9
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 142,
+                            "startColumn": 7
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 143,
+                            "startColumn": 7
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 144,
+                            "startColumn": 35
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 150,
+                            "startColumn": 7
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 152,
+                            "startColumn": 15
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 153,
+                            "startColumn": 15
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 154,
+                            "startColumn": 15
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 155,
+                            "startColumn": 15
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 156,
+                            "startColumn": 15
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 159,
+                            "startColumn": 17
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 160,
+                            "startColumn": 15
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 162,
+                            "startColumn": 10
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 163,
+                            "startColumn": 9
+                          }
+                        },
+                        "message": {
+                          "text": "\"buffer\" kann NULL sein."
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 164,
+                            "startColumn": 7
+                          }
+                        },
+                        "message": {
+                          "text": "\"buffer\" ist ein Eingabe-/Ausgabeargument für \"fread\" (in c:\\program files (x86)\\windows kits\\10\\include\\10.0.22621.0\\ucrt\\stdio.h:239 deklariert)"
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+                          },
+                          "region": {
+                            "startLine": 164,
+                            "startColumn": 7
+                          }
+                        },
+                        "message": {
+                          "text": "\"buffer\" sollte nicht NULL sein, da dies nicht der SAL-Anmerkung zu \"fread\" entspricht."
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.39.33521.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/bachelorarbeit/3dsimulator/texture.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "54cdb10233a46bb1b5a17ae9e863a1fe13a3bc416d675e44f982647c041daba3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/linking/glew-2.1.0/include/gl/glew.h"
+          },
+          "hashes": {
+            "sha-256": "1a2d50dc00a69940838cb3b5413cf7a7ac3cee8078672f27ffbfa2d3b88ad344"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/linking/glfw-3.4.bin.win32/include/glfw/glfw3.h"
+          },
+          "hashes": {
+            "sha-256": "aa370985f6b493bbe0358a36ab49f5780a6397c0209c6d98a62143dea595b73c"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+﻿  iisphparticle.cpp
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(84,14): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(84,14): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(84,14): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(84,14): warning C4244:             genType=float
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(84,14): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(155,40): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(155,40): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(155,40): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(155,40): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(155,40): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(157,35): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(157,35): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(157,35): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(157,35): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(157,35): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(159,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(159,30): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(159,30): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(159,30): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(159,30): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(161,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(161,31): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(161,31): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(161,31): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(161,31): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(163,32): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(163,32): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(163,32): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(163,32): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(163,32): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(165,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(165,31): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(165,31): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(165,31): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(165,31): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(167,36): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(167,36): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(167,36): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(167,36): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(167,36): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(169,37): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(169,37): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(169,37): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(169,37): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(169,37): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(171,28): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(171,28): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(171,28): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(171,28): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(171,28): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(238,40): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(238,40): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(238,40): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(238,40): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(238,40): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(240,35): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(240,35): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(240,35): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(240,35): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(240,35): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(242,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(242,30): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(242,30): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(242,30): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(242,30): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(244,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(244,31): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(244,31): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(244,31): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(244,31): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(246,32): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(246,32): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(246,32): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(246,32): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(246,32): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(248,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(248,31): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(248,31): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(248,31): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(248,31): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(250,36): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(250,36): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(250,36): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(250,36): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(250,36): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(252,37): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(252,37): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(252,37): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(252,37): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(252,37): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(254,28): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(254,28): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(254,28): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(254,28): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(254,28): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(326,39): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(326,39): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(326,39): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(326,39): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(326,39): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(328,34): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(328,34): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(328,34): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(328,34): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(328,34): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(330,29): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(330,29): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(330,29): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(330,29): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(330,29): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(332,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(332,30): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(332,30): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(332,30): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(332,30): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(334,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(334,31): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(334,31): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(334,31): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(334,31): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(336,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(336,30): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(336,30): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(336,30): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(336,30): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(338,35): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(338,35): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(338,35): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(338,35): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(338,35): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(340,36): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(340,36): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(340,36): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(340,36): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(340,36): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(342,27): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(342,27): warning C4244:         with
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(342,27): warning C4244:         [
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(342,27): warning C4244:             _Rep=__int64
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(342,27): warning C4244:         ]
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(355,16): warning C4305: "=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(790,17): warning C4305: "+=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(995,17): warning C4305: "-=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(1368,17): warning C4305: "+=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(1573,17): warning C4305: "-=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2036,17): warning C4305: "+=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2187,15): warning C4305: "=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2203,22): warning C4244: "Argument": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2359,15): warning C4305: "=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2375,22): warning C4244: "Argument": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2531,15): warning C4305: "=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2547,22): warning C4244: "Argument": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2665,22): warning C4244: "Argument": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2772,16): warning C4305: "=": Verkürzung von "double" in "float"
+D:\bachelorarbeit\3dsimulator\iisphparticle.cpp(2924,16): warning C4305: "=": Verkürzung von "double" in "float"
+Release\part.obj : warning LNK4042: Objekt mehrmals angegeben; zusätzliche Objekte werden ignoriert.
+  Code wird generiert.
+  3 of 2976 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    46 functions had inline decision re-evaluated but remain unchanged
+  Codegenerierung ist abgeschlossen.
+  3dsimulator.vcxproj -> D:\bachelorarbeit\Release\3dsimulator.exe

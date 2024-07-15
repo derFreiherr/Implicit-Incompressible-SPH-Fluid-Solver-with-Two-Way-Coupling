@@ -1,0 +1,1067 @@
+//iisph wird gemacht
+//theorie: zweite ableitung vom druckfeld
+//scalarprodukt
+//omega immer 0.5
+// konzeptionell riesige matrix mit jakobi gelöst
+// divergenz der geschwindigkeit = 0 = kein dichtefehler
+// gleichung 2 : links approkimation: rechts SPH  gleichung 2 wird nicht gelößt, da zu rechenaufwendig und unendlich viele lösungen und geschwindigkeitsäderungen auf symetrischen kräften basieren sollen
+//gamma erstmal auf 1
+//mittlere gleichung gleichung 14 nachtpartikel, partikel und dann andersrum der kernelfunktion
+// omega mal (sf-AP) immer kleiner
+// durchschnittlicher fehler, absolutbetrag
+// omega * sf/aff statt pl mit null initialisieren
+#include"imgui.h"
+#include"imgui_impl_glfw.h"
+#include"imgui_impl_opengl3.h"
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include<omp.h>
+#include <vector>
+#include <algorithm>
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+GLFWwindow * window;
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/norm.hpp>
+using namespace glm;
+
+#include <controls.hpp>
+#include <shader.hpp>
+#include <texture.hpp>
+#include <stdexcept>
+#include <vector>
+#include <unordered_map>
+#include <iostream>
+#include <set>
+#include <string>
+#include <fstream>
+#include <Cell.h>
+#include <iisphparticle.h>
+#include<part.h>
+#include <chrono>
+#include <sstream>
+
+//particleamount___________________________________________________________________________________________________
+const int nx = 10;
+const int ny = 10;
+const int nz = 10;
+const int oneway = 16;
+const int fluidpart = nx * ny * nz;
+const int MaxParticles = nx * ny * nz + (oneway * oneway * 12);
+int var_nx = 67;
+int var_ny = 54;
+int var_nz = 30;
+int var_oneway = 180;
+int var_fluidpart = var_nx * var_ny * var_nz;
+int var_MaxParticles = var_nx * var_ny * var_nz + (var_oneway * var_oneway * 12);
+//constants__________________________________________________________________
+float pi_F = glm::pi<float>();
+const float h = 1;
+const float p0 = 1;
+const float alpha = 1 / (4 * pi_F * h * h * h); //8 / (pi_F*h*h*h);// 
+const float m = (p0 * h * h * h);
+float deltaT = 0.01;
+float viscosity = 0.7;
+float visc_fluid = 0.0000011;
+float visc_boundary = 0.0000011;
+float k = 10000;
+float cfl_max = 0.1;
+float cfl_min = 0.09;
+float deltaTmax = 0.09;
+float deltaTmin = 0.025;
+float cfl = 0;
+bool cfl_cond = false;
+float avgErr = 0.1;
+glm::vec3 gamma = glm::vec3(1, 1, 1);
+float gammafloat = 0.7f;
+float omega = 0.5;
+float gravity = -9.81f;
+//hash___________________________________________________________________________________________
+int gridResolution = oneway * oneway * oneway;
+float cellsize = 2 * h;
+int hashsize = var_MaxParticles;
+const int p1 = 73856093;
+const int p2 = 19349663;
+const int p3 = 83492791;
+float searchRadius = 2 * h;
+//debug_________________________________________________________________________________________________
+std::vector<float> densitys;
+std::vector<float> densitysnew;
+float currentdens;
+float neighbouraverage = 0;
+float maxvel = 0.f;
+float maxdist = 0.f;
+bool start = false;
+bool tesla = false;
+bool teslaclosed = false;
+bool realtesla = false;
+bool watercol = false;
+bool rotatinganimation = false;
+bool dambreaktestscen = false;
+bool smalldambreaktestscen = true;
+float sizefac = 0.1;
+float distfac = 1;
+float overallmaxvel = 0.f;
+float cloloroffset = 3.f;
+int observing = var_MaxParticles + 1;
+float numNeighofobserving;
+bool exportdata = false;
+bool exportimage = false;
+bool exportanimation = false;
+bool exportscene = false;
+bool importscene = false;
+glm::vec3 eindrittelvector = glm::vec3(1 / 3, 1 / 3, 1 / 3);
+int currentiter = 0;
+int currentitermax = 10000;
+float denistyerrormax = 0.5;// 0.1;
+bool newiisph = false;
+bool iisph = true;
+bool ssph = false;
+int numexport = 0;
+float animationtime = 0.f;
+float neighSearchTime = 0.f;
+float drawingTime = 0.f;
+float othercomputationTime = 0.f;
+float kerneltime = 0.f;
+float densitytime = 0.f;
+float nonpresatime = 0.f;
+float predveltime = 0.f;
+float computeallsftime = 0.f;
+float computeallafftime = 0.f;
+float looptime = 0.f;
+bool makesingle = true;
+float teslatime = 0.f;
+bool maketesla = false;
+bool maketeslaclosed = false;
+int itertesla = 0;
+int boundarya = 10;
+int obstaclea = 10;
+const int overallmaxpart = 18*(50 * 50 * 50 + (55 * 55 * 12));
+float denserrold = 0.f;
+float maxavgdensdeviation = 0.f;
+bool singlewall = true;
+int avgiter= 0;
+int maxiter = 0;
+float avgcomptime = 0;
+float maxcomptime = 0;
+int animationstep = 0;
+bool clampp0 = false;
+int watercolheight = 50;
+float totaltimeanimated = 0;
+float simcomptime= 0; 
+float max_singledens = 0;
+int num_rot_part = 140;
+float baseRotationSpeed = 0.25;
+float angle = 0;
+float minypos = 0;
+float maxypos = 0;
+int animatedparticles = 0;
+int animationneighbourscount = 24;
+bool changename = false;
+std::string firstdatapath;
+glm::vec3 oldpos;
+//initlists__________________________________________________________________
+//iisphparticle ParticlesContainer[MaxParticles];
+//Particle ParticlesContainer[MaxParticles];
+std::unordered_map<int, Cell> hashmap;
+std::vector<iisphparticle> var_PartC(var_MaxParticles);
+int main(void)
+{
+	// Initialize GLFW
+	if (!glfwInit())
+	{
+		fprintf(stderr, "Failed to initialize GLFW\n");
+		getchar();
+		return -1;
+	}
+
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make macOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	// Open a window and create its OpenGL context
+	window = glfwCreateWindow(1024, 768, "crazy great fluid simulation", NULL, NULL);
+	if (window == NULL) {
+		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
+		getchar();
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	// Initialize GLEW
+	glewExperimental = true; // Needed for core profile
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Failed to initialize GLEW\n");
+		getchar();
+		glfwTerminate();
+		return -1;
+	}
+	// Ensure we can capture the escape key being pressed below
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	// Hide the mouse and enable unlimited movement
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+	// Set the mouse at the center of the screen
+	glfwPollEvents();
+	glfwSetCursorPos(window, 1024 / 2, 768 / 2);
+
+	// Dark blue background
+	glClearColor(1.0f, 1.0f, 1.f, 0.0f);
+	// Enable depth test
+	glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it is closer to the camera than the former one
+	glDepthFunc(GL_LESS);
+
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+
+
+	// Create and compile our GLSL program from the shaders
+	GLuint programID = LoadShaders("Particle.vertexshader", "Particle.fragmentshader");
+
+	// Vertex shader
+	GLuint CameraRight_worldspace_ID = glGetUniformLocation(programID, "CameraRight_worldspace");
+	GLuint CameraUp_worldspace_ID = glGetUniformLocation(programID, "CameraUp_worldspace");
+	GLuint ViewProjMatrixID = glGetUniformLocation(programID, "VP");
+
+	// fragment shader
+	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
+	/*
+	std::vector<GLfloat> g_particule_position_size_data(50 * 50 * 50 + (55 * 55 * 12));
+	std::vector<GLubyte> g_particule_color_data(50 * 50 * 50 + (55 * 55 * 12));
+	*/
+	static GLfloat* g_particule_position_size_data = new GLfloat[overallmaxpart];
+	static GLubyte* g_particule_color_data = new GLubyte[overallmaxpart];
+	
+
+	//mystuff
+	computeMatricesFromInputs();
+	glm::mat4 ProjectionMatrix = getProjectionMatrix();
+	glm::mat4 ViewMatrix = getViewMatrix();
+
+	// We will need the camera's position in order to sort the particles
+	// w.r.t the camera's distance.
+	// There should be a getCameraPosition() function in common/controls.cpp, 
+	// but this works too.
+	glm::vec3 CameraPosition(glm::inverse(ViewMatrix)[3]);
+
+	glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
+	GLuint Texture = loadDDS("particle.DDS");
+
+	// The VBO containing the 4 vertices of the particles.
+	// Thanks to instancing, they will be shared by all particles.
+	static const GLfloat g_vertex_buffer_data[] = {
+		 -0.5f, -0.5f, 0.0f,
+		  0.5f, -0.5f, 0.0f,
+		 -0.5f,  0.5f, 0.0f,
+		  0.5f,  0.5f, 0.0f,
+	};
+	GLuint billboard_vertex_buffer;
+	glGenBuffers(1, &billboard_vertex_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	// The VBO containing the positions and sizes of the particles
+	GLuint particles_position_buffer;
+	glGenBuffers(1, &particles_position_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
+	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
+	glBufferData(GL_ARRAY_BUFFER, overallmaxpart * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+
+	// The VBO containing the colors of the particles
+	GLuint particles_color_buffer;
+	glGenBuffers(1, &particles_color_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
+	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
+	glBufferData(GL_ARRAY_BUFFER, overallmaxpart * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
+	//__________________________________________________________________________________________________________________________________________________________________________________
+	double lastTime = glfwGetTime();
+	densitysnew.push_back(0.f);
+
+	//imgui__________________________________________________________________________________________________________________________________________________________________________________
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+	do
+	{
+
+		// Clear the screen
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//imgui
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		//imgui end
+		double currentTime = glfwGetTime();
+		double delta = currentTime - lastTime;
+		lastTime = currentTime;
+
+
+		computeMatricesFromInputs();
+		glm::mat4 ProjectionMatrix = getProjectionMatrix();
+		glm::mat4 ViewMatrix = getViewMatrix();
+
+		// We will need the camera's position in order to sort the particles
+		// w.r.t the camera's distance.
+		// There should be a getCameraPosition() function in common/controls.cpp, 
+		// but this works too.
+		glm::vec3 CameraPosition(glm::inverse(ViewMatrix)[3]);
+
+		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
+		//init
+		if (start) {
+			firstdatapath = "breakingDam";
+			gammafloat = 0.7;
+			deltaTmax = 0.01;
+			cfl_max = 0.59;
+			cfl_min = 0.49;
+			var_init(CameraPosition, var_PartC);
+			start = false;
+			maketesla = false;
+			maketeslaclosed = false;
+		}
+		if (dambreaktestscen) {
+			firstdatapath = "breakingDamTest";
+			exportanimation = false;
+			gammafloat = 1;
+			deltaTmax = 0.009;
+			cfl_max = 0.59;
+			cfl_min = 0.49;
+			dambreaktest(CameraPosition, var_PartC);
+			dambreaktestscen = false;
+			maketesla = false;
+			maketeslaclosed = false;
+		}if (smalldambreaktestscen) {
+			firstdatapath = "breakingDamTestSmall";
+			exportanimation = false;
+			gammafloat = 1;
+			deltaTmax = 0.009;
+			cfl_max = 0.59;
+			cfl_min = 0.49;
+			smalldambreaktest(CameraPosition, var_PartC);
+			smalldambreaktestscen = false;
+			maketesla = false;
+			maketeslaclosed = false;
+		}
+		if (tesla) {
+			firstdatapath = "Obstacles";
+			gammafloat = 1;
+			deltaTmax = 0.015;
+			deltaT = 0.01;
+			visc_boundary = 0.3;
+			visc_fluid = 1;
+			var_teslavalve(CameraPosition, var_PartC);
+			tesla = false;
+			maketesla = true;
+			maketeslaclosed = false;
+		}
+		if (realtesla) {
+			firstdatapath = "Tesla";
+			gammafloat = 1.0;;
+			deltaTmax = 0.01;
+			deltaT = 0.01;
+			visc_boundary = 0.3;
+			visc_fluid = 1;
+			//var_teslavalve(CameraPosition, var_PartC);
+			var_real_teslavalve(CameraPosition, var_PartC);
+			realtesla = false;
+			maketesla = true;
+			maketeslaclosed = false;
+		}
+		if (teslaclosed) {
+			firstdatapath = "ObstaclesClosed";
+			gammafloat = 1.0;
+			deltaTmax = 0.01;
+			deltaTmin = 0.00;
+			deltaT = 0.01;
+			visc_boundary = 0.3;
+			visc_fluid = 1;
+			var_teslavalveclosed(CameraPosition, var_PartC);
+			teslaclosed = false;
+			maketeslaclosed = true;
+			maketesla = false;
+		}
+		if (watercol) {
+			firstdatapath = "WaterColumn";
+			exportanimation = true;
+			currentitermax = 1000;
+			boundarya = 70;
+			gammafloat = 1;
+			deltaTmax = 0.008;
+			cfl_max = 0.09;
+			cfl_min = 0.01;
+			deltaT = 0.009;
+			visc_fluid = 0.0000011;
+			visc_boundary = 0.0000011;
+			watercolumn(CameraPosition, var_PartC);
+			watercol = false;
+		}
+		if (rotatinganimation) {
+			firstdatapath = "Blender";
+			exportanimation = true;
+			num_rot_part = 184;
+			var_oneway = 50;
+			var_nx = 15;
+			var_ny = 20;
+			var_nz = 48;
+			baseRotationSpeed = 0.0;
+			denistyerrormax = 0.5;
+			gammafloat = 0.7;
+			deltaTmax = 0.015;
+			deltaTmin = 0.001;
+			deltaT = 0.009;
+			visc_boundary = 0.3;
+			visc_fluid = 0.8;
+			moving_boundary(CameraPosition, var_PartC);
+			rotatinganimation = false;
+		}
+		if (exportimage) {
+			std::string filename("../exportdata/numPart" + std::to_string(var_MaxParticles) + "v" + std::to_string(viscosity) + "k" + std::to_string(k) +firstdatapath +".csv");
+			std::fstream file_out;
+			file_out.open(filename, std::ios_base::out);
+			if (!file_out.is_open()) {
+				std::cerr << "Fehler beim Öffnen der Datei." << std::endl;
+				return -1;
+			}
+			for (const auto& part : var_PartC) {
+				if (part.isboundary == false) {
+					std::string xPos = std::to_string(part.pos.x);
+					std::string yPos = std::to_string(part.pos.y);
+					std::string zPos = std::to_string(part.pos.z);
+					std::string normv = std::to_string(glm::length(part.vel));
+					file_out << xPos << ";" << yPos << ";" << zPos << ";" << normv << "\n";
+				}
+			}
+			file_out.flush();
+			file_out.close();
+			std::cout << "finito" << std::endl;
+			std::cout << "S key pressed!" << std::endl;
+			exportimage = false;
+		}
+		if (exportscene) {
+			std::string filename("../exportdata/Scene"+ firstdatapath +".csv");
+			std::cout << filename << std::endl;
+			std::fstream file_out;
+			file_out.open(filename, std::ios_base::out);
+			if (!file_out.is_open()) {
+				std::cerr << "Fehler beim Öffnen der Datei." << std::endl;
+				return -1;
+			}
+			for (const auto& part : var_PartC) {
+				std::string xPos = std::to_string(part.pos.x);
+				std::string yPos = std::to_string(part.pos.y);
+				std::string zPos = std::to_string(part.pos.z);
+				std::string xAcc = std::to_string(part.acc.x);
+				std::string yAcc = std::to_string(part.acc.y);
+				std::string zAcc = std::to_string(part.acc.z);
+				std::string xVel = std::to_string(part.vel.x);
+				std::string yVel = std::to_string(part.vel.y);
+				std::string zVel = std::to_string(part.vel.z);
+				std::string bound = std::to_string(part.isboundary);
+				file_out << bound << ";" << xPos << ";" << yPos << ";" << zPos << ";" << xAcc << ";" << yAcc << ";" << zAcc << "; " << xVel << ";" << yVel << ";" << zVel << "\n";
+			}
+			file_out.flush();
+			file_out.close();
+			std::cout << "finito" << std::endl;
+			std::cout << "Scene exported!" << std::endl;
+			exportscene = false;
+		}
+		if (importscene) {
+			std::string filename("../exportdata/Scene" + firstdatapath + ".csv");
+			std::ifstream file(filename);
+			std::vector<std::vector<std::string>> data;
+			std::string line;
+
+			// Check if the file is open
+			if (!file.is_open()) {
+				std::cerr << "Could not open the file!" << std::endl;
+			}
+
+			// Read the file line by line
+			while (std::getline(file, line)) {
+				std::stringstream lineStream(line);
+				std::string cell;
+				std::vector<std::string> row;
+
+				// Read each cell separated by a comma
+				while (std::getline(lineStream, cell, ';')) {
+					row.push_back(cell);
+				}
+
+				// Add the row to the data vector
+				data.push_back(row);
+			}
+			var_fluidpart = 0;
+			var_MaxParticles = 0;
+			for (std::vector<std::string> roww : data) {
+				if (roww[0] == "0") {
+					var_fluidpart++;
+				}
+				var_MaxParticles++;
+			}
+			hashsize = var_MaxParticles;
+			var_PartC.resize(var_MaxParticles);
+
+			for (int i = 0; i < var_MaxParticles; i++) {
+				if (data[i][0] == "0") {
+					var_PartC[i].isboundary = false;
+				}
+				else {
+					var_PartC[i].isboundary = true;
+				}
+				var_PartC[i].pos.x = std::stof(data[i][1]);
+				var_PartC[i].pos.y = std::stof(data[i][2]);
+				var_PartC[i].pos.z = std::stof(data[i][3]);
+				var_PartC[i].acc.x = std::stof(data[i][4]);
+				var_PartC[i].acc.y = std::stof(data[i][5]);
+				var_PartC[i].acc.z = std::stof(data[i][6]);
+				var_PartC[i].vel.x = std::stof(data[i][7]);
+				var_PartC[i].vel.y = std::stof(data[i][8]);
+				var_PartC[i].vel.z = std::stof(data[i][9]);
+			}
+			file.close();
+			std::cout << "Scene imported!" << std::endl;
+			importscene = false;
+			exportanimation = false;
+		}
+		if ((exportanimation && iisph) ||( exportanimation && ssph)) {
+			if (animationtime >= 0.08) {
+				std::string filename("../exportdata/"+ firstdatapath + std::to_string(numexport) + ".csv");
+				numexport++;
+				std::fstream file_out;
+				file_out.open(filename, std::ios_base::out);
+				if (!file_out.is_open()) {
+					std::cerr << "Fehler beim Öffnen der Datei." << std::endl;
+					return -1;
+				}
+				for (const auto&  part : var_PartC) {
+					if (((part.isboundary == true && part.ismovingboundary == true) || part.drawme == true )) {
+						std::string xPos = std::to_string(part.pos.x);
+						std::string yPos = std::to_string(part.pos.y);
+						std::string zPos = std::to_string(part.pos.z);
+						std::string isbound = std::to_string(part.ismovingboundary);
+						file_out << xPos << ";" << yPos << ";" << zPos << ";" << isbound << "\n";
+					}
+				}
+				file_out.flush();
+				file_out.close();
+				std::cout << "frame" << std::to_string(numexport) << std::endl;
+				animationtime = 0;
+			}
+			else {
+				animationtime += deltaT;
+			}
+
+		}
+		//debug--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		if (maxvel > overallmaxvel) {
+			overallmaxvel = maxvel;
+		}
+		currentdens = 0;
+		maxvel = 0;;
+		//_____________________________________________________________________________________________________________________________________________________________________________________________________________
+
+		//IISPH___________________________________________________________________________________________________________________________________________________________________________________________________
+		if (iisph) {
+
+			//IISPHalgorythm(ParticlesContainer, hashmap);
+			//var_iiSPHalgorythm(ParticlesContainer, hashmap);
+			if (maketesla && itertesla < 0) {
+				if (teslatime >= 0.33f) {
+					int i = var_MaxParticles;
+					var_fluidpart += 8 * 9;
+					var_MaxParticles += 8 * 9;
+					var_PartC.resize(var_MaxParticles);
+					for (int x = -1; x < (8 - 1); x++) {
+						for (int z = -1; z < (9 - 1); z++) {
+							var_PartC[i].pos = glm::vec3((x + 162) * h, (95 + 2) * h, (z + 3) * h);
+							var_PartC[i].vel = glm::vec3(0, 0, 0);
+							var_PartC[i].acc = glm::vec3(0, 0, 0);
+							var_PartC[i].a = 250;
+							var_PartC[i].isboundary = 0;
+							var_PartC[i].index = i;
+							i += 1;
+						}
+					}
+					itertesla += 1;
+					teslatime = 0;
+				}
+				else {
+					teslatime += deltaT;
+				}
+			}
+			if (maketeslaclosed && itertesla < 0) {
+				if (teslatime >= 0.33f) {
+					int i = var_MaxParticles;
+					var_fluidpart += 8 * 9;
+					var_MaxParticles += 8 * 9;
+					var_PartC.resize(var_MaxParticles);
+					for (int x = -1; x < (8 - 1); x++) {
+						for (int z = -1; z < (9 - 1); z++) {
+							var_PartC[i].pos = glm::vec3((x + 2) * h, (95 + 2) * h, (z + 3) * h);
+							var_PartC[i].vel = glm::vec3(0, 0, 0);
+							var_PartC[i].acc = glm::vec3(0, 0, 0);
+							var_PartC[i].a = 250;
+							var_PartC[i].isboundary = 0;
+							var_PartC[i].index = i;
+							i += 1;
+						}
+					}
+					itertesla += 1;
+					teslatime = 0;
+				}
+				else {
+					teslatime += deltaT;
+				}
+
+			}
+			var_iisph(var_PartC, hashmap);
+			animationstep++;
+		}
+		//endIISPH___________________________________________________________________________________________________________________________________________________________________________________________________
+		//SESPH___________________________________________________________________________________________________________________________________________________________________________________________________
+		if (ssph) {
+			deltaTmax = 0.09;
+			deltaTmin = 0.00;
+			cfl_max = 0.1;
+			cfl_min = 0.09;
+			ssphAlgo(var_PartC, hashmap);
+			//SSPHalgorythm(ParticlesContainer, hashmap);
+			animationstep++;
+		}
+		//endSESPH___________________________________________________________________________________________________________________________________________________________________________________________________
+		//debug--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		neighbouraverage = 0;
+#pragma omp for
+		for (int i = 0; i < var_MaxParticles; i++) {
+
+			if (var_PartC[i].index == observing && observing != var_MaxParticles + 1) {
+				var_PartC[i].r = 255;
+				var_PartC[i].g = 0;
+				var_PartC[i].b = 0;
+				numNeighofobserving = 0;
+				for (std::tuple<int, glm::vec3, glm::vec3>& neigh : var_PartC[i].IdNSubKernelder) {
+					var_PartC[std::get<0>(neigh)].r = 0;
+					var_PartC[std::get<0>(neigh)].g = 255;
+					var_PartC[std::get<0>(neigh)].b = 0;
+					numNeighofobserving += 1;
+				}
+			}
+			if (var_PartC[i].isboundary == false) {
+				for (std::tuple<int, glm::vec3, glm::vec3>& neigh : var_PartC[i].IdNSubKernelder) {
+					neighbouraverage += 1;
+				}
+				if (glm::length(var_PartC[i].vel) > maxvel) {
+					maxvel = glm::length(var_PartC[i].vel);
+				}
+				if (var_PartC[i].pos.y < minypos) {
+					minypos = var_PartC[i].pos.y;
+				}
+				if (var_PartC[i].pos.y > maxypos) {
+					maxypos = var_PartC[i].pos.y;
+				}
+			}
+		}
+		neighbouraverage = neighbouraverage / var_fluidpart;
+		// Simulate all particles
+		auto start_d = std::chrono::high_resolution_clock::now();
+		int ParticlesCount = 0;
+#pragma omp for
+		for (iisphparticle& p : var_PartC) {
+
+			if (p.drawme == true || p.drawme == false) {
+				g_particule_position_size_data[4 * ParticlesCount + 0] = p.pos.x * 0.1;
+				g_particule_position_size_data[4 * ParticlesCount + 1] = p.pos.y * 0.1;
+				g_particule_position_size_data[4 * ParticlesCount + 2] = p.pos.z * 0.1;
+				g_particule_position_size_data[4 * ParticlesCount + 3] = p.size * sizefac;
+
+				g_particule_color_data[4 * ParticlesCount + 0] = p.r;
+				g_particule_color_data[4 * ParticlesCount + 1] = p.g;
+				g_particule_color_data[4 * ParticlesCount + 2] = p.b;
+				g_particule_color_data[4 * ParticlesCount + 3] = p.a;
+
+				ParticlesCount++;
+			}
+			//p.cameradistance = glm::length2(p.pos - CameraPosition);
+
+			// Fill the GPU buffer
+		}
+		animatedparticles = ParticlesCount;
+		//_____________________________________________________________________________________________________________________________________________________________________________________________________________
+
+				//printf("%d ",ParticlesCount);
+
+				// Update the buffers that OpenGL uses for rendering.
+				// There are much more sophisticated means to stream data from the CPU to the GPU, 
+				// but this is outside the scope of this tutorial.
+				// http://www.opengl.org/wiki/Buffer_Object_Streaming
+		
+		glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
+		glBufferData(GL_ARRAY_BUFFER, var_MaxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf. See above link for details.
+		glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLfloat) * 4, g_particule_position_size_data);
+
+		glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
+		glBufferData(GL_ARRAY_BUFFER, var_MaxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW); // Buffer orphaning, a common way to improve streaming perf. See above link for details.
+		glBufferSubData(GL_ARRAY_BUFFER, 0, ParticlesCount * sizeof(GLubyte) * 4, g_particule_color_data);
+		
+		/*
+		glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
+		glBufferData(GL_ARRAY_BUFFER, ParticlesCount * 4 * sizeof(GLfloat), g_particule_position_size_data.data(), GL_STREAM_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
+		glBufferData(GL_ARRAY_BUFFER, ParticlesCount * 4 * sizeof(GLubyte), g_particule_color_data.data(), GL_STREAM_DRAW);
+		*/
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Use our shader
+		glUseProgram(programID);
+
+		// Bind our texture in Texture Unit 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		// Set our "myTextureSampler" sampler to use Texture Unit 0
+		glUniform1i(TextureID, 0);
+
+		// Same as the billboards tutorial
+		glUniform3f(CameraRight_worldspace_ID, ViewMatrix[0][0], ViewMatrix[1][0], ViewMatrix[2][0]);
+		glUniform3f(CameraUp_worldspace_ID, ViewMatrix[0][1], ViewMatrix[1][1], ViewMatrix[2][1]);
+
+		glUniformMatrix4fv(ViewProjMatrixID, 1, GL_FALSE, &ViewProjectionMatrix[0][0]);
+
+		// 1rst attribute buffer : vertices
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+		glVertexAttribPointer(
+			0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+
+		// 2nd attribute buffer : positions of particles' centers
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, particles_position_buffer);
+		glVertexAttribPointer(
+			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+			4,                                // size : x + y + z + size => 4
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+
+		// 3rd attribute buffer : particles' colors
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, particles_color_buffer);
+		glVertexAttribPointer(
+			2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+			4,                                // size : r + g + b + a => 4
+			GL_UNSIGNED_BYTE,                 // type
+			GL_TRUE,                          // normalized?    *** YES, this means that the unsigned char[4] will be accessible with a vec4 (floats) in the shader ***
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+
+		// These functions are specific to glDrawArrays*Instanced*.
+		// The first parameter is the attribute buffer we're talking about.
+		// The second parameter is the "rate at which generic vertex attributes advance when rendering multiple instances"
+		// http://www.opengl.org/sdk/docs/man/xhtml/glVertexAttribDivisor.xml
+		glVertexAttribDivisor(0, 0); // particles vertices : always reuse the same 4 vertices -> 0
+		glVertexAttribDivisor(1, 1); // positions : one per quad (its center)                 -> 1
+		glVertexAttribDivisor(2, 1); // color : one per quad                                  -> 1
+
+		// Draw the particles !
+		// This draws many times a small triangle_strip (which looks like a quad).
+		// This is equivalent to :
+		// for(i in ParticlesCount) : glDrawArrays(GL_TRIANGLE_STRIP, 0, 4), 
+		// but faster.
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, ParticlesCount);
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+		auto end_d = std::chrono::high_resolution_clock::now();
+		auto duration_d = std::chrono::duration_cast<std::chrono::microseconds>(end_d - start_d);
+		drawingTime = duration_d.count();
+		
+		if (densitysnew.back() / p0 * 100 > maxavgdensdeviation) {
+			maxavgdensdeviation = densitysnew.back() / p0 * 100;
+		}
+		if (currentiter > maxiter) {
+			maxiter = currentiter;
+		}
+		avgiter += currentiter;
+		float totalComputationTime = (othercomputationTime > 0.0f) ? othercomputationTime : 1.0f;
+		if (totalComputationTime > maxcomptime) {
+			maxcomptime = totalComputationTime;
+		}
+		avgcomptime += totalComputationTime;
+		totaltimeanimated += deltaT;
+		simcomptime = avgcomptime/totaltimeanimated;
+		//imgui
+		ImGui::Begin("schiebereglermachine");
+		ImGui::Text("fps: %.1f", 1 / delta);
+		ImGui::Text("density deviation: %.3f %%", densitysnew.back() / p0 * 100);
+		ImGui::Text("max density deviation: %.3f %%", maxavgdensdeviation);
+		ImGui::Text("used iterations: %i", currentiter);
+		ImGui::Text("average comp time  %.1f ms", avgcomptime/animationstep);
+		ImGui::Text("average iterations    %.1d", avgiter / animationstep);
+		ImGui::Text("max comp time    %.1f ms",maxcomptime);
+		ImGui::Text("max iterations    %.1d",maxiter);
+		ImGui::Text("total simulation time    %.1f", totaltimeanimated);
+		ImGui::Text("simtime/comptime    %.1f", simcomptime);
+		ImGui::Text("maximum density overall: %.3f %%", max_singledens);
+
+
+		// Start a new ImGui table with 3 columns
+		if (ImGui::BeginTable("Time Metrics", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+		{
+			// Set column headers
+			ImGui::TableSetupColumn("Timer");
+			ImGui::TableSetupColumn("Time (ms)");
+			ImGui::TableSetupColumn("Percentage (%)");
+			ImGui::TableHeadersRow();
+
+			// Row for Neighbour Search Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("Neighbour Search Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", neighSearchTime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", (neighSearchTime / totalComputationTime) * 100);
+
+			// Row for Drawing Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("Drawing Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", drawingTime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", (drawingTime / totalComputationTime) * 100);
+
+			// Row for Other Computation Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("Kernel Computation Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", kerneltime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", ((kerneltime) / totalComputationTime) * 100);
+			// Row for Other Computation Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("density Computation Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", densitytime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", ((densitytime) / totalComputationTime) * 100);
+			// Row for Other Computation Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("non pressure acce Computation Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", nonpresatime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", ((nonpresatime) / totalComputationTime) * 100);
+			// Row for Other Computation Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("pred vel Computation Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", predveltime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", ((predveltime) / totalComputationTime) * 100);
+			// Row for Other Computation Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("sf Computation Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", computeallsftime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", ((computeallsftime) / totalComputationTime) * 100);
+			// Row for Other Computation Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("aff Computation Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", computeallafftime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", ((computeallafftime) / totalComputationTime) * 100);
+			// Row for Other Computation Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("loop Computation Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", looptime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("%.1f%%", ((looptime) / totalComputationTime) * 100);
+			// Row for Total Computation Time
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("Total Computation Time");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::Text("%.1f ms", othercomputationTime);
+			ImGui::TableSetColumnIndex(2);
+			ImGui::Text("100.0%%");  // Total is always 100%
+
+			// End the table
+			ImGui::EndTable();
+		}
+
+
+
+
+		if (ImGui::CollapsingHeader("timerzz")) {
+			ImGui::Text("neighbour search time  : %.1f ms", neighSearchTime);
+			ImGui::Text("drawing time  : %.1f ms", drawingTime);
+			ImGui::Text("other computation time  : %.1f ms", othercomputationTime - neighSearchTime);
+			ImGui::Text("total computation time  : %.1f ms", othercomputationTime);
+		}
+		if (ImGui::CollapsingHeader("integration setting")) {
+			ImGui::Checkbox("iisph", &iisph);
+			ImGui::Checkbox("ssph", &ssph);
+			ImGui::Checkbox("single algorythm", &makesingle);
+		}
+		if (ImGui::CollapsingHeader("scene")) {
+			ImGui::Checkbox("teslavalve", &realtesla);
+			ImGui::Checkbox("obstacles open", &tesla);
+			ImGui::Checkbox("obstacles closed", &teslaclosed);
+			ImGui::Checkbox("small dambreak test", &smalldambreaktestscen);
+			ImGui::Checkbox("big dambreak test", &dambreaktestscen);
+			ImGui::Checkbox("moving boundary", &rotatinganimation);
+			if (ImGui::CollapsingHeader("moving boundary settings")) {
+				ImGui::Checkbox("single wall", &singlewall);
+				ImGui::SliderInt("fluid in x direction", &var_nx, 1, 50);
+				ImGui::SliderInt("fluid in y direction", &var_ny, 1, 50);
+				ImGui::SliderInt("fluid in z direction", &var_nz, 1, 50);
+				ImGui::SliderInt("boundary cube", &var_oneway, 1, 55);
+				ImGui::SliderInt("number of rotation parts", &num_rot_part, 50, 500);
+				ImGui::SliderFloat("rotation speed", &baseRotationSpeed, 0, 0.8);
+			}
+			ImGui::Checkbox("water column", &watercol);
+			if (ImGui::CollapsingHeader("water column settings")) {
+				ImGui::Checkbox("single wall", &singlewall);
+				ImGui::SliderInt("boundary y direction", &watercolheight, 35, 210);
+			}
+			ImGui::Checkbox("Breaking dam", &start);
+			if (ImGui::CollapsingHeader("breaking dam settings")) {
+				ImGui::Checkbox("single wall", &singlewall);
+				ImGui::SliderInt("fluid in x direction", &var_nx, 1, 50);
+				ImGui::SliderInt("fluid in y direction", &var_ny, 1, 50);
+				ImGui::SliderInt("fluid in z direction", &var_nz, 1, 50);
+				ImGui::SliderInt("boundary cube", &var_oneway, 1, 55);
+			}
+			
+		}
+		if (ImGui::CollapsingHeader("simulation setting technical")) {
+			ImGui::SliderFloat("deltaTmax", &deltaTmax, 0.001f, 0.1f);
+			ImGui::SliderFloat("deltaTmin", &deltaTmin, 0.01f, 0.1f);
+			ImGui::SliderFloat("deltaT", &deltaT, 0.0001f, 0.1f);
+			ImGui::SliderFloat("k", &k, 1, 100000);
+			ImGui::SliderFloat("viscosity", &viscosity, 0.1, 10);
+			ImGui::SliderFloat("gamma ", &gammafloat, 0.1, 2);
+			ImGui::SliderInt("maximum iterations ", &currentitermax, 1, 1000);
+			ImGui::SliderFloat("maximum density deviation ", &denistyerrormax,0.01,1);
+			ImGui::SliderFloat("gravity ", &gravity, -19.81, 19.81);
+			ImGui::SliderFloat("boundary viscosity ", &visc_boundary, 0.1, 10);
+			ImGui::SliderFloat("particle viscosity ", &visc_fluid, 0.1, 10);
+			ImGui::Checkbox("clamp rest density", &clampp0);
+
+		}
+		if (ImGui::CollapsingHeader("simulation setting visual")) {
+			ImGui::SliderFloat("color multiplyer", &cloloroffset, 0, 20);
+			ImGui::SliderFloat("size", &sizefac, 0.1, 1);
+			ImGui::SliderInt("boundary alpha value", &boundarya, 0, 200);
+			ImGui::SliderInt("obstacle alpha value", &obstaclea, 0, 200);
+			ImGui::SliderInt("max neighbours ", &animationneighbourscount, 10, 60);
+		}
+		if (ImGui::CollapsingHeader("overall stats")) {
+			
+			ImGui::Text("AllParticles: %i", var_MaxParticles);
+			ImGui::Text("Fluidparticles: %i", var_fluidpart);
+			ImGui::Text("Boundaryparticles: %i", var_MaxParticles- var_fluidpart);
+			ImGui::Text("Animated particles: %i", animatedparticles);
+			ImGui::Text("dt: %.8f", deltaT);
+			ImGui::Text("cfl: %.8f", cfl);
+			//ImGui::Text("density error: %.3f", densitys.back());
+			
+			ImGui::Text("average neighbours: %.3f", neighbouraverage);
+			
+			ImGui::Text("overall maximum velocity: %.1f", overallmaxvel);
+			ImGui::Text("overall minimum ypos: %.1f", minypos);
+			ImGui::Text("overall maximum ypos: %.1f", maxypos);
+		}
+		if (ImGui::CollapsingHeader("single stats")) {
+			ImGui::Text("number of neighbours: %.1f", numNeighofobserving);
+			ImGui::SliderInt("osverving", &observing, 1, var_MaxParticles);
+		}
+		if (ImGui::CollapsingHeader("export")) {
+			ImGui::Checkbox("export image", &exportimage);
+			ImGui::Checkbox("export scene", &exportscene);
+			ImGui::Checkbox("export animation", &exportanimation);
+			
+			ImGui::Checkbox("change name", &changename);
+			if (changename) {
+				ImGui::InputText("ExportName", firstdatapath.data(), 128);
+			}
+		}
+		if (ImGui::CollapsingHeader("import")) {
+			ImGui::Checkbox("import scene", &importscene);
+			ImGui::InputText("ImportName", firstdatapath.data(), 128);
+		}
+
+		
+
+		ImGui::End();
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		//imgui end
+
+		// Swap buffers
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
+	} // Check if the ESC key was pressed or the window was closed
+	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+		glfwWindowShouldClose(window) == 0);
+
+
+	delete[] g_particule_position_size_data;
+	//g_particule_position_size_data.clear();
+	//imgui
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+	//imgui end
+	// Cleanup VBO and shader
+	glDeleteBuffers(1, &particles_color_buffer);
+	glDeleteBuffers(1, &particles_position_buffer);
+	glDeleteBuffers(1, &billboard_vertex_buffer);
+	glDeleteProgram(programID);
+	glDeleteTextures(1, &Texture);
+	glDeleteVertexArrays(1, &VertexArrayID);
+
+
+	// Close OpenGL window and terminate GLFW
+	glfwTerminate();
+
+	return 0;
+}

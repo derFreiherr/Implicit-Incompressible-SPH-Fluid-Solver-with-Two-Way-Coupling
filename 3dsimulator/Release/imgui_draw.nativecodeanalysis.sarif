@@ -1,0 +1,113 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C26819",
+          "message": {
+            "text": "fallthrough-Attribut ohne Anmerkungen zwischen switch-Bezeichnungen (es. 78)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/imgui/imstb_truetype.h"
+                },
+                "region": {
+                  "startLine": 2148,
+                  "startColumn": 12
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "stbtt__run_charstring",
+                  "decoratedName": "?stbtt__run_charstring@@YAHPBUstbtt_fontinfo@@HPAUstbtt__csctx@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.39.33521.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/bachelorarbeit/imgui/imstb_truetype.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "5b7693f174b0458c7bec5522c8d6be4fe606d3f5da5082351959c14e59269b53"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imgui_draw.cpp"
+          },
+          "roles": [
+            "analysisTarget"
+          ],
+          "hashes": {
+            "sha-256": "41f662931990e607136022433513e5d5110dc832b397a844f411f66612b427f8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "52a624ec22f961bf4570a6859449394466376bc059d76d1e303f8f631570f58e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "a253e82c1960f8aa7594a51a8ac606a6235738c923f12d67a7742e88bf07ed63"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imgui_internal.h"
+          },
+          "hashes": {
+            "sha-256": "654e447d93249a855ae0f1541df7674ac6f6959e221eceb789bea0cf4db58993"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imstb_textedit.h"
+          },
+          "hashes": {
+            "sha-256": "6cb9de88e714f42bdbdc25ba190f01e346a2b6eba727c2044acccc7e70966c70"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imstb_rectpack.h"
+          },
+          "hashes": {
+            "sha-256": "2efa3d5f7d003c19743b15155dad9f46d9f9fc783a18893d703b431d3c990972"
+          }
+        }
+      ]
+    }
+  ]
+}

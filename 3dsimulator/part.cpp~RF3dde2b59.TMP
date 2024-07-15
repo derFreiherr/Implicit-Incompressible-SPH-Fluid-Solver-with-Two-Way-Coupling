@@ -1,0 +1,368 @@
+#include <part.h>
+void Particle::makeKernel()
+{
+	Kernel.clear();
+	for (std::tuple<int, float, glm::vec3>neig : IdNdistNsub) {
+		float d = std::get<1>(neig) / h;
+		float t1 = std::max((1 - d), 0.f);
+		float t2 = std::max((2 - d), 0.f);
+		Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
+	}
+}
+void Particle::makeKernelDer()
+{
+	IdNSubKernelder.clear();
+	for (std::tuple<int, float, glm::vec3>neig : IdNdistNsub) {
+		if (std::get<1>(neig) == 0.) {
+			IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig), glm::vec3(0, 0, 0)));
+		}
+		else {
+			float d = std::get<1>(neig) / h;
+			float t1 = std::max((1 - d), 0.f);
+			float t2 = std::max((2 - d), 0.f);
+			IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig), alpha * std::get<2>(neig) / (std::get<1>(neig)) * (-3 * t2 * t2 + 12 * t1 * t1)));
+		}
+	}
+}
+void Particle::computeDens()
+{
+	float dens = 0;
+	for (float kern : Kernel) {
+		dens += kern * m;
+	}
+	if (isboundary == false) {
+		density = std::max(dens, 0.f);
+	}
+	else
+	{
+		density = p0;
+	}
+
+}
+void Particle::makeDens()
+{
+	float dens = 0;
+	for (float kern : Kernel) {
+		dens += kern * m;
+	}
+	if (isboundary == false) {
+		density = glm::max(dens, p0);
+	}
+	else
+	{
+		density = p0;
+	}
+}
+void Particle::makePres()
+{
+	pressure = k * ((density / p0) - 1);
+}
+void Particle::makeA(Particle ParticlesContainer[])
+{
+	glm::vec3 PresA(0.f, 0.f, 0.f);
+	glm::vec3 ViscA(0.f, 0.f, 0.f);
+	for (std::tuple<int, glm::vec3, glm::vec3>neig : IdNSubKernelder) {
+		if (ParticlesContainer[std::get<0>(neig)].isboundary) {
+			PresA -= m * (pressure / (density * density) + pressure / (p0 * p0)) * std::get<2>(neig);
+			ViscA += (m / p0) * (vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+		}
+		else {
+			PresA -= m * (pressure / (density * density) + ParticlesContainer[std::get<0>(neig)].pressure / (ParticlesContainer[std::get<0>(neig)].density * ParticlesContainer[std::get<0>(neig)].density)) * std::get<2>(neig);
+			ViscA += (m / ParticlesContainer[std::get<0>(neig)].density) * ((vel - ParticlesContainer[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+		}
+
+	}
+	ViscA = 2 * viscosity * ViscA + glm::vec3(0, -9.81, 0);
+	acc = PresA + ViscA;
+}
+void Particle::makeNonpresA(Particle ParticlesContainer[])
+{
+	glm::vec3 ViscAf(0.f, 0.f, 0.f);
+	glm::vec3 ViscAb(0.f, 0.f, 0.f);
+	for (std::tuple<int, glm::vec3, glm::vec3>neig : IdNSubKernelder) {
+		if (ParticlesContainer[std::get<0>(neig)].isboundary) {
+			ViscAb += (ParticlesContainer[std::get<0>(neig)].m / p0) * (vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+		}
+		else {
+			ViscAf += (ParticlesContainer[std::get<0>(neig)].m / /*ParticlesContainer[std::get<0>(neig)].density*/p0) * ((vel - ParticlesContainer[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+		}
+	}
+	nonpresA = 2 * viscosity * (ViscAb + ViscAf) + glm::vec3(0, -9.81, 0);
+}
+void Particle::computedivofvelchange(Particle PartC[]) {
+	AP = 0;
+	float APF = 0;
+	float APB = 0;
+	for (std::tuple<int, glm::vec3, glm::vec3>neig : IdNSubKernelder) {
+		if (index != std::get<0>(neig)) {
+			if (PartC[std::get<0>(neig)].isboundary) {
+				APB += PartC[std::get<0>(neig)].m * glm::dot(presA, std::get<2>(neig));
+			}
+			else {
+				APF += PartC[std::get<0>(neig)].m * glm::dot((presA - PartC[std::get<0>(neig)].presA), std::get<2>(neig));
+			}
+		}
+	}
+	AP = deltaT * deltaT * ((APB)+APF);
+}
+void Particle::makePresA(Particle PartC[]) {
+	presA = glm::vec3(0, 0, 0);
+	glm::vec3 PresAf(0.f, 0.f, 0.f);
+	glm::vec3 PresAb(0.f, 0.f, 0.f);
+	for (std::tuple<int, glm::vec3, glm::vec3>neig : IdNSubKernelder) {
+		if (index != std::get<0>(neig)) {
+			if (PartC[std::get<0>(neig)].isboundary) {
+				PresAb -= PartC[std::get<0>(neig)].m * (2 * pressureiter / (p0 * p0)) * std::get<2>(neig);
+			}
+			else {
+				PresAf -= PartC[std::get<0>(neig)].m * (pressureiter / (p0 * p0) + PartC[std::get<0>(neig)].pressureiter / (p0 * p0)) * std::get<2>(neig);
+			}
+		}
+	}
+	presA = (PresAf + (gammafloat * PresAb));
+}
+void Particle::updatePres() {
+	if (Aff != 0) {
+		pressureiter = glm::max(pressureiter + (omega * (sf - AP) / Aff), 0.f);
+	}
+	else {
+		pressureiter = glm::max(pressureiter, 0.f);
+	}
+}
+void Particle::makeV()
+{
+	vel += deltaT * acc;
+	float normv = glm::length(vel);
+	r = 30;
+	g = glm::min(30 + (cloloroffset * normv), 143.f);
+	b = 148;
+}
+void Particle::makeVIISPH() {
+	if (glm::length(presA) > 100 * glm::length(nonpresA)) {
+		presA = presA * 1.f / 1000.f;
+	}
+	vel += deltaT * (presA + nonpresA);
+	float normv = glm::length(vel);
+	r = 30;
+	g = glm::min(30 + (cloloroffset * normv), 143.f);
+	b = 148;
+}
+void Particle::predictVel()
+{
+	predictedVel = vel + (deltaT * nonpresA);
+}
+void Particle::computeDensErr() {
+	densityerror = AP - sf;
+}
+void Particle::makeP() {
+	pos += vel * deltaT;
+}
+
+void IISPHalgorythm(Particle PartC[], std::unordered_map<int, Cell>& hashmap) {
+	makecfltrue(PartC);
+	deltaT = glm::min(deltaT, deltaTmax);
+	hashmap.clear();
+	insertParticlesIntoHashmap3D(PartC, hashmap);
+	//findneighbours
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		findNeighbors3D(i, PartC, hashmap);
+	}
+	//makeKernel
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		PartC[i].makeKernel();
+		PartC[i].makeKernelDer();
+	}
+	//compute density
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		PartC[i].computeDens();
+	}
+	//nonpresAcceleartion
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		if (PartC[i].isboundary == false) {
+			PartC[i].makeNonpresA(PartC);
+			PartC[i].predictVel();
+		}
+	}
+	//compute sf
+	computeSF(PartC);
+	//compute diagonal element
+	makeAllAff1(PartC);
+	// set p0f
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		PartC[i].pressureiter = 0;
+		if (PartC[i].isboundary == false) {
+			PartC[i].computeDensErr();
+		}
+	}
+	int l = 0;
+	while ((makerlavg(PartC) > (denistyerrormax) || l == 0) && l < currentitermax) {
+		//first for
+#pragma omp for
+		for (int i = 0; i < MaxParticles; i++) {
+			if (PartC[i].isboundary == false) {
+				PartC[i].makePresA(PartC);
+			}
+		}
+		//second for
+#pragma omp for
+		for (int i = 0; i < MaxParticles; i++) {
+			if (PartC[i].isboundary == false) {
+				PartC[i].computedivofvelchange(PartC);
+				PartC[i].updatePres();
+				PartC[i].computeDensErr();
+			}
+		}
+		l++;
+	}
+	currentiter = l;
+	densitysnew.push_back(makerlavg(PartC));
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		if (PartC[i].isboundary == false) {
+			PartC[i].makeVIISPH();
+			PartC[i].makeP();
+		}
+	}
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		currentdens += PartC[i].density;
+	}
+	densitys.push_back(((currentdens / (fluidpart)) - p0) / p0 * 100);
+	densitys.push_back(0.f);
+}
+
+void SSPHalgorythm(Particle ParticlesContainer[], std::unordered_map<int, Cell>& hashmap) {
+	makecfltrue(ParticlesContainer);
+	hashmap.clear();
+	insertParticlesIntoHashmap3D(ParticlesContainer, hashmap);
+	//findneighbours
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		if (ParticlesContainer[i].isboundary == false) {
+			findNeighbors3D(i, ParticlesContainer, hashmap);
+		}
+	}
+
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		if (ParticlesContainer[i].isboundary == false) {
+			ParticlesContainer[i].makeKernel();
+			ParticlesContainer[i].makeKernelDer();
+		}
+	}
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		if (ParticlesContainer[i].isboundary == false) {
+			ParticlesContainer[i].makeDens();
+			currentdens += ParticlesContainer[i].density;
+			ParticlesContainer[i].makePres();
+		}
+	}
+	densitys.push_back(((currentdens / (fluidpart)) - p0) / p0 * 100);
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		if (ParticlesContainer[i].isboundary == false) {
+			ParticlesContainer[i].makeA(ParticlesContainer);
+		}
+	}
+#pragma omp for
+	for (int i = 0; i < MaxParticles; i++) {
+		if (ParticlesContainer[i].isboundary == false) {
+			ParticlesContainer[i].makeV();
+			ParticlesContainer[i].makeP();
+		}
+	}
+}
+
+void init(glm::vec3 CameraPosition, Particle ParticlesContainer[]) {
+	int i = 0;
+	for (int x = -1; x < (nx - 1); x++) {
+		for (int y = -1; y < (ny - 1); y++) {
+			for (int z = -1; z < (nz - 1); z++) {
+				ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+				ParticlesContainer[i].pos = glm::vec3((x + 2) * h, (y + 2) * h, (z + 2) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = 250;
+				ParticlesContainer[i].isboundary = 0;
+				ParticlesContainer[i].index = i;
+				i += 1;
+			}
+		}
+	}
+	//border
+	for (int ii = 0; ii < oneway; ii++) {
+		for (int j = 0; j < oneway; j++) {
+			//1upper
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3(ii * h, oneway * h, j * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//2back
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3(ii * h, j * h, 0);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//3right
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3(oneway * h, ii * h, j * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//4lower
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3(ii * h, 0, j * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//5front
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3(ii * h, j * h, (oneway - 1) * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//6 left
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3(0, ii * h, j * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//7back2
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii - 1) * h, (j - 1) * h, (0 - 1));
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//8right2
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((oneway - 1) * h, (ii - 1) * h, (j - 1) * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//9lower2
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii - 1) * h, (0 - 1), (j - 1) * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//10front2
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii - 1) * h, (j - 1) * h, (oneway - 2) * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//11 left2
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((0 - 1), (ii - 1) * h, (j - 1) * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+			//12upper2
+			ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii - 1) * h, (oneway - 1) * h, (j - 1) * h);
+			ParticlesContainer[i].index = i;
+			i += 1;
+		}
+	}
+	for (int i = 0; i < MaxParticles; i++) {
+		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+		ParticlesContainer[i].nonpresA = glm::vec3(0, 0, 0);
+		ParticlesContainer[i].presA = glm::vec3(0, 0, 0);
+	}
+}

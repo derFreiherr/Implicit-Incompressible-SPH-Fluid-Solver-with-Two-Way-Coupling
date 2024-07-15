@@ -1,0 +1,264 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C28182",
+          "message": {
+            "text": "Dereferenzierender NULL-Zeiger. \"window->RootWindowForNav\" enthält den gleichen NULL-Wert wie \"parent_window\". "
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                },
+                "region": {
+                  "startLine": 6314,
+                  "startColumn": 12,
+                  "endLine": 6314,
+                  "endColumn": 46
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "ImGui::UpdateWindowParentAndRootLinks",
+                  "decoratedName": "?UpdateWindowParentAndRootLinks@ImGui@@YAXPAUImGuiWindow@@H0@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6306,
+                            "startColumn": 26
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6307,
+                            "startColumn": 24
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6308,
+                            "startColumn": 65
+                          }
+                        },
+                        "message": {
+                          "text": "\"parent_window\" kann NULL sein. (Diese Verzweigung überspringen)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6310,
+                            "startColumn": 23
+                          }
+                        },
+                        "message": {
+                          "text": "Diese Verzweigung überspringen (Annahme: \"<Verzweigungsbedingung>\" ist false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6312,
+                            "startColumn": 60
+                          }
+                        },
+                        "message": {
+                          "text": "Diese Verzweigung überspringen (Annahme: \"<Verzweigungsbedingung>\" ist false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6314,
+                            "startColumn": 44
+                          }
+                        },
+                        "message": {
+                          "text": "Diese Schleife überspringen (Annahme: \"<Verzweigungsbedingung>\" ist false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6317,
+                            "startColumn": 34
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6314,
+                            "startColumn": 44
+                          }
+                        },
+                        "message": {
+                          "text": "In diese Schleife eintreten (Annahme: \"<Verzweigungsbedingung>\")"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ]
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                          },
+                          "region": {
+                            "startLine": 6314,
+                            "startColumn": 44
+                          }
+                        },
+                        "message": {
+                          "text": "\"parent_window\" wird dereferenziert, kann jedoch weiterhin NULL sein."
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.39.33521.0",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "691267e749ff442dc32881240614a6a6ac0c7c250dc48fe7f78c9c901f910d56"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imgui.h"
+          },
+          "hashes": {
+            "sha-256": "52a624ec22f961bf4570a6859449394466376bc059d76d1e303f8f631570f58e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imconfig.h"
+          },
+          "hashes": {
+            "sha-256": "a253e82c1960f8aa7594a51a8ac606a6235738c923f12d67a7742e88bf07ed63"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imgui_internal.h"
+          },
+          "hashes": {
+            "sha-256": "654e447d93249a855ae0f1541df7674ac6f6959e221eceb789bea0cf4db58993"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/bachelorarbeit/imgui/imstb_textedit.h"
+          },
+          "hashes": {
+            "sha-256": "6cb9de88e714f42bdbdc25ba190f01e346a2b6eba727c2044acccc7e70966c70"
+          }
+        }
+      ]
+    }
+  ]
+}
