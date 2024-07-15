@@ -6,7 +6,7 @@ void iisphparticle::resetvalues() {
 	vel = glm::vec3(0,0,0), acc = glm::vec3(0, 0, 0), nonpresA = glm::vec3(0, 0, 0), predictedVel = glm::vec3(0, 0, 0), presA = glm::vec3(0, 0, 0);
 	r = 44, g = 2, b = 25; // Color
 	size = h, density = p0, pressure = 0, predictedDens = 0, densityerror = 0, pressureiter = 0, sf = 0, Aff = 0, AP = 0;
-	m = (p0 * h * h*h );
+	m = (p0 * h * h);
 	Kernel.clear();
 	KernelDer.clear();
 	IdNdistNsub.clear();
@@ -2553,7 +2553,7 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 		for (int y = 0; y < watercolheight; y++) {
 			double rando = dis(gen);
 			double randomnum = jitterfac * static_cast<double>(std::rand()) / (RAND_MAX);
-			ParticlesContainer[i].pos = glm::vec3((x + rando) * h, (2+y + rando) * h,0* h);
+			ParticlesContainer[i].pos = glm::vec3((x + rando) * h, (y + rando) * h,0* h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = 250;

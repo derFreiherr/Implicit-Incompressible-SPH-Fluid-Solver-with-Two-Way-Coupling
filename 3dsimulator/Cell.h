@@ -139,6 +139,7 @@ extern void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle
 extern void makeAllPresAwithbound(std::vector<iisphparticle>& var_PartC);
 extern void makeBoundPres(std::vector<iisphparticle>& var_PartC);
 extern float makesinglekernel(glm::vec3& posi, glm::vec3& posj);
+extern glm::vec3 makesinglekernelder(glm::vec3& posi, glm::vec3& posj);
 extern void makeAllPresAwithboundtwoD(std::vector<iisphparticle>& var_PartC);
 extern void makeAllAtwoD(std::vector<iisphparticle>& var_PartC);
 void ssphAlgotwoD(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap);
@@ -147,3 +148,4 @@ extern void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unor
 extern void insertAllParticlesIntoHashmap2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
 extern void makeAllAfffparallel(std::vector<iisphparticle>& PartC);
 extern void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
+extern void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC);

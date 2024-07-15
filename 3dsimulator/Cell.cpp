@@ -384,7 +384,7 @@ void makeAllKernelAndKernelDer(std::vector<iisphparticle>& var_PartC) {
 					float d = std::get<1>(neig) / h;
 					float t1 = std::max((1 - d), 0.f);
 					float t2 = std::max((2 - d), 0.f);
-					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig), 1.0000280157848f* alpha * std::get<2>(neig) / (std::get<1>(neig)) * (-3 * t2 * t2 + 12 * t1 * t1)));
+					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig), alpha * std::get<2>(neig) / (d*h*h) * (-3 * t2 * t2 + 12 * t1 * t1)));
 				}
 			}
 			Part.Kernel.clear();
@@ -394,10 +394,10 @@ void makeAllKernelAndKernelDer(std::vector<iisphparticle>& var_PartC) {
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
 				if (var_PartC[std::get<0>(neig)].isboundary) {
-					Part.Kernel.push_back(gammadens * alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1))* 1.0000280157848);
+					Part.Kernel.push_back(gammadens * alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
 				}
 				else {
-					Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848);
+					Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
 				}
 				
 			}
@@ -419,7 +419,7 @@ void makeAllKernelAndKernelDerTwoD(std::vector<iisphparticle>& var_PartC) {
 					float d = std::get<1>(neig) / h;
 					float t1 = std::max((1 - d), 0.f);
 					float t2 = std::max((2 - d), 0.f);
-					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig) * glm::vec3(1.f, 1.f, 0) , 1.0000280157848f * alphaTwoD * std::get<2>(neig) / (std::get<1>(neig)) * (-3 * t2 * t2 + 12 * t1 * t1)));
+					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig) * glm::vec3(1.f, 1.f, 0) ,  alphaTwoD * std::get<2>(neig) / (d *h*h) * (-3 * t2 * t2 + 12 * t1 * t1)));
 				}
 			}
 			Part.Kernel.clear();
@@ -429,10 +429,10 @@ void makeAllKernelAndKernelDerTwoD(std::vector<iisphparticle>& var_PartC) {
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
 				if (var_PartC[std::get<0>(neig)].isboundary) {
-					Part.Kernel.push_back(gammadens * alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848);
+					Part.Kernel.push_back(gammadens * alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
 				}
 				else {
-					Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848);
+					Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
 				}
 
 			}
@@ -866,6 +866,65 @@ void makeAllAfffparallel(std::vector<iisphparticle>& PartC) {
 		}
 	}
 }
+void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC) {
+	glm::vec3 Kerndelder_jf_if;
+	glm::vec3 jjf;
+	glm::vec3 jjb;
+
+#pragma omp parallel for private(Kerndelder_jf_if, jjf, jjb) 
+	for (int i = 0; i < var_MaxParticles; ++i) {
+		iisphparticle& Part = PartC[i];
+		if (Part.isboundary == false) {
+			Part.Aff = 0.f;
+			float if_jf1 = 0;
+			float if_jf2 = 0;
+			float if_jb = 0;
+			auto& neighbors = Part.IdNSubKernelder;
+
+			for (std::tuple<int, glm::vec3, glm::vec3>& jf : neighbors) {
+				if (PartC[std::get<0>(jf)].isboundary == false && PartC[std::get<0>(jf)].index != Part.index) {
+					jjf = glm::vec3(0.f, 0.f, 0.f);
+					jjb = glm::vec3(0.f, 0.f, 0.f);
+
+					for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
+						if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != Part.index) {
+							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+						}
+						if (PartC[std::get<0>(jj)].isboundary) {
+							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+						}
+					}
+					if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
+				}
+				if (PartC[std::get<0>(jf)].isboundary == false && PartC[std::get<0>(jf)].index != Part.index) {
+					Kerndelder_jf_if = glm::vec3(0, 0, 0);
+
+					for (std::tuple<int, glm::vec3, glm::vec3>& tmp : PartC[std::get<0>(jf)].IdNSubKernelder) {
+						if (PartC[std::get<0>(tmp)].index == Part.index) {
+							Kerndelder_jf_if = std::get<2>(tmp);
+							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((Part.m / (p0 * p0) * Kerndelder_jf_if), std::get<2>(jf));
+						}
+					}
+				}
+				if (PartC[std::get<0>(jf)].isboundary) {
+					jjf = glm::vec3(0.f, 0.f, 0.f);
+					jjb = glm::vec3(0.f, 0.f, 0.f);
+
+					for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
+						if (PartC[std::get<0>(jj)].isboundary == false) {
+							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+						}
+						if (PartC[std::get<0>(jj)].isboundary) {
+							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+						}
+					}
+					if_jb += glm::dot(PartC[std::get<0>(jf)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jf));
+				}
+			}
+			Part.Aff = (deltaT * deltaT) * (if_jf1 + if_jf2 + if_jb);
+		}
+	}
+}
 void makeAllAfffastwithdens(std::vector<iisphparticle>& PartC) {
 	glm::vec3 Kerndelder_jf_if = glm::vec3(0, 0, 0);
 	glm::vec3  jjf = glm::vec3(0.f, 0.f, 0.f);
@@ -1090,6 +1149,16 @@ float makesinglekernel(glm::vec3& posi, glm::vec3& posj) {
 	return alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848;
 }
 
+glm::vec3 makesinglekernelder(glm::vec3& posi, glm::vec3& posj) {
+	float distX = posi.x - posj.x;
+	float distY = posi.y - posj.y;
+	float distZ = posi.z - posj.z;
+	float distance = sqrt(distX * distX + distY * distY + distZ * distZ);
+	float d = distance / h;
+	float t1 = std::max((1 - d), 0.f);
+	float t2 = std::max((2 - d), 0.f);
+	return alphaTwoD * (posi - posj) / (d*h*h)* (-3 * t2 * t2 + 12 * t1 * t1);
+}
 
 
 void makeAllPresAtwoD(std::vector<iisphparticle>& var_PartC) {
@@ -1465,8 +1534,8 @@ void makeboundmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map
 				float d = std::get<1>(neig) / h;
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
-				Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848);
-				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848;
+				Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
+				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) ;
 			}
 			Part.m = gammabound * p0 / std::max( kernsum, 0.0000000000000001f);
 		}
@@ -1517,8 +1586,8 @@ void makepartmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map<
 				float d = std::get<1>(neig) / h;
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
-				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848);
-				kernsum += alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848;
+				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
+				kernsum += alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) ;
 			}
 			Part.m = p0 / std::max(gammapart * kernsum, 0.0000000000000001f);
 		}

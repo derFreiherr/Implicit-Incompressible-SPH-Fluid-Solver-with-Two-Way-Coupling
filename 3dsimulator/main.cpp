@@ -60,7 +60,7 @@ int var_fluidpart = var_nx * var_ny * var_nz;
 int var_MaxParticles = var_nx * var_ny * var_nz + (var_oneway * var_oneway * 12);
 //constants__________________________________________________________________
 float pi_F = glm::pi<float>();
-const float h = 1;
+const float h =10;
 const float p0 = 1000;
 const float alpha = 1 / (4 * pi_F * h * h * h); //8 / (pi_F*h*h*h);// 
 const float alphaTwoD = 5 / (14 * pi_F * h * h);
@@ -115,7 +115,7 @@ bool TwoDwatercol = true;
 bool TwoDDambreak = false;
 
 //__________________________________________________________________________________________________
-float sizefac = 0.1;
+float sizefac = 0.4;
 float distfac = 1;
 float overallmaxvel = 0.f;
 float cloloroffset = 9.f;
@@ -224,6 +224,11 @@ float gridbreite = 20;
 float gridhöhe = 0;
 float densobserving = 0;
 float massobserving = 0;
+float nonpresaobserving = 0;
+float presaobserving = 0;
+float sumkernelderobserving = 0;
+float sumkernelobserving = 0;
+
 //_________________________________________________________________________________
 int windowedWidth = 2048;//small1600;
 int windowedHeight = 1152;//small900;
@@ -602,7 +607,7 @@ int main(void)
 			//gammapres = 0.5;
 			//gammabound = 1.3;
 			deltaTmax = 0.008;
-			upperviualbord = 200 + watercolheight;
+			upperviualbord = 200 + watercolheight*h;
 			lowervisualbord = -10;
 			k = 500000;
 			position = glm::vec3(1, 7, 45);
@@ -644,8 +649,8 @@ int main(void)
 			//singlewall = false;
 			//setpartmass = true;
 			//setboundmass = true;
-			upperviualbord = 200 + watercolheight;
-			lowervisualbord = -10;
+			upperviualbord = 200 + watercolheight*h;
+			lowervisualbord = -10*h;
 			k = 400000000;
 			position = glm::vec3(1, 4, 25);
 			firstdatapath = "/2dWatercol50/gammabound" + std::to_string(gammabound) +"gammapres"+ std::to_string(gammapres);
@@ -683,9 +688,9 @@ int main(void)
 			gammabound = 0.6;
 			gammapres = 0.6;
 			//setpartmass = true;
-			setboundmass = true;
-			upperviualbord =150;
-			lowervisualbord = -10;
+			//setboundmass = true;
+			upperviualbord =150*h;
+			lowervisualbord = -10*h;
 			k = 400000000;
 			position = glm::vec3(10, 2, 45);
 			firstdatapath = "SmallWaterColumn";
@@ -972,14 +977,22 @@ int main(void)
 				var_PartC[i].g = 0;
 				var_PartC[i].b = 0;
 				numNeighofobserving = 0;
+				sumkernelderobserving = 0;
 				for (std::tuple<int, glm::vec3, glm::vec3>& neigh : var_PartC[i].IdNSubKernelder) {
 					var_PartC[std::get<0>(neigh)].r = 0;
 					var_PartC[std::get<0>(neigh)].g = 255;
 					var_PartC[std::get<0>(neigh)].b = 0;
 					numNeighofobserving += 1;
+					sumkernelderobserving += std::get<2>(neigh).x;
+				}
+				sumkernelobserving = 0;
+				for (auto& neigh : var_PartC[i].Kernel) {
+					sumkernelobserving += neigh;
 				}
 				densobserving = var_PartC[i].density;
 				massobserving = var_PartC[i].m;
+				presaobserving = glm::length(var_PartC[i].presA);
+				nonpresaobserving = glm::length(var_PartC[i].nonpresA);
 			}
 			if (var_PartC[i].isboundary == false) {
 				for (std::tuple<int, glm::vec3, glm::vec3>& neigh : var_PartC[i].IdNSubKernelder) {
@@ -1403,7 +1416,7 @@ int main(void)
 
 		if (ImGui::CollapsingHeader("simulation setting visual")) {
 			ImGui::SliderFloat("color multiplyer", &cloloroffset, 0, 50);
-			ImGui::SliderFloat("size", &sizefac, 0.1, 10000);
+			ImGui::InputFloat("size", &sizefac, 0.1, 10000);
 			ImGui::SliderInt("boundary alpha value", &boundarya, 0, 200);
 			ImGui::SliderInt("obstacle alpha value", &obstaclea, 0, 200);
 			ImGui::SliderInt("max neighbours ", &animationneighbourscount, 10, 60);
@@ -1439,7 +1452,11 @@ int main(void)
 		if (ImGui::CollapsingHeader("single stats")) {
 			ImGui::Text("number of neighbours: %.1f", numNeighofobserving);
 			ImGui::Text("density % .1f", densobserving);
-			ImGui::Text("mass % .1f", massobserving);
+			ImGui::Text("mass % .3f", massobserving);
+			ImGui::Text("pressure accellatation % .3f", presaobserving);
+			ImGui::Text("nonpressure accelaration % .3f", nonpresaobserving);
+			ImGui::Text("sum kernel der x % .3f", sumkernelderobserving);
+			ImGui::Text("sum kernel  % .3f", sumkernelobserving);
 			ImGui::InputInt("osverving", &observing, 1, var_MaxParticles);
 		}
 		if (ImGui::CollapsingHeader("export")) {
