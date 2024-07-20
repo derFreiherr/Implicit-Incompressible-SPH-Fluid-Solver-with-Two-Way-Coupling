@@ -11,6 +11,8 @@
 #include <random>
 #include "Eigen/Dense"
 #include <iostream>
+using namespace Eigen;
+
 extern float cellsize;
 extern int hashsize;
 extern const int p1;
@@ -87,6 +89,20 @@ extern bool highlightusedforcomp;
 extern bool highlightdenserr;
 extern float gridbreite;
 extern float gridhöhe;
+extern float allrigidmass;
+extern glm::vec3 posofcenterofmass;
+extern glm::vec3 velofcenterofmass ;
+extern glm::mat3x3 rotMat;
+extern glm::vec3 xCM;
+extern glm::vec3 vCM;
+extern glm::mat3 A;
+extern glm::vec3 L;
+extern glm::mat3 I_inv;
+extern glm::mat3 inertiaTensor;
+extern glm::vec3 omegarigidbody;
+extern glm::mat3 inertiaTensorInverse;
+
+
 struct Cell {
 	std::vector<int> particles;
 };
@@ -149,3 +165,7 @@ extern void insertAllParticlesIntoHashmap2D(std::vector<iisphparticle>& var_Part
 extern void makeAllAfffparallel(std::vector<iisphparticle>& PartC);
 extern void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
 extern void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC);
+extern void calculatecenterofmass(std::vector<iisphparticle>& PartC);
+extern void initrigidbodies(std::vector<iisphparticle>& PartC);
+extern void updaterigidbody(std::vector<iisphparticle>& PartC);
+extern glm::mat3 skewSymmetricMatrix(const glm::vec3& v);

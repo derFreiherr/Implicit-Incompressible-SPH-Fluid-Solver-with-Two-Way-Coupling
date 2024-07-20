@@ -6,7 +6,7 @@ void iisphparticle::resetvalues() {
 	vel = glm::vec3(0,0,0), acc = glm::vec3(0, 0, 0), nonpresA = glm::vec3(0, 0, 0), predictedVel = glm::vec3(0, 0, 0), presA = glm::vec3(0, 0, 0);
 	r = 44, g = 2, b = 25; // Color
 	size = h, density = p0, pressure = 0, predictedDens = 0, densityerror = 0, pressureiter = 0, sf = 0, Aff = 0, AP = 0;
-	m = (p0 * h * h);
+	m = (p0 * h * h * h );
 	Kernel.clear();
 	KernelDer.clear();
 	IdNdistNsub.clear();
@@ -117,7 +117,7 @@ void var_iisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 		computeAllSF(PartC);
 		auto end_sf = std::chrono::high_resolution_clock::now();
 		//compute diagonal element
-		makeAllAfffast(PartC);
+		makeAllAfffparallel(PartC);
 		auto end_aff = std::chrono::high_resolution_clock::now();
 		// set p0f
 #pragma omp parallel for
@@ -321,6 +321,7 @@ void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 	currentiter = l;
 		//update velocity and Position
 	makeAllVandP(PartC);
+	updaterigidbody(PartC);
 	auto end_o = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_o - start_o);
 	othercomputationTime = duration.count();
@@ -2527,11 +2528,11 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 	ParticlesContainer.resize(0);
 
 	// Define boundary and fluid parameters
-	int var_boundarypart = 19 + 2 * (watercolheight + 100) ;
+	int var_boundarypart = 19 + 2 * (watercolheight + 100) +10;
 	gammafloat = 0.7;
 	if (!singlewall) {
 		//gammafloat = 1;
-		var_boundarypart = var_boundarypart = 2* 19 + 2* 2 * (watercolheight + 100);
+		var_boundarypart = 2* 19 + 2* 2 * (watercolheight + 100)+25;
 	}
 
 	// Parameters for the fluid particles
@@ -2628,16 +2629,36 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 		}
 		std::cout << " left und right wände double : " << leftandright << std::endl;
 	}
+	for (int xi = 0; xi < 5; xi++) {
+		for (int yi = 0; yi < 2; yi++) {
+			ParticlesContainer[i].pos = glm::vec3((xi + 2) * h, (yi + watercolheight) * h, (0) * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+		}
+	}
 
 	// Finalize particle properties
 	for (int j = 0; j < var_MaxParticles; j++) {
 		ParticlesContainer[j].ismovingboundary = false;
 		ParticlesContainer[j].resetvalues();
+		ParticlesContainer[j].m = (p0 * h * h);
 		if (ParticlesContainer[j].isboundary) {
 			ParticlesContainer[j].a = boundarya;
 		}
 		else {
 			ParticlesContainer[j].a = 250;
+		}
+		if (ParticlesContainer[j].isfloatingboundary) {
+			ParticlesContainer[j].a = 200;
+			ParticlesContainer[j].r = 200;
+			ParticlesContainer[j].b = 0;
+			ParticlesContainer[j].g = 0;
+
 		}
 	}
 }
@@ -2647,10 +2668,10 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	ParticlesContainer.resize(0);
 
 	// Define boundary and fluid parameters
-	int var_boundarypart = 150 + 2 * (100);
+	int var_boundarypart = 2*150 + 2 * (100);
 	if (!singlewall) {
 		//gammafloat = 1;
-		var_boundarypart = var_boundarypart = 2 * 150 + 2 * 2 * (100);
+		var_boundarypart = var_boundarypart = 2*2 * 150 + 2 * 2 * (100);
 	}
 
 	// Parameters for the fluid particles
@@ -2681,12 +2702,20 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	}
 	std::cout << "fluid: " << i << std::endl;
 	float boden = 0;
-	// Create bottom boundary particles
+	// Create bottom and top boundary particles
 	for (int x = -2; x <= 148; x++) {
 		for (int y = -2; y <= -1; y++) {
 
 			if (y > -2 || !singlewall) {
 				ParticlesContainer[i].pos = glm::vec3((x)*h, y * h, (0) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = true;
+				ParticlesContainer[i].index = i;
+				i++;
+				boden++;
+				ParticlesContainer[i].pos = glm::vec3((x)*h, (100+y) * h, (0) * h);
 				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].a = boundarya;
@@ -2750,6 +2779,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	for (int j = 0; j < var_MaxParticles; j++) {
 		ParticlesContainer[j].ismovingboundary = false;
 		ParticlesContainer[j].resetvalues();
+		ParticlesContainer[j].m = (p0 * h * h);
 		if (ParticlesContainer[j].isboundary) {
 			ParticlesContainer[j].a = boundarya;
 		}
@@ -3114,7 +3144,7 @@ void smalldambreaktest(glm::vec3 CameraPosition, std::vector<iisphparticle>& Par
 			i += 1;
 			//6 left
 			////ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
-			ParticlesContainer[i].pos = glm::vec3(1, ii * h, j * h);
+			ParticlesContainer[i].pos = glm::vec3(1*h, ii * h, j * h);
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			i += 1;

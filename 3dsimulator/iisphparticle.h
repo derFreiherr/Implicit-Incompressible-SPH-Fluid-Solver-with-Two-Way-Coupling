@@ -6,6 +6,9 @@
 #include <glm/gtx/norm.hpp>
 #include <chrono>
 #include <Cell.h>
+#include "Eigen/Dense"
+using namespace Eigen;
+
 extern const float p0;
 extern const float h;
 extern const int MaxParticles;
@@ -31,9 +34,23 @@ extern int watercolheight;
 class iisphparticle
 {
 public:
+	Matrix3d inertiaTensor;
+	Matrix3d inertiaTensorInverse;
+	Vector3d position;
+	Quaterniond orientation;
+	Vector3d linearMomentum;
+	Vector3d angularMomentum;
+	Vector3d velocity;
+	Vector3d angularVelocity;
+	Matrix3d rotationMatrix;
+	double mass;
+	bool isfloatingboundary = false;
+
+
 	bool denstolow = false;
 	bool computeme = true;
 	bool drawme = false;
+	
 	glm::vec3 pos = glm::vec3(0, 0, 0);
 	glm::vec3 vel = glm::vec3(0, 0, 0);
 	glm::vec3 acc = glm::vec3(0, 0, 0);

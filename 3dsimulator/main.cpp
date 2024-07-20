@@ -60,7 +60,7 @@ int var_fluidpart = var_nx * var_ny * var_nz;
 int var_MaxParticles = var_nx * var_ny * var_nz + (var_oneway * var_oneway * 12);
 //constants__________________________________________________________________
 float pi_F = glm::pi<float>();
-const float h =10;
+const float h = 0.015625;
 const float p0 = 1000;
 const float alpha = 1 / (4 * pi_F * h * h * h); //8 / (pi_F*h*h*h);// 
 const float alphaTwoD = 5 / (14 * pi_F * h * h);
@@ -110,12 +110,12 @@ bool watercol = false;
 bool rotatinganimation = false;
 bool dambreaktestscen = false;
 bool smalldambreaktestscen = false;
-bool smallwatercol = false;
-bool TwoDwatercol = true;
+bool smallwatercol = true;
+bool TwoDwatercol = false;
 bool TwoDDambreak = false;
 
 //__________________________________________________________________________________________________
-float sizefac = 0.4;
+float sizefac = 6;
 float distfac = 1;
 float overallmaxvel = 0.f;
 float cloloroffset = 9.f;
@@ -228,6 +228,19 @@ float nonpresaobserving = 0;
 float presaobserving = 0;
 float sumkernelderobserving = 0;
 float sumkernelobserving = 0;
+float allrigidmass = 0;
+glm::vec3 posofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
+glm::vec3 velofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
+glm::mat3x3 rotMat = glm::mat3x3(0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
+glm::vec3 xCM = glm::vec3(0.f,0.f,0.f);
+glm::vec3 vCM = glm::vec3(0.f, 0.f, 0.f);
+glm::mat3 A(0.f);
+glm::vec3 L = glm::vec3(0.f, 0.f, 0.f);
+glm::mat3 I_inv(0.f);
+glm::mat3 inertiaTensor(0.f);
+glm::vec3 omegarigidbody = glm::vec3(0.f, 0.f, 0.f);
+glm::mat3 inertiaTensorInverse;
+
 
 //_________________________________________________________________________________
 int windowedWidth = 2048;//small1600;
@@ -476,13 +489,15 @@ int main(void)
 			surfacetension = 0.08;
 			currentitermax = 1000;
 			denistyerrormax = 0.1;
-			visc_fluid = 0.25;
-			visc_boundary = 0.025;
+			jitterfac = 0;
+			gammapres = 0.7;
+			visc_fluid = 0.025;
+			visc_boundary = 0.0000025;
 			absinterrupt = true;
 			singlewall = true;
 			exportanimation = false;
 			gammafloat = 0.7;
-			deltaTmax = 0.01;
+			deltaTmax = 0.009;
 			deltaTmin = 0.0001;
 			cfl_max = 0.5;
 			cfl_min = 0.8;
@@ -499,7 +514,7 @@ int main(void)
 			if (setboundmass) {
 				makeboundmass(var_PartC, hashmap);
 			}
-			setpartmass = true;
+			//setpartmass = true;
 			if (setpartmass) {
 				makepartmass(var_PartC, hashmap);
 			}
@@ -606,7 +621,7 @@ int main(void)
 		if (smallwatercol) {
 			//gammapres = 0.5;
 			//gammabound = 1.3;
-			deltaTmax = 0.008;
+			deltaTmax = 0.001;
 			upperviualbord = 200 + watercolheight*h;
 			lowervisualbord = -10;
 			k = 500000;
@@ -618,11 +633,13 @@ int main(void)
 			boundarya = 70;
 			absinterrupt = true;
 			paussimul = true;
+			jitterfac = 0;
+			gammapres = 0.7;
 			//setboundmass = true;
 			compbord = 26;
 			denistyerrormax = 0.1;
-			visc_fluid = 0.25;
-			visc_boundary = 0.025;
+			visc_fluid = 0.025;
+			visc_boundary = 0.0000025;
 			singlewall = true;
 			watercolumnsmall(CameraPosition, var_PartC);
 			smallwatercol = false;
@@ -642,15 +659,16 @@ int main(void)
 			ssph = false; 
 			//jitterfac = 0.01f;
 			//watercolheight = 10;
-			deltaTmax = 0.008;
+			deltaTmax = 0.0009;
 			cfl_max = 0.015;
+			//jitterfac = 0;
 			//gammabound = 0.6;
 			//gammapres = 0.5;
 			//singlewall = false;
 			//setpartmass = true;
 			//setboundmass = true;
-			upperviualbord = 200 + watercolheight*h;
-			lowervisualbord = -10*h;
+			upperviualbord = 200 + watercolheight;
+			lowervisualbord = -10;
 			k = 400000000;
 			position = glm::vec3(1, 4, 25);
 			firstdatapath = "/2dWatercol50/gammabound" + std::to_string(gammabound) +"gammapres"+ std::to_string(gammapres);
@@ -662,10 +680,12 @@ int main(void)
 			paussimul = true;
 			compbord = 26;
 			denistyerrormax = 0.1;
-			visc_fluid = 0.25;
-			visc_boundary = 0.025;
+			visc_fluid = 0.025;
+			visc_boundary = 0.0000025;
 			cloloroffset = 50;
+			gammapres = 0.7;
 			watercolumnTwoD(CameraPosition, var_PartC);
+			
 			TwoDwatercol = false;
 			if (setboundmass) {
 				makeboundmassTwoD(var_PartC, hashmap);
@@ -673,7 +693,9 @@ int main(void)
 			if (setpartmass) {
 				makepartmassTwoD(var_PartC, hashmap);
 			}
-			resetvalues = true;
+			initrigidbodies(var_PartC);
+			//resetvalues = true;
+			
 		}
 		if (TwoDDambreak) {
 			TwoDsimul = true;
@@ -681,16 +703,16 @@ int main(void)
 			ssph = false;
 			//jitterfac = 0.f;
 			watercolheight = 50;
-			deltaTmax = 0.04;
+			deltaTmax = 0.0009;
 			cfl_max = 0.7;
 			var_nx = 40;
 			var_ny = 80;
-			gammabound = 0.6;
+			gammabound = 40;
 			gammapres = 0.6;
 			//setpartmass = true;
 			//setboundmass = true;
-			upperviualbord =150*h;
-			lowervisualbord = -10*h;
+			upperviualbord =150;
+			lowervisualbord = -10;
 			k = 400000000;
 			position = glm::vec3(10, 2, 45);
 			firstdatapath = "SmallWaterColumn";
@@ -702,8 +724,8 @@ int main(void)
 			paussimul = true;
 			compbord = 26;
 			denistyerrormax = 0.1;
-			visc_fluid = 0.25;
-			visc_boundary = 0.025;
+			visc_fluid = 0.025;
+			visc_boundary = 0.0000025;
 			cloloroffset = 10;
 			DambreaktestTwoD(CameraPosition, var_PartC);
 			TwoDDambreak = false;
@@ -1445,18 +1467,18 @@ int main(void)
 			ImGui::Text("average neighbours: %.3f", neighbouraverage);
 			
 			ImGui::Text("overall maximum velocity: %.1f", overallmaxvel);
-			ImGui::Text("overall minimum ypos: %.1f", minypos);
-			ImGui::Text("overall maximum ypos: %.1f", maxypos);
+			ImGui::Text("overall minimum ypos: %.1f", minypos/h);
+			ImGui::Text("overall maximum ypos: %.1f", maxypos/h);
 			ImGui::Text("current maximum velocity: %.1f", maxvel);
 		}
 		if (ImGui::CollapsingHeader("single stats")) {
 			ImGui::Text("number of neighbours: %.1f", numNeighofobserving);
 			ImGui::Text("density % .1f", densobserving);
-			ImGui::Text("mass % .3f", massobserving);
-			ImGui::Text("pressure accellatation % .3f", presaobserving);
-			ImGui::Text("nonpressure accelaration % .3f", nonpresaobserving);
-			ImGui::Text("sum kernel der x % .3f", sumkernelderobserving);
-			ImGui::Text("sum kernel  % .3f", sumkernelobserving);
+			ImGui::Text("mass % .6f", massobserving);
+			ImGui::Text("pressure accellatation % .6f", presaobserving);
+			ImGui::Text("nonpressure accelaration % .6f", nonpresaobserving);
+			ImGui::Text("sum kernel der x % .6f", sumkernelderobserving);
+			ImGui::Text("sum kernel  % .6f", sumkernelobserving);
 			ImGui::InputInt("osverving", &observing, 1, var_MaxParticles);
 		}
 		if (ImGui::CollapsingHeader("export")) {

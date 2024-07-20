@@ -198,7 +198,7 @@ void PredictAllVel(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.predictedVel = Part.vel + (deltaT * Part.nonpresA);
 		}
 	}
@@ -235,12 +235,12 @@ void MakeAllNonpresAtwoD(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			glm::vec3 ViscAf(0.f, 0.f, 0.f);
 			glm::vec3 ViscAb(0.f, 0.f, 0.f);
 			glm::vec3 surfacetens(0.f, 0.f, 0.f);
 			for (const auto& neig : Part.IdNSubKernelder) {
-				if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary) {
+				if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary &&!!var_PartC[std::get<0>(neig)].isfloatingboundary) {
 					ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
 				}
 				else {
@@ -301,7 +301,7 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 				dens += kern * Part.m;
 			}
 			Part.density = dens;
-			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord &&Part.isboundary == false) {
+			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord &&Part.isboundary == false ) {
 				Part.denstolow = false;
 				numofp0high++;
 				if (absinterrupt) {
@@ -384,7 +384,7 @@ void makeAllKernelAndKernelDer(std::vector<iisphparticle>& var_PartC) {
 					float d = std::get<1>(neig) / h;
 					float t1 = std::max((1 - d), 0.f);
 					float t2 = std::max((2 - d), 0.f);
-					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig), alpha * std::get<2>(neig) / (d*h*h) * (-3 * t2 * t2 + 12 * t1 * t1)));
+					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig), 0.999221087f* alpha * std::get<2>(neig) / (d*h*h) * (-3 * t2 * t2 + 12 * t1 * t1)));
 				}
 			}
 			Part.Kernel.clear();
@@ -394,12 +394,11 @@ void makeAllKernelAndKernelDer(std::vector<iisphparticle>& var_PartC) {
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
 				if (var_PartC[std::get<0>(neig)].isboundary) {
-					Part.Kernel.push_back(gammadens * alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
+					Part.Kernel.push_back(0.999221087*gammadens * alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
 				}
 				else {
-					Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
+					Part.Kernel.push_back(0.999221087*alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
 				}
-				
 			}
 		}
 		
@@ -413,31 +412,30 @@ void makeAllKernelAndKernelDerTwoD(std::vector<iisphparticle>& var_PartC) {
 			Part.IdNSubKernelder.clear();
 			for (const auto& neig : Part.IdNdistNsub) {
 				if (std::get<1>(neig) == 0.) {
-					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig) * glm::vec3(1.f,1.f,0), glm::vec3(0, 0, 0)));
+					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig) * glm::vec3(1.f, 1.f, 0), glm::vec3(0, 0, 0)));
 				}
 				else {
 					float d = std::get<1>(neig) / h;
 					float t1 = std::max((1 - d), 0.f);
 					float t2 = std::max((2 - d), 0.f);
-					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig) * glm::vec3(1.f, 1.f, 0) ,  alphaTwoD * std::get<2>(neig) / (d *h*h) * (-3 * t2 * t2 + 12 * t1 * t1)));
+					Part.IdNSubKernelder.push_back(std::make_tuple(std::get<0>(neig), std::get<2>(neig) * glm::vec3(1.f, 1.f, 0), 0.99911389780816045467516953288827f * alphaTwoD * std::get<2>(neig) / (d * h * h) * (-3 * t2 * t2 + 12 * t1 * t1)));
 				}
 			}
 			Part.Kernel.clear();
-//#pragma omp parallel for
+			//#pragma omp parallel for
 			for (const auto& neig : Part.IdNdistNsub) {
 				float d = std::get<1>(neig) / h;
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
 				if (var_PartC[std::get<0>(neig)].isboundary) {
-					Part.Kernel.push_back(gammadens * alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
+					Part.Kernel.push_back(0.9991389780816045467516953288827 * gammadens * alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
 				}
 				else {
-					Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
+					Part.Kernel.push_back(0.9991389780816045467516953288827 * alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
 				}
 
 			}
 		}
-
 	}
 }
 /*
@@ -511,7 +509,7 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 									float distY = var_PartC[idx].pos.y - Part.pos.y;
 									float distZ = var_PartC[idx].pos.z - Part.pos.z;
 									float distance = sqrt(distX * distX + distY * distY + distZ * distZ);
-									if (distance < searchRadius) {
+									if (distance <= searchRadius) {
 										Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
 										uniqueIds.insert(idx); // Mark this ID as added
 										if (var_PartC[idx].isboundary && Part.isboundary == false) {
@@ -558,7 +556,7 @@ void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unordered_m
 									float distX = var_PartC[idx].pos.x - Part.pos.x;
 									float distY = var_PartC[idx].pos.y - Part.pos.y;
 									float distance = sqrt(distX * distX + distY * distY);
-									if (distance < searchRadius) {
+									if (distance <= searchRadius) {
 										Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
 										uniqueIds.insert(idx); // Mark this ID as added
 										if (var_PartC[idx].isboundary && Part.isboundary == false) {
@@ -815,7 +813,7 @@ void makeAllAfffparallel(std::vector<iisphparticle>& PartC) {
 #pragma omp parallel for private(Kerndelder_jf_if, jjf, jjb) 
 	for (int i = 0; i < var_MaxParticles; ++i) {
 		iisphparticle& Part = PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.Aff = 0.f;
 			float if_jf1 = 0;
 			float if_jf2 = 0;
@@ -1165,7 +1163,7 @@ void makeAllPresAtwoD(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_MaxParticles; i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.presA = glm::vec3(0, 0, 0);
 			glm::vec3 PresAf(0.f, 0.f, 0.f);
 			glm::vec3 PresAb(0.f, 0.f, 0.f);
@@ -1187,7 +1185,7 @@ void makeAllPresAwithboundtwoD(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_MaxParticles; i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.presA = glm::vec3(0, 0, 0);
 			glm::vec3 PresAf(0.f, 0.f, 0.f);
 			glm::vec3 PresAb(0.f, 0.f, 0.f);
@@ -1292,7 +1290,7 @@ void secondloop(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_MaxParticles; i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (!Part.isboundary) {
+		if (!Part.isboundary || Part.isfloatingboundary) {
 			Part.AP = 0;
 			float APF = 0;
 			float APB = 0;
@@ -1432,8 +1430,8 @@ void makeboundmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int
 				float d = std::get<1>(neig) / h;
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
-				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848);
-				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848;
+				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
+				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1));
 			}
 			Part.m = gammabound * p0 / std::max( kernsum, 0.0000000000000001f);
 		}
@@ -1484,8 +1482,8 @@ void makepartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int,
 				float d = std::get<1>(neig) / h;
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
-				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848);
-				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848;
+				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
+				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) ;
 			}
 			Part.m = p0 / std::max(gammapart * kernsum, 0.0000000000000001f);
 		}
@@ -1535,7 +1533,7 @@ void makeboundmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
 				Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
-				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) ;
+				kernsum +=  alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) ;
 			}
 			Part.m = gammabound * p0 / std::max( kernsum, 0.0000000000000001f);
 		}
@@ -1592,5 +1590,136 @@ void makepartmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map<
 			Part.m = p0 / std::max(gammapart * kernsum, 0.0000000000000001f);
 		}
 
+	}
+}
+void calculatecenterofmass(std::vector<iisphparticle>& PartC) {
+	for (int i = 0; i < PartC.size(); ++i) {
+		iisphparticle& Part = PartC[i];
+		if (Part.isfloatingboundary == true) {
+			
+		}
+	}
+}
+glm::mat3 skewSymmetricMatrix(const glm::vec3& v) {
+	return glm::mat3(
+		0, -v.z, v.y,
+		v.z, 0, -v.x,
+		-v.y, v.x, 0
+	);
+}
+
+void initrigidbodies(std::vector<iisphparticle>& PartC) {
+	posofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
+	velofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
+	rotMat = glm::mat3(1.0f); // Identity matrix
+	xCM = glm::vec3(0.f, 0.f, 0.f);
+	vCM = glm::vec3(0.f, 0.f, 0.f);
+	A = glm::mat3(1.0f); // Identity matrix
+	L = glm::vec3(0.f, 0.f, 0.f);
+	I_inv = glm::mat3(1.0f); // Identity matrix
+	inertiaTensor = glm::mat3(0.0f);
+	omegarigidbody = glm::vec3(0.f, 0.f, 0.f);
+	allrigidmass = 0.0f;
+
+	// Compute center of mass
+	for (int i = 0; i < PartC.size(); ++i) {
+		iisphparticle& Part = PartC[i];
+		if (Part.isfloatingboundary) {
+			Part.m = Part.m / 5;
+			allrigidmass += Part.m;
+			xCM += Part.m * Part.pos;
+			std::cout << "Particle " << i << " mass: " << Part.m << ", position: (" << Part.pos.x << ", " << Part.pos.y << ", " << Part.pos.z << ")" << std::endl;
+		}
+	}
+
+	if (allrigidmass > 0) {
+		xCM /= allrigidmass;
+	}
+	std::cout << "Center of mass: (" << xCM.x << ", " << xCM.y << ", " << xCM.z << "), Total mass: " << allrigidmass << std::endl;
+
+	// Compute inertia tensor
+	for (int i = 0; i < PartC.size(); ++i) {
+		iisphparticle& Part = PartC[i];
+		if (Part.isfloatingboundary) {
+			glm::vec3 r = Part.pos - xCM;
+			float mass = Part.m;
+			inertiaTensor[0][0] += mass * (r.y * r.y + r.z * r.z);
+			inertiaTensor[1][1] += mass * (r.x * r.x + r.z * r.z);
+			inertiaTensor[2][2] += mass * (r.x * r.x + r.y * r.y);
+			inertiaTensor[0][1] -= mass * r.x * r.y;
+			inertiaTensor[0][2] -= mass * r.x * r.z;
+			inertiaTensor[1][2] -= mass * r.y * r.z;
+		}
+	}
+
+	inertiaTensor[1][0] = inertiaTensor[0][1];
+	inertiaTensor[2][0] = inertiaTensor[0][2];
+	inertiaTensor[2][1] = inertiaTensor[1][2];
+
+	std::cout << "Inertia Tensor: \n"
+		<< inertiaTensor[0][0] << " " << inertiaTensor[0][1] << " " << inertiaTensor[0][2] << "\n"
+		<< inertiaTensor[1][0] << " " << inertiaTensor[1][1] << " " << inertiaTensor[1][2] << "\n"
+		<< inertiaTensor[2][0] << " " << inertiaTensor[2][1] << " " << inertiaTensor[2][2] << "\n";
+
+	if (glm::determinant(inertiaTensor) != 0) {
+		inertiaTensorInverse = glm::inverse(inertiaTensor);
+		I_inv = inertiaTensorInverse;
+		std::cout << "Inertia Tensor Inverse: \n"
+			<< I_inv[0][0] << " " << I_inv[0][1] << " " << I_inv[0][2] << "\n"
+			<< I_inv[1][0] << " " << I_inv[1][1] << " " << I_inv[1][2] << "\n"
+			<< I_inv[2][0] << " " << I_inv[2][1] << " " << I_inv[2][2] << "\n";
+	}
+}
+
+void updaterigidbody(std::vector<iisphparticle>& PartC) {
+	glm::vec3 torque(0.f);
+	glm::vec3 linforce(0.f);
+
+	// Compute forces and torques
+	for (int i = 0; i < PartC.size(); ++i) {
+		iisphparticle& Part = PartC[i];
+		if (Part.isfloatingboundary) {
+			glm::vec3 force = (Part.presA + Part.nonpresA) * Part.m; // Assume forces are accelerations
+			torque += glm::cross((Part.pos - xCM), force);
+			linforce += force;
+			std::cout << "Particle " << i << " force: (" << force.x << ", " << force.y << ", " << force.z << ")" << std::endl;
+		}
+	}
+
+	if (allrigidmass > 0) {
+		vCM += deltaT * linforce / allrigidmass;
+	}
+
+	xCM += deltaT * vCM;
+	std::cout << "Updated center of mass: (" << xCM.x << ", " << xCM.y << ", " << xCM.z << "), velocity: (" << vCM.x << ", " << vCM.y << ", " << vCM.z << ")" << std::endl;
+
+	// Update orientation matrix
+	glm::mat3 skewOmega = skewSymmetricMatrix(omegarigidbody);
+	A += deltaT * skewOmega * A;
+	L += deltaT * torque;
+
+	if (glm::determinant(A) != 0) {
+		I_inv = A * inertiaTensorInverse * glm::transpose(A);
+		omegarigidbody = I_inv * L;
+	}
+
+	std::cout << "Updated angular momentum: (" << L.x << ", " << L.y << ", " << L.z << "), angular velocity: (" << omegarigidbody.x << ", " << omegarigidbody.y << ", " << omegarigidbody.z << ")" << std::endl;
+
+	// Ensure the orientation matrix remains orthonormal
+	// Gram-Schmidt orthonormalization (for example)
+	glm::vec3 col1 = glm::normalize(A[0]);
+	glm::vec3 col2 = glm::normalize(A[1] - glm::dot(A[1], col1) * col1);
+	glm::vec3 col3 = glm::cross(col1, col2);
+	A = glm::mat3(col1, col2, col3);
+
+	// Update particle positions and velocities
+	for (int i = 0; i < PartC.size(); ++i) {
+		iisphparticle& Part = PartC[i];
+		if (Part.isfloatingboundary) {
+			glm::vec3 relpostmp = A * (Part.pos - xCM);
+			Part.vel += glm::cross(omegarigidbody, relpostmp) * deltaT;
+			Part.pos += vCM * deltaT + Part.vel * deltaT; // Update position with linear velocity
+			std::cout << "Particle " << i << " updated position: (" << Part.pos.x << ", " << Part.pos.y << ", " << Part.pos.z << "), velocity: (" << Part.vel.x << ", " << Part.vel.y << ", " << Part.vel.z << ")" << std::endl;
+		}
 	}
 }
