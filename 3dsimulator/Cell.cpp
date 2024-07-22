@@ -84,6 +84,7 @@ void ssphAlgo(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& 
 	makeAllA(PartC);
 	//update velocity and Position
 	makeAllVandP(PartC);
+	updaterigidbody(PartC);
 	auto end_o = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_o - start_o);
 	othercomputationTime = duration.count();
@@ -134,7 +135,7 @@ void computeAllPres(std::vector<iisphparticle>&  var_PartC) {
 #pragma omp parallel for
 for (int i = 0; i < var_PartC.size(); ++i) {
 	iisphparticle& Part = var_PartC[i];
-		if (var_PartC[i].isboundary == false) {
+		if (var_PartC[i].isboundary == false || var_PartC[i].isfloatingboundary) {
 			var_PartC[i].pressure = k * ((var_PartC[i].density / p0) - 1);
 		}
 	}
@@ -144,7 +145,7 @@ void makeAllA(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 for (int i = 0; i < var_PartC.size(); ++i) {
 	iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.presA = glm::vec3(0, 0, 0);
 			glm::vec3 PresAf(0.f, 0.f, 0.f);
 			glm::vec3 PresAb(0.f, 0.f, 0.f);
@@ -301,7 +302,7 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 				dens += kern * Part.m;
 			}
 			Part.density = dens;
-			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord &&Part.isboundary == false ) {
+			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord &&Part.isboundary == false && Part.isfloatingboundary == false) {
 				Part.denstolow = false;
 				numofp0high++;
 				if (absinterrupt) {
@@ -333,7 +334,7 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 			*/
 		}
 		
-		if (Part.isboundary == true) {
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
 			Part.density = p0;
 			Part.denstolow = true;
 		}
@@ -348,7 +349,7 @@ void computeAllDensSSPH(std::vector<iisphparticle>& var_PartC) {
 	numofp0high = 0;
 //#pragma omp parallel for
 	for (auto& Part : var_PartC) {
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			float dens = 0;
 			for (float& kern : Part.Kernel) {
 				dens += kern * Part.m;
@@ -364,7 +365,7 @@ void computeAllDensSSPH(std::vector<iisphparticle>& var_PartC) {
 				denserrold += Part.density - p0;
 			}
 		}
-		if (Part.isboundary == true) {
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
 			Part.density = p0;
 		}
 	}
@@ -1333,7 +1334,7 @@ void makeAllVandP(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		auto& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false && Part.isfloatingboundary == false) {
 			if (Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord) {
 				Part.vel += deltaT * (Part.presA + Part.nonpresA);
 				Part.r = 30;
@@ -1533,7 +1534,7 @@ void makeboundmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
 				Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
-				kernsum +=  alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) ;
+				kernsum += alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) ;
 			}
 			Part.m = gammabound * p0 / std::max( kernsum, 0.0000000000000001f);
 		}
@@ -1584,7 +1585,7 @@ void makepartmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map<
 				float d = std::get<1>(neig) / h;
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
-				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
+				Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) );
 				kernsum += alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) ;
 			}
 			Part.m = p0 / std::max(gammapart * kernsum, 0.0000000000000001f);
@@ -1600,13 +1601,7 @@ void calculatecenterofmass(std::vector<iisphparticle>& PartC) {
 		}
 	}
 }
-glm::mat3 skewSymmetricMatrix(const glm::vec3& v) {
-	return glm::mat3(
-		0, -v.z, v.y,
-		v.z, 0, -v.x,
-		-v.y, v.x, 0
-	);
-}
+
 
 void initrigidbodies(std::vector<iisphparticle>& PartC) {
 	posofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
@@ -1625,7 +1620,7 @@ void initrigidbodies(std::vector<iisphparticle>& PartC) {
 	for (int i = 0; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
-			Part.m = Part.m / 5;
+			Part.m = Part.m * 1;
 			allrigidmass += Part.m;
 			xCM += Part.m * Part.pos;
 			std::cout << "Particle " << i << " mass: " << Part.m << ", position: (" << Part.pos.x << ", " << Part.pos.y << ", " << Part.pos.z << ")" << std::endl;
@@ -1643,18 +1638,21 @@ void initrigidbodies(std::vector<iisphparticle>& PartC) {
 		if (Part.isfloatingboundary) {
 			glm::vec3 r = Part.pos - xCM;
 			float mass = Part.m;
-			inertiaTensor[0][0] += mass * (r.y * r.y + r.z * r.z);
+			glm::mat3 rr = glm::outerProduct(r, r);
+			inertiaTensor -= mass * rr;
+			/*inertiaTensor[0][0] += mass * (r.y * r.y + r.z * r.z);
 			inertiaTensor[1][1] += mass * (r.x * r.x + r.z * r.z);
 			inertiaTensor[2][2] += mass * (r.x * r.x + r.y * r.y);
 			inertiaTensor[0][1] -= mass * r.x * r.y;
 			inertiaTensor[0][2] -= mass * r.x * r.z;
 			inertiaTensor[1][2] -= mass * r.y * r.z;
+			*/
 		}
 	}
 
-	inertiaTensor[1][0] = inertiaTensor[0][1];
-	inertiaTensor[2][0] = inertiaTensor[0][2];
-	inertiaTensor[2][1] = inertiaTensor[1][2];
+	//inertiaTensor[1][0] = inertiaTensor[0][1];
+	//inertiaTensor[2][0] = inertiaTensor[0][2];
+	//inertiaTensor[2][1] = inertiaTensor[1][2];
 
 	std::cout << "Inertia Tensor: \n"
 		<< inertiaTensor[0][0] << " " << inertiaTensor[0][1] << " " << inertiaTensor[0][2] << "\n"
@@ -1671,18 +1669,27 @@ void initrigidbodies(std::vector<iisphparticle>& PartC) {
 	}
 }
 
+glm::mat3 skewSymmetricMatrix(const glm::vec3& v) {
+	return glm::mat3(0.0f, -v.z, v.y,
+		v.z, 0.0f, -v.x,
+		-v.y, v.x, 0.0f);
+}
+
 void updaterigidbody(std::vector<iisphparticle>& PartC) {
 	glm::vec3 torque(0.f);
 	glm::vec3 linforce(0.f);
 
-	// Compute forces and torques
-	for (int i = 0; i < PartC.size(); ++i) {
+	// Kräfte und Drehmomente berechnen
+//#pragma omp parallel for reduction(+:torque, linforce)
+	for (int i = var_fluidpart; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
-			glm::vec3 force = (Part.presA + Part.nonpresA) * Part.m; // Assume forces are accelerations
-			torque += glm::cross((Part.pos - xCM), force);
+			glm::vec3 force = (Part.presA + Part.nonpresA) * Part.m; // Annahme, dass Kräfte Beschleunigungen sind
+			glm::vec3 r = Part.pos - xCM;
+			glm::vec3 t = glm::cross(r, force);
+
+			torque += t;
 			linforce += force;
-			std::cout << "Particle " << i << " force: (" << force.x << ", " << force.y << ", " << force.z << ")" << std::endl;
 		}
 	}
 
@@ -1691,35 +1698,32 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 	}
 
 	xCM += deltaT * vCM;
-	std::cout << "Updated center of mass: (" << xCM.x << ", " << xCM.y << ", " << xCM.z << "), velocity: (" << vCM.x << ", " << vCM.y << ", " << vCM.z << ")" << std::endl;
 
-	// Update orientation matrix
+	// Orientierungsmatrix aktualisieren
 	glm::mat3 skewOmega = skewSymmetricMatrix(omegarigidbody);
 	A += deltaT * skewOmega * A;
 	L += deltaT * torque;
 
 	if (glm::determinant(A) != 0) {
-		I_inv = A * inertiaTensorInverse * glm::transpose(A);
+		glm::mat3 A_T = glm::transpose(A);
+		glm::mat3 I_inv = A * inertiaTensorInverse * A_T;
 		omegarigidbody = I_inv * L;
 	}
 
-	std::cout << "Updated angular momentum: (" << L.x << ", " << L.y << ", " << L.z << "), angular velocity: (" << omegarigidbody.x << ", " << omegarigidbody.y << ", " << omegarigidbody.z << ")" << std::endl;
-
-	// Ensure the orientation matrix remains orthonormal
-	// Gram-Schmidt orthonormalization (for example)
+	// Sicherstellen, dass die Orientierungsmatrix orthonormal bleibt
 	glm::vec3 col1 = glm::normalize(A[0]);
 	glm::vec3 col2 = glm::normalize(A[1] - glm::dot(A[1], col1) * col1);
 	glm::vec3 col3 = glm::cross(col1, col2);
 	A = glm::mat3(col1, col2, col3);
 
-	// Update particle positions and velocities
-	for (int i = 0; i < PartC.size(); ++i) {
+	// Partikelpositionen und -geschwindigkeiten aktualisieren
+#pragma omp parallel for
+	for (int i = var_fluidpart; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
 			glm::vec3 relpostmp = A * (Part.pos - xCM);
 			Part.vel += glm::cross(omegarigidbody, relpostmp) * deltaT;
-			Part.pos += vCM * deltaT + Part.vel * deltaT; // Update position with linear velocity
-			std::cout << "Particle " << i << " updated position: (" << Part.pos.x << ", " << Part.pos.y << ", " << Part.pos.z << "), velocity: (" << Part.vel.x << ", " << Part.vel.y << ", " << Part.vel.z << ")" << std::endl;
+			Part.pos += vCM * deltaT + Part.vel * deltaT; // Position mit linearer Geschwindigkeit aktualisieren
 		}
 	}
 }

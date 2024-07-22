@@ -110,8 +110,8 @@ bool watercol = false;
 bool rotatinganimation = false;
 bool dambreaktestscen = false;
 bool smalldambreaktestscen = false;
-bool smallwatercol = true;
-bool TwoDwatercol = false;
+bool smallwatercol = false;
+bool TwoDwatercol = true;
 bool TwoDDambreak = false;
 
 //__________________________________________________________________________________________________
@@ -209,7 +209,7 @@ bool colorpres = false;
 bool setboundmass = false;
 bool setpartmass = true;
 float gammapart = 1;
-float jitterfac = 0.01 * h;
+float jitterfac = 0.01;
 float maxdenserrold = 0;
 bool resetvalues = false;
 std::vector<float> maxvels;
@@ -518,6 +518,7 @@ int main(void)
 			if (setpartmass) {
 				makepartmass(var_PartC, hashmap);
 			}
+			initrigidbodies(var_PartC);
 		}
 		if (tesla) {
 			upperviualbord = 210;
@@ -630,7 +631,7 @@ int main(void)
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
 			clampfac = 0;
-			boundarya = 70;
+			//boundarya = 70;
 			absinterrupt = true;
 			paussimul = true;
 			jitterfac = 0;
@@ -649,6 +650,7 @@ int main(void)
 			if (setpartmass) {
 				makepartmass(var_PartC, hashmap);
 			}
+			initrigidbodies(var_PartC);
 			TwoDsimul = false;
 			iisph = true;
 			ssph = false;
@@ -694,7 +696,7 @@ int main(void)
 				makepartmassTwoD(var_PartC, hashmap);
 			}
 			initrigidbodies(var_PartC);
-			//resetvalues = true;
+			resetvalues = true;
 			
 		}
 		if (TwoDDambreak) {
@@ -707,8 +709,8 @@ int main(void)
 			cfl_max = 0.7;
 			var_nx = 40;
 			var_ny = 80;
-			gammabound = 40;
-			gammapres = 0.6;
+			gammabound = 0.7;
+			gammapres = 0.5;
 			//setpartmass = true;
 			//setboundmass = true;
 			upperviualbord =150;
@@ -735,6 +737,7 @@ int main(void)
 			if (setpartmass) {
 				makepartmassTwoD(var_PartC, hashmap);
 			}
+			initrigidbodies(var_PartC);
 		}
 		if (rotatinganimation) {
 			upperviualbord = 200;
