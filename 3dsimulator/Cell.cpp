@@ -488,49 +488,50 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 */
 void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
 	totalcomp = 0;
-
+	float maxhashnum = 0;
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord) {
-			Part.IdNdistNsub.clear();
-			Part.drawme = false;
-			Part.computeme = false;
-			Part.Aff = 0;
-			std::unordered_set<int> uniqueIds; // Set to track unique IDs
+		Part.IdNdistNsub.clear();
+		Part.drawme = false;
+		Part.computeme = false;
+		Part.Aff = 0;
+		std::unordered_set<int> uniqueIds; // Set to track unique IDs
 
-			for (int x = -1; x <= 1; x++) {
-				for (int y = -1; y <= 1; y++) {
-					for (int z = -1; z <= 1; z++) {
-						int hash = hashFunction3D(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius, Part.pos.z + z * searchRadius);
-						if (hashmap.find(hash) != hashmap.end()) {
-							for (int idx : hashmap[hash].particles) {
-								if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
-									float distX = var_PartC[idx].pos.x - Part.pos.x;
-									float distY = var_PartC[idx].pos.y - Part.pos.y;
-									float distZ = var_PartC[idx].pos.z - Part.pos.z;
-									float distance = sqrt(distX * distX + distY * distY + distZ * distZ);
-									if (distance <= searchRadius) {
-										Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
-										uniqueIds.insert(idx); // Mark this ID as added
-										//if (var_PartC[idx].isboundary && Part.isboundary == false) {
-										//	Part.drawme = true;
-										//}
-										
-									}
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				for (int z = -1; z <= 1; z++) {
+					int hash = hashFunction3D(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius, Part.pos.z + z * searchRadius);
+					if (hashmap.find(hash) != hashmap.end()) {
+						for (int idx : hashmap[hash].particles) {
+							if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
+								/*
+								float distX = var_PartC[idx].pos.x - Part.pos.x;
+								float distY = var_PartC[idx].pos.y - Part.pos.y;
+								float distZ = var_PartC[idx].pos.z - Part.pos.z;
+								float distance = sqrt(distX * distX + distY * distY + distZ * distZ);
+								*/
+								float distance = glm::distance(var_PartC[idx].pos, Part.pos);
+								if (distance <= searchRadius) {
+									Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
+									uniqueIds.insert(idx); // Mark this ID as added
+									//if (var_PartC[idx].isboundary && Part.isboundary == false) {
+									//	Part.drawme = true;
+									//}
+
 								}
 							}
 						}
 					}
 				}
 			}
-			if (Part.IdNdistNsub.size() < animationneighbourscount && Part.isboundary == false) {
-				Part.drawme = true;
-			}
-			if (Part.IdNdistNsub.size() > compbord && Part.isboundary == false) {
-				Part.computeme = true;
-				totalcomp++;
-			}
+		}
+		if (Part.IdNdistNsub.size() < animationneighbourscount) {
+			Part.drawme = true;
+		}
+		if (Part.IdNdistNsub.size() > compbord) {
+			Part.computeme = true;
+			totalcomp++;
 		}
 	}
 }
@@ -541,45 +542,44 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
 	totalcomp = 0;
 #pragma omp parallel for
-	for (int i = 0; i < var_PartC.size(); ++i) {
+	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord ) {
-			Part.IdNdistNsub.clear();
-			Part.drawme = false;
-			Part.computeme = false;
-			Part.Aff = 0;
-			std::unordered_set<int> uniqueIds; // Set to track unique IDs
-			for (int x = -1; x <= 1; x++) {
-				for (int y = -1; y <= 1; y++) {
-						int hash = hashFunction2D(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius);
-						if (hashmap.find(hash) != hashmap.end()) {
-							for (int idx : hashmap[hash].particles) {
-								if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
-									float distX = var_PartC[idx].pos.x - Part.pos.x;
-									float distY = var_PartC[idx].pos.y - Part.pos.y;
-									float distance = sqrt(distX * distX + distY * distY);
-									if (distance <= searchRadius) {
-										
-										Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
-										uniqueIds.insert(idx); // Mark this ID as added
-										//if (var_PartC[idx].isboundary && Part.isboundary == false) {
-										//	Part.drawme = true;
-										//}
-										
-									}
-								}
+		Part.IdNdistNsub.clear();
+		Part.drawme = false;
+		Part.computeme = false;
+		Part.Aff = 0;
+		std::unordered_set<int> uniqueIds; // Set to track unique IDs
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				int hash = hashFunction2D(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius);
+				if (hashmap.find(hash) != hashmap.end()) {
+					for (int idx : hashmap[hash].particles) {
+						if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
+							float distX = var_PartC[idx].pos.x - Part.pos.x;
+							float distY = var_PartC[idx].pos.y - Part.pos.y;
+							float distance = sqrt(distX * distX + distY * distY);
+							if (distance <= searchRadius) {
+
+								Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
+								uniqueIds.insert(idx); // Mark this ID as added
+								//if (var_PartC[idx].isboundary && Part.isboundary == false) {
+								//	Part.drawme = true;
+								//}
+
 							}
 						}
+					}
 				}
 			}
-			if (Part.IdNdistNsub.size() < animationneighbourscount && Part.isboundary == false) {
-				Part.drawme = true;
-			}
-			if (Part.IdNdistNsub.size() > compbord && Part.isboundary == false) {
-				Part.computeme = true;
-				totalcomp++;
-			}
 		}
+		if (Part.IdNdistNsub.size() < animationneighbourscount) {
+			Part.drawme = true;
+		}
+		if (Part.IdNdistNsub.size() > compbord) {
+			Part.computeme = true;
+			totalcomp++;
+		}
+		
 	}
 }
 
@@ -588,40 +588,38 @@ void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC, std::unor
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (/*Part.isboundary == false && */Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord) {
-			Part.IdNdistNsub.clear();
-			Part.drawme = false;
-			Part.computeme = false;
-			Part.Aff = 0;
-			std::unordered_set<int> uniqueIds; // Set to track unique IDs
-			for (int x = -1; x <= 1; x++) {
-				for (int y = -1; y <= 1; y++) {
-					int hash = uniformgridhash(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius, Part.pos.z + 0 * searchRadius);
-					if (hashmap.find(hash) != hashmap.end()) {
-						for (int idx : hashmap[hash].particles) {
-							if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
-								float distX = var_PartC[idx].pos.x - Part.pos.x;
-								float distY = var_PartC[idx].pos.y - Part.pos.y;
-								float distance = sqrt(distX * distX + distY * distY);
-								if (distance < searchRadius) {
-									Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
-									uniqueIds.insert(idx); // Mark this ID as added
-									if (var_PartC[idx].isboundary && Part.isboundary == false) {
-										Part.drawme = true;
-									}
+		Part.IdNdistNsub.clear();
+		Part.drawme = false;
+		Part.computeme = false;
+		Part.Aff = 0;
+		std::unordered_set<int> uniqueIds; // Set to track unique IDs
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				int hash = uniformgridhash(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius, Part.pos.z + 0 * searchRadius);
+				if (hashmap.find(hash) != hashmap.end()) {
+					for (int idx : hashmap[hash].particles) {
+						if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
+							float distX = var_PartC[idx].pos.x - Part.pos.x;
+							float distY = var_PartC[idx].pos.y - Part.pos.y;
+							float distance = sqrt(distX * distX + distY * distY);
+							if (distance < searchRadius) {
+								Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
+								uniqueIds.insert(idx); // Mark this ID as added
+								if (var_PartC[idx].isboundary && Part.isboundary == false) {
+									Part.drawme = true;
 								}
 							}
 						}
 					}
 				}
 			}
-			if (Part.IdNdistNsub.size() < animationneighbourscount && Part.isboundary == false) {
-				Part.drawme = true;
-			}
-			if (Part.IdNdistNsub.size() > compbord && Part.isboundary == false) {
-				Part.computeme = true;
-				totalcomp++;
-			}
+		}
+		if (Part.IdNdistNsub.size() < animationneighbourscount && Part.isboundary == false) {
+			Part.drawme = true;
+		}
+		if (Part.IdNdistNsub.size() > compbord && Part.isboundary == false) {
+			Part.computeme = true;
+			totalcomp++;
 		}
 	}
 }
@@ -810,64 +808,98 @@ void makeAllAfffast(std::vector<iisphparticle>& PartC) {
 	}
 }
 void makeAllAfffparallel(std::vector<iisphparticle>& PartC) {
-	glm::vec3 Kerndelder_jf_if;
 	glm::vec3 jjf;
 	glm::vec3 jjb;
 
-#pragma omp parallel for private(Kerndelder_jf_if, jjf, jjb) 
-	for (int i = 0; i < var_MaxParticles; ++i) {
+#pragma omp parallel for private(jjf, jjb) 
+	for (int i = 0; i < (var_fluidpart); ++i) {
 		iisphparticle& Part = PartC[i];
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			Part.Aff = 0.f;
-			float if_jf1 = 0;
-			float if_jf2 = 0;
-			float if_jb = 0;
-			auto& neighbors = Part.IdNSubKernelder;
+		Part.Aff = 0.f;
+		float if_jf1 = 0;
+		float if_jf2 = 0;
+		float if_jb = 0;
+		auto& neighbors = Part.IdNSubKernelder;
 
-			for (std::tuple<int, glm::vec3, glm::vec3>& jf : neighbors) {
-				if (PartC[std::get<0>(jf)].isboundary == false && PartC[std::get<0>(jf)].index != Part.index) {
-					jjf = glm::vec3(0.f, 0.f, 0.f);
-					jjb = glm::vec3(0.f, 0.f, 0.f);
+		for (std::tuple<int, glm::vec3, glm::vec3>& jf : neighbors) {
+			if (PartC[std::get<0>(jf)].isboundary == false && PartC[std::get<0>(jf)].index != Part.index) {
+				jjf = glm::vec3(0.f, 0.f, 0.f);
+				jjb = glm::vec3(0.f, 0.f, 0.f);
 
-					for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
-						if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != Part.index) {
-							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
-						}
-						if (PartC[std::get<0>(jj)].isboundary) {
-							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
-						}
+				for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
+					if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != Part.index) {
+						jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 					}
-					if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
-				}
-				if (PartC[std::get<0>(jf)].isboundary == false && PartC[std::get<0>(jf)].index != Part.index) {
-					Kerndelder_jf_if = glm::vec3(0, 0, 0);
-
-					for (std::tuple<int, glm::vec3, glm::vec3>& tmp : PartC[std::get<0>(jf)].IdNSubKernelder) {
-						if (PartC[std::get<0>(tmp)].index == Part.index) {
-							Kerndelder_jf_if = std::get<2>(tmp);
-							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((Part.m / (p0p0) * Kerndelder_jf_if), std::get<2>(jf));
-						}
+					if (PartC[std::get<0>(jj)].isboundary) {
+						jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 					}
 				}
-				if (PartC[std::get<0>(jf)].isboundary) {
-					jjf = glm::vec3(0.f, 0.f, 0.f);
-					jjb = glm::vec3(0.f, 0.f, 0.f);
-
-					for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
-						if (PartC[std::get<0>(jj)].isboundary == false) {
-							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
-						}
-						if (PartC[std::get<0>(jj)].isboundary) {
-							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
-						}
-					}
-					if_jb += glm::dot(PartC[std::get<0>(jf)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jf));
-				}
+				if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
+				if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((Part.m / (p0p0) * -std::get<2>(jf)), std::get<2>(jf));
 			}
-			Part.Aff = (deltaT * deltaT) * (if_jf1 + if_jf2 + if_jb);
+			if (PartC[std::get<0>(jf)].isboundary == true && PartC[std::get<0>(jf)].index != Part.index) {
+				jjf = glm::vec3(0.f, 0.f, 0.f);
+				jjb = glm::vec3(0.f, 0.f, 0.f);
+
+				for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
+					if (PartC[std::get<0>(jj)].isboundary == false) {
+						jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
+					}
+					if (PartC[std::get<0>(jj)].isboundary) {
+						jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
+					}
+				}
+				if_jb += glm::dot(PartC[std::get<0>(jf)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jf));
+			}
 		}
+		Part.Aff = (deltaT * deltaT) * (if_jf1 + if_jf2 + if_jb);
+
+	}
+
+#pragma omp parallel for private(jjf, jjb) 
+	for (int i = var_fluidpart; i < (var_fluidpart +var_spezialboundpart); ++i) {
+		iisphparticle& Part = PartC[i];
+		Part.Aff = 0.f;
+		float if_jf1 = 0;
+		float if_jf2 = 0;
+		float if_jb = 0;
+		auto& neighbors = Part.IdNSubKernelder;
+
+		for (std::tuple<int, glm::vec3, glm::vec3>& jf : neighbors) {
+			if (PartC[std::get<0>(jf)].isboundary == false) {
+				//std::cout << Part.precompAff << "firstcase" << std::endl;
+				jjf = glm::vec3(0.f, 0.f, 0.f);
+				jjb = glm::vec3(0.f, 0.f, 0.f);
+				for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
+					if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != Part.index) {
+						jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
+					}
+					if (PartC[std::get<0>(jj)].isboundary) {
+						jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
+					}
+				}
+				if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
+				if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((Part.m / (p0p0) * -std::get<2>(jf)), std::get<2>(jf));
+			}
+			if (PartC[std::get<0>(jf)].isboundary == true) {
+				//std::cout << Part.precompAff << "secondtcase" << std::endl;
+				jjf = glm::vec3(0.f, 0.f, 0.f);
+				jjb = glm::vec3(0.f, 0.f, 0.f);
+
+				for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
+					if (PartC[std::get<0>(jj)].isboundary == false) {
+						jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
+					}
+					if (PartC[std::get<0>(jj)].isboundary) {
+						jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
+					}
+				}
+				if_jb += glm::dot(PartC[std::get<0>(jf)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jf));
+			}
+		}
+		Part.Aff = (deltaT * deltaT) * (if_jf1 + if_jf2 +if_jb);
 	}
 }
+
 void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC) {
 	glm::vec3 Kerndelder_jf_if;
 	glm::vec3 jjf;
@@ -1078,65 +1110,77 @@ float makeAlldenserrAvg(std::vector<iisphparticle>& var_PartC) {
 	return 0.f; // default return in case all conditions are false
 }
 void makeAllPresA(std::vector<iisphparticle>& var_PartC) {
-//#pragma omp parallel for
-	for (auto& Part : var_PartC) {
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			Part.presA = glm::vec3(0, 0, 0);
-			glm::vec3 PresAf(0.f, 0.f, 0.f);
-			glm::vec3 PresAb(0.f, 0.f, 0.f);
-			for (std::tuple<int, glm::vec3, glm::vec3>&neig : Part.IdNSubKernelder) {
-				if (Part.index != std::get<0>(neig)) {
-					if (var_PartC[std::get<0>(neig)].isboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressureiter / (p0p0)) * std::get<2>(neig);
-					}
-					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
-					}
+#pragma omp parallel for
+	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); i++) {
+		iisphparticle& Part = var_PartC[i];
+		Part.presA = glm::vec3(0, 0, 0);
+		glm::vec3 PresAf(0.f, 0.f, 0.f);
+		glm::vec3 PresAb(0.f, 0.f, 0.f);
+		for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
+			if (Part.index != std::get<0>(neig)) {
+				if (var_PartC[std::get<0>(neig)].isboundary) {
+					PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressureiter / (p0p0)) * std::get<2>(neig);
+				}
+				else {
+					PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0)+var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 				}
 			}
-			Part.presA = (PresAf + (gammapres * PresAb));
 		}
+		Part.presA = (PresAf + (gammapres * PresAb));
 	}
 }
 void makeAllPresAwithbound(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
-	for (int i = 0; i < var_MaxParticles; i++) {
+	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			Part.presA = glm::vec3(0, 0, 0);
-			glm::vec3 PresAf(0.f, 0.f, 0.f);
-			glm::vec3 PresAb(0.f, 0.f, 0.f);
-			for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
-				if (Part.index != std::get<0>(neig)) {
-					if (var_PartC[std::get<0>(neig)].isboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
-					}
-					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
-					}
+		Part.presA = glm::vec3(0, 0, 0);
+		glm::vec3 PresAf(0.f, 0.f, 0.f);
+		glm::vec3 PresAb(0.f, 0.f, 0.f);
+		for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
+			if (Part.index != std::get<0>(neig)) {
+				if (var_PartC[std::get<0>(neig)].isboundary) {
+					PresAb -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0)+var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
+				}
+				else {
+					PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0)+var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 				}
 			}
-			Part.presA = (PresAf + (gammapres * PresAb));
 		}
+		Part.presA = (PresAf + (gammapres * PresAb));
 	}
 }
 void makeBoundPres(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
-	for (int i = 0; i < var_MaxParticles; i++) {
+	for (int i = var_fluidpart + var_spezialboundpart; i < var_MaxParticles; i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary) {
-			float firstsum = 0;
-			float secondsum = 0;
-			float thirdsum = 0;
-			for (auto& neigh : Part.IdNdistNsub) {
-				if (var_PartC[std::get<0>(neigh)].isboundary == false) {
-					firstsum += var_PartC[std::get<0>(neigh)].pressureiter * makesinglekernel(Part.pos, var_PartC[std::get<0>(neigh)].pos);
-					secondsum += var_PartC[std::get<0>(neigh)].density * std::get<1>(neigh) * makesinglekernel(Part.pos, var_PartC[std::get<0>(neigh)].pos);
-					thirdsum += makesinglekernel(Part.pos, var_PartC[std::get<0>(neigh)].pos);
-				}
+		float firstsum = 0;
+		float secondsum = 0;
+		float thirdsum = 0;
+		for (auto& neigh : Part.IdNdistNsub) {
+			if (var_PartC[std::get<0>(neigh)].isboundary == false) {
+				firstsum += var_PartC[std::get<0>(neigh)].pressureiter * makesinglekernel(Part.pos, var_PartC[std::get<0>(neigh)].pos);
+				secondsum += var_PartC[std::get<0>(neigh)].density * std::get<1>(neigh) * makesinglekernel(Part.pos, var_PartC[std::get<0>(neigh)].pos);
+				thirdsum += makesinglekernel(Part.pos, var_PartC[std::get<0>(neigh)].pos);
 			}
-			Part.pressureiter = (firstsum + gravity * secondsum) / thirdsum;
 		}
+		Part.pressureiter = (firstsum + gravity * secondsum) / thirdsum;
+	}
+}
+void makeBoundPres2D(std::vector<iisphparticle>& var_PartC) {
+#pragma omp parallel for
+	for (int i = var_fluidpart + var_spezialboundpart; i < var_MaxParticles; i++) {
+		iisphparticle& Part = var_PartC[i];
+		float firstsum = 0;
+		float secondsum = 0;
+		float thirdsum = 0;
+		for (auto& neigh : Part.IdNdistNsub) {
+			if (var_PartC[std::get<0>(neigh)].isboundary == false) {
+				firstsum += var_PartC[std::get<0>(neigh)].pressureiter * makesinglekernel2D(Part.pos, var_PartC[std::get<0>(neigh)].pos);
+				secondsum += var_PartC[std::get<0>(neigh)].density * std::get<1>(neigh) * makesinglekernel2D(Part.pos, var_PartC[std::get<0>(neigh)].pos);
+				thirdsum += makesinglekernel(Part.pos, var_PartC[std::get<0>(neigh)].pos);
+			}
+		}
+		Part.pressureiter = (firstsum + gravity * secondsum) / thirdsum;
 	}
 }
 
@@ -1150,6 +1194,16 @@ float makesinglekernel(glm::vec3& posi, glm::vec3& posj) {
 	float t2 = std::max((2 - d), 0.f);
 	return alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848;
 }
+float makesinglekernel2D(glm::vec3& posi, glm::vec3& posj) {
+	float distX = posi.x - posj.x;
+	float distY = posi.y - posj.y;
+	float distance = sqrt(distX * distX + distY * distY);
+	float d = distance / h;
+	float t1 = std::max((1 - d), 0.f);
+	float t2 = std::max((2 - d), 0.f);
+	return alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 1.0000280157848;
+}
+
 
 glm::vec3 makesinglekernelder(glm::vec3& posi, glm::vec3& posj) {
 	float distX = posi.x - posj.x;
@@ -1165,46 +1219,42 @@ glm::vec3 makesinglekernelder(glm::vec3& posi, glm::vec3& posj) {
 
 void makeAllPresAtwoD(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
-	for (int i = 0; i < var_MaxParticles; i++) {
+	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			Part.presA = glm::vec3(0, 0, 0);
-			glm::vec3 PresAf(0.f, 0.f, 0.f);
-			glm::vec3 PresAb(0.f, 0.f, 0.f);
-			for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
-				if (Part.index != std::get<0>(neig)) {
-					if (var_PartC[std::get<0>(neig)].isboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressureiter / (p0p0)) * std::get<2>(neig);
-					}
-					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
-					}
+		Part.presA = glm::vec3(0, 0, 0);
+		glm::vec3 PresAf(0.f, 0.f, 0.f);
+		glm::vec3 PresAb(0.f, 0.f, 0.f);
+		for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
+			if (Part.index != std::get<0>(neig)) {
+				if (var_PartC[std::get<0>(neig)].isboundary) {
+					PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressureiter / (p0p0)) * std::get<2>(neig);
+				}
+				else {
+					PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0)+var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 				}
 			}
-			Part.presA = (PresAf + (gammapres * PresAb)) * glm::vec3(1.f,1.f,0);
 		}
+		Part.presA = (PresAf + (gammapres * PresAb)) * glm::vec3(1.f, 1.f, 0);
 	}
 }
 void makeAllPresAwithboundtwoD(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
-	for (int i = 0; i < var_MaxParticles; i++) {
+	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			Part.presA = glm::vec3(0, 0, 0);
-			glm::vec3 PresAf(0.f, 0.f, 0.f);
-			glm::vec3 PresAb(0.f, 0.f, 0.f);
-			for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
-				if (Part.index != std::get<0>(neig)) {
-					if (var_PartC[std::get<0>(neig)].isboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
-					}
-					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
-					}
+		Part.presA = glm::vec3(0, 0, 0);
+		glm::vec3 PresAf(0.f, 0.f, 0.f);
+		glm::vec3 PresAb(0.f, 0.f, 0.f);
+		for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
+			if (Part.index != std::get<0>(neig)) {
+				if (var_PartC[std::get<0>(neig)].isboundary) {
+					PresAb -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0)+var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
+				}
+				else {
+					PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0)+var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 				}
 			}
-			Part.presA = (PresAf + (gammapres * PresAb));
 		}
+		Part.presA = (PresAf + (gammapres * PresAb));
 	}
 }
 void makeAllPresAwithdens(std::vector<iisphparticle>& var_PartC) {
@@ -1292,42 +1342,39 @@ void secondloop(std::vector<iisphparticle>& var_PartC) {
 void secondloop(std::vector<iisphparticle>& var_PartC) {
 	
 #pragma omp parallel for
-	for (int i = 0; i < var_MaxParticles; i++) {
+	for (int i = 0; i < (var_fluidpart+var_spezialboundpart); i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (!Part.isboundary || Part.isfloatingboundary) {
-			Part.AP = 0;
-			float APF = 0;
-			float APB = 0;
-			const auto& neighbors = Part.IdNSubKernelder;
-			for (const auto& neig : neighbors) {
-				int neig_idx = std::get<0>(neig);
-				const glm::vec3& kernel_deriv = std::get<2>(neig);
-				if (Part.index != neig_idx) {
-					if (var_PartC[neig_idx].isboundary) {
-						APB += var_PartC[neig_idx].m * glm::dot(Part.presA - var_PartC[neig_idx].presA, kernel_deriv);
-					}
-					else {
-						APF += var_PartC[neig_idx].m * glm::dot((Part.presA - var_PartC[neig_idx].presA), kernel_deriv);
-					}
+		Part.AP = 0;
+		float APF = 0;
+		float APB = 0;
+		const auto& neighbors = Part.IdNSubKernelder;
+		for (const auto& neig : neighbors) {
+			int neig_idx = std::get<0>(neig);
+			const glm::vec3& kernel_deriv = std::get<2>(neig);
+			if (Part.index != neig_idx) {
+				if (var_PartC[neig_idx].isboundary) {
+					APB += var_PartC[neig_idx].m * glm::dot(Part.presA - var_PartC[neig_idx].presA, kernel_deriv);
+				}
+				else {
+					APF += var_PartC[neig_idx].m * glm::dot((Part.presA - var_PartC[neig_idx].presA), kernel_deriv);
 				}
 			}
-			float deltaT2 = deltaT * deltaT;
-			float APB_APF = APB + APF;
-			Part.AP = deltaT2 * APB_APF;
-			float tmpap = deltaT2 * APB_APF;
-			Part.densityerror = (Part.AP - Part.sf)/p0;
+		}
+		float deltaT2 = deltaT * deltaT;
+		float APB_APF = APB + APF;
+		Part.AP = deltaT2 * APB_APF;
+		float tmpap = deltaT2 * APB_APF;
+		Part.densityerror = (Part.AP - Part.sf) / p0;
 
-			//if (Part.Aff >= 0.000000001 || Part.Aff <= -0.000000001) 
-			if (Part.Aff != 0)
-			{
-				Part.pressureiter = glm::max(Part.pressureiter + (omega * (Part.sf - tmpap) / Part.Aff), 0.f);
-				//Part.pressureiter = Part.pressureiter + (omega * (Part.sf - tmpap) / Part.Aff);
-			}
-			else {
-				Part.pressureiter = glm::max(Part.pressureiter, 0.f);
-				//Part.pressureiter = Part.pressureiter ;
-			}
-			
+		//if (Part.Aff >= 0.000000001 || Part.Aff <= -0.000000001) 
+		if (Part.Aff != 0)
+		{
+			Part.pressureiter = glm::max(Part.pressureiter + (omega * (Part.sf - tmpap) / Part.Aff), 0.f);
+			//Part.pressureiter = Part.pressureiter + (omega * (Part.sf - tmpap) / Part.Aff);
+		}
+		else {
+			Part.pressureiter = glm::max(Part.pressureiter, 0.f);
+			//Part.pressureiter = Part.pressureiter ;
 		}
 	}
 }
@@ -1699,7 +1746,7 @@ void makefloatingpartmass2d(std::vector<iisphparticle>& var_PartC, std::unordere
 }
 
 
-void initrigidbodies(std::vector<iisphparticle>& PartC) {
+void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap) {
 	posofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
 	velofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
 	rotMat = glm::mat3(1.0f); // Identity matrix
@@ -1752,6 +1799,7 @@ void initrigidbodies(std::vector<iisphparticle>& PartC) {
 		//	<< I_inv[1][0] << " " << I_inv[1][1] << " " << I_inv[1][2] << "\n"
 		//	<< I_inv[2][0] << " " << I_inv[2][1] << " " << I_inv[2][2] << "\n";
 	}
+
 }
 
 void updaterigidbody(std::vector<iisphparticle>& PartC) {
@@ -1780,7 +1828,7 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 	// Kombiniere die Komponenten wieder zu Vektoren
 	glm::vec3 torque(torque_x, torque_y, torque_z);
 	glm::vec3 linforce(linforce_x, linforce_y, linforce_z);
-	torque = torque * 0.01f ;
+	//torque = torque * 0.01f ;
 	
 
 	xCM += deltaT * vCM;

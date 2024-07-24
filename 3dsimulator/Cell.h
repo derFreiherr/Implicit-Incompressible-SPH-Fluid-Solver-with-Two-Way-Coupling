@@ -13,7 +13,7 @@
 #include <iostream>
 #include <fstream>
 using namespace Eigen;
-
+extern int var_spezialboundpart;
 extern float cellsize;
 extern int hashsize;
 extern const int p1;
@@ -169,9 +169,11 @@ extern void makeAllAfffparallel(std::vector<iisphparticle>& PartC);
 extern void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
 extern void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC);
 extern void calculatecenterofmass(std::vector<iisphparticle>& PartC);
-extern void initrigidbodies(std::vector<iisphparticle>& PartC);
+extern void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap);
 extern void updaterigidbody(std::vector<iisphparticle>& PartC);
 extern glm::mat3 skewSymmetricMatrix(const glm::vec3& v);
 extern void makefloatingpartmass2d(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
 extern void makefloatingpartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
 extern std::vector<glm::vec3> parseObjFile(const std::string& filePath);
+extern float makesinglekernel2D(glm::vec3& posi, glm::vec3& posj);
+extern void makeBoundPres2D(std::vector<iisphparticle>& var_PartC);

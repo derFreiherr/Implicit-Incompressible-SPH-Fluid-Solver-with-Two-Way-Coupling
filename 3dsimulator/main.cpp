@@ -58,6 +58,7 @@ int var_nz = 30;
 int var_oneway = 50;
 int var_fluidpart = var_nx * var_ny * var_nz;
 int var_MaxParticles = var_nx * var_ny * var_nz + (var_oneway * var_oneway * 12);
+int var_spezialboundpart = 0;
 //constants__________________________________________________________________
 float pi_F = glm::pi<float>();
 const float h = 0.015625;
@@ -150,6 +151,8 @@ float predveltime = 0.f;
 float computeallsftime = 0.f;
 float computeallafftime = 0.f;
 float looptime = 0.f;
+float everythingtime = 0.f;
+float overheadtime = 0.f;
 bool makesingle = true;
 float teslatime = 0.f;
 bool maketesla = false;
@@ -418,6 +421,7 @@ int main(void)
 		double delta = currentTime - lastTime;
 		lastTime = currentTime;
 
+		auto start_alltime = std::chrono::high_resolution_clock::now();
 
 		computeMatricesFromInputs();
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
@@ -480,7 +484,7 @@ int main(void)
 				makepartmass(var_PartC, hashmap);
 			}
 		}if (smalldambreaktestscen) {
-			upperviualbord = 100;
+			upperviualbord = 120*h;
 			lowervisualbord = -10;
 			position = glm::vec3(15, 5, 50);
 			firstdatapath = "breakingDamTestSmall";
@@ -520,7 +524,7 @@ int main(void)
 				makepartmass(var_PartC, hashmap);
 			}
 			makefloatingpartmass(var_PartC, hashmap);
-			initrigidbodies(var_PartC);
+			initrigidbodies(var_PartC, hashmap);
 		}
 		if (tesla) {
 			upperviualbord = 210;
@@ -595,7 +599,7 @@ int main(void)
 		}
 		if (watercol) {
 			gammapres = 0.7;
-			deltaTmax = 0.008;
+			deltaTmax = 0.0008;
 			upperviualbord = 200 + watercolheight;
 			lowervisualbord = -10;
 			k = 500000;
@@ -610,7 +614,7 @@ int main(void)
 			singlewall = true;
 			compbord = 26;
 			denistyerrormax = 0.1;
-			visc_fluid = 0.0025;
+			visc_fluid = 0.025;
 			visc_boundary = 0.0025;
 			watercolumn(CameraPosition, var_PartC);
 			watercol = false;
@@ -624,7 +628,7 @@ int main(void)
 				makepartmass(var_PartC, hashmap);
 			}
 			makefloatingpartmass(var_PartC, hashmap);
-			initrigidbodies(var_PartC);
+			initrigidbodies(var_PartC, hashmap);
 		}
 		if (smallwatercol) {
 			//gammapres = 0.5;
@@ -658,7 +662,7 @@ int main(void)
 				makepartmass(var_PartC, hashmap);
 			}
 			makefloatingpartmass(var_PartC, hashmap);
-			initrigidbodies(var_PartC);
+			initrigidbodies(var_PartC, hashmap);
 			TwoDsimul = false;
 			iisph = true;
 			ssph = false;
@@ -704,7 +708,7 @@ int main(void)
 				makepartmassTwoD(var_PartC, hashmap);
 			}
 			makefloatingpartmass2d(var_PartC, hashmap);
-			initrigidbodies(var_PartC);
+			initrigidbodies(var_PartC, hashmap);
 			resetvalues = true;
 			
 		}
@@ -747,7 +751,7 @@ int main(void)
 				makepartmassTwoD(var_PartC, hashmap);
 			}
 			makefloatingpartmass2d(var_PartC, hashmap);
-			initrigidbodies(var_PartC);
+			initrigidbodies(var_PartC, hashmap);
 		}
 		if (rotatinganimation) {
 			upperviualbord = 200;
@@ -1164,7 +1168,7 @@ int main(void)
 		glDisableVertexAttribArray(2);
 		auto end_d = std::chrono::high_resolution_clock::now();
 		auto duration_d = std::chrono::duration_cast<std::chrono::microseconds>(end_d - start_d);
-		
+		auto duration_alltime = std::chrono::duration_cast<std::chrono::microseconds>(end_d - start_alltime);
 		if (oldanimstep != animationstep) {
 			maxdenserrold = std::max(maxdenserrold, denserrold);
 			numunderpop = var_fluidpart - totalcomp;
@@ -1177,7 +1181,7 @@ int main(void)
 				maxiter = currentiter;
 			}
 			avgiter += currentiter;
-			totalComputationTime = (delta > 0.0f) ? delta : 1.0f;
+			totalComputationTime = (duration_alltime.count() > 0.0f) ? duration_alltime.count() : 1.0f;
 			if (totalComputationTime > maxcomptime) {
 				maxcomptime = totalComputationTime;
 			}
@@ -1287,7 +1291,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", neighSearchTime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", (neighSearchTime / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", (neighSearchTime / (totalComputationTime )) * 100);
 
 				// Row for Drawing Time
 				ImGui::TableNextRow();
@@ -1296,7 +1300,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", drawingTime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", (drawingTime / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", (drawingTime / (totalComputationTime )) * 100);
 
 				// Row for Other Computation Time
 				ImGui::TableNextRow();
@@ -1305,7 +1309,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", kerneltime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", ((kerneltime) / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", ((kerneltime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -1313,7 +1317,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", densitytime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", ((densitytime) / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", ((densitytime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -1321,7 +1325,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", nonpresatime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", ((nonpresatime) / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", ((nonpresatime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -1329,7 +1333,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", predveltime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", ((predveltime) / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", ((predveltime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -1337,7 +1341,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", computeallsftime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", ((computeallsftime) / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", ((computeallsftime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -1345,7 +1349,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", computeallafftime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", ((computeallafftime) / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", ((computeallafftime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -1353,7 +1357,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", looptime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", ((looptime) / (totalComputationTime * 1000000)) * 100);
+				ImGui::Text("%.1f%%", ((looptime) / (totalComputationTime )) * 100);
 				// Row for Total Computation Time
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -1361,7 +1365,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%.1f ms", othercomputationTime);
 				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%.1f%%", ((othercomputationTime) / (totalComputationTime*1000000)) * 100);
+				ImGui::Text("%.1f%%", ((othercomputationTime) / (totalComputationTime)) * 100);
 
 				// End the table
 				ImGui::EndTable();
