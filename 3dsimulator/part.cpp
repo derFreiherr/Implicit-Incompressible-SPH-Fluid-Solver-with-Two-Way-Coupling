@@ -63,7 +63,7 @@ void Particle::makeA(Particle ParticlesContainer[])
 	glm::vec3 ViscA(0.f, 0.f, 0.f);
 	for (std::tuple<int, glm::vec3, glm::vec3>neig : IdNSubKernelder) {
 		if (ParticlesContainer[std::get<0>(neig)].isboundary) {
-			PresA -= m * (pressure / (density * density) + pressure / (p0 * p0)) * std::get<2>(neig);
+			PresA -= m * (pressure / (density * density) + pressure / (p0p0)) * std::get<2>(neig);
 			ViscA += (m / p0) * (vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
 		}
 		else {
@@ -112,10 +112,10 @@ void Particle::makePresA(Particle PartC[]) {
 	for (std::tuple<int, glm::vec3, glm::vec3>neig : IdNSubKernelder) {
 		if (index != std::get<0>(neig)) {
 			if (PartC[std::get<0>(neig)].isboundary) {
-				PresAb -= PartC[std::get<0>(neig)].m * (2 * pressureiter / (p0 * p0)) * std::get<2>(neig);
+				PresAb -= PartC[std::get<0>(neig)].m * (2 * pressureiter / (p0p0)) * std::get<2>(neig);
 			}
 			else {
-				PresAf -= PartC[std::get<0>(neig)].m * (pressureiter / (p0 * p0) + PartC[std::get<0>(neig)].pressureiter / (p0 * p0)) * std::get<2>(neig);
+				PresAf -= PartC[std::get<0>(neig)].m * (pressureiter / (p0p0) + PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 			}
 		}
 	}

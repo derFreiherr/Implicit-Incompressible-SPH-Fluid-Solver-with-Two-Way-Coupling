@@ -11,6 +11,7 @@
 #include <random>
 #include "Eigen/Dense"
 #include <iostream>
+#include <fstream>
 using namespace Eigen;
 
 extern float cellsize;
@@ -27,6 +28,8 @@ extern float deltaTmax;
 extern float deltaTmin;
 extern float deltaT;
 extern const float h;
+extern const float p0p0;
+extern const float p0;
 extern float currentdens;
 extern float neighSearchTime;
 extern float  drawingTime; 
@@ -169,3 +172,6 @@ extern void calculatecenterofmass(std::vector<iisphparticle>& PartC);
 extern void initrigidbodies(std::vector<iisphparticle>& PartC);
 extern void updaterigidbody(std::vector<iisphparticle>& PartC);
 extern glm::mat3 skewSymmetricMatrix(const glm::vec3& v);
+extern void makefloatingpartmass2d(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
+extern void makefloatingpartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
+extern std::vector<glm::vec3> parseObjFile(const std::string& filePath);

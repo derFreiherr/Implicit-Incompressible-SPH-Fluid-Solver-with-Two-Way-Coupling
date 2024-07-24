@@ -154,11 +154,11 @@ for (int i = 0; i < var_PartC.size(); ++i) {
 			for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
 				if (Part.index != std::get<0>(neig)) {
 					if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressure / (p0 * p0)) * std::get<2>(neig);
+						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressure / (p0p0)) * std::get<2>(neig);
 						ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
 					}
 					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressure / (p0 * p0) + var_PartC[std::get<0>(neig)].pressure / (p0 * p0)) * std::get<2>(neig);
+						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressure / (p0p0) + var_PartC[std::get<0>(neig)].pressure / (p0p0)) * std::get<2>(neig);
 						ViscAf += (var_PartC[std::get<0>(neig)].m / var_PartC[std::get<0>(neig)].density) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
 					}
 				}
@@ -181,11 +181,11 @@ void makeAllAtwoD(std::vector<iisphparticle>& var_PartC) {
 			for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
 				if (Part.index != std::get<0>(neig)) {
 					if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressure / (p0 * p0)) * std::get<2>(neig);
+						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressure / (p0p0)) * std::get<2>(neig);
 						ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
 					}
 					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressure / (p0 * p0) + var_PartC[std::get<0>(neig)].pressure / (p0 * p0)) * std::get<2>(neig);
+						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressure / (p0p0) + var_PartC[std::get<0>(neig)].pressure / (p0p0)) * std::get<2>(neig);
 						ViscAf += (var_PartC[std::get<0>(neig)].m / var_PartC[std::get<0>(neig)].density) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
 					}
 				}
@@ -208,7 +208,7 @@ void MakeAllNonpresA(std::vector<iisphparticle>& var_PartC ) {
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if ((Part.isboundary == false || Part.isfloatingboundary)) {
 			glm::vec3 ViscAf(0.f, 0.f, 0.f);
 			glm::vec3 ViscAb(0.f, 0.f, 0.f);
 			glm::vec3 surfacetens(0.f, 0.f, 0.f);
@@ -295,7 +295,7 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 //#pragma omp parallel for reduction(+:denserrold, numofp0high)
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false ) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.denstolow = true;
 			float dens = 0;
 			for (float& kern : Part.Kernel) {
@@ -316,6 +316,7 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 					usemefordens.push_back(Part.index);
 				}
 			}
+
 			/*
 			if (clampp0 == true) {
 				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
@@ -333,7 +334,6 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 			}
 			*/
 		}
-		
 		if (Part.isboundary == true && Part.isfloatingboundary == false) {
 			Part.density = p0;
 			Part.denstolow = true;
@@ -492,7 +492,7 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord) {
+		if (Part.isboundary == false && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord) {
 			Part.IdNdistNsub.clear();
 			Part.drawme = false;
 			Part.computeme = false;
@@ -513,9 +513,10 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 									if (distance <= searchRadius) {
 										Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
 										uniqueIds.insert(idx); // Mark this ID as added
-										if (var_PartC[idx].isboundary && Part.isboundary == false) {
-											Part.drawme = true;
-										}
+										//if (var_PartC[idx].isboundary && Part.isboundary == false) {
+										//	Part.drawme = true;
+										//}
+										
 									}
 								}
 							}
@@ -542,7 +543,7 @@ void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unordered_m
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (/*Part.isboundary == false && */Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord) {
+		if (Part.isboundary == false && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord ) {
 			Part.IdNdistNsub.clear();
 			Part.drawme = false;
 			Part.computeme = false;
@@ -558,11 +559,13 @@ void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unordered_m
 									float distY = var_PartC[idx].pos.y - Part.pos.y;
 									float distance = sqrt(distX * distX + distY * distY);
 									if (distance <= searchRadius) {
+										
 										Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
 										uniqueIds.insert(idx); // Mark this ID as added
-										if (var_PartC[idx].isboundary && Part.isboundary == false) {
-											Part.drawme = true;
-										}
+										//if (var_PartC[idx].isboundary && Part.isboundary == false) {
+										//	Part.drawme = true;
+										//}
+										
 									}
 								}
 							}
@@ -687,12 +690,12 @@ void makeAllAff1(std::vector<iisphparticle>& PartC) {
 						// fluidneighbours jjf
 						if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != PartC[i].index) {
 							//sum( jjf_m /p0*p0 * dWdt_jf_jjf)
-							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 						// boundaryneighbours jjb
 						if (PartC[std::get<0>(jj)].isboundary) {
 							//sum( jjb_m /p0*p0 * dWdt_jf_jjb)
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -708,12 +711,12 @@ void makeAllAff1(std::vector<iisphparticle>& PartC) {
 						// fluidneighbours jjf
 						if (PartC[std::get<0>(jj)].isboundary == false) {
 							//sum( jjf_m /p0*p0 * dWdt_jb_jjf)
-							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 						// boundaryneighbours jjb
 						if (PartC[std::get<0>(jj)].isboundary) {
 							//sum( jjb_m /p0*p0 * dWdt_jb_jjb)
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jb += glm::dot(PartC[std::get<0>(jb)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jb));
@@ -729,7 +732,7 @@ void makeAllAff1(std::vector<iisphparticle>& PartC) {
 						if (PartC[std::get<0>(tmp)].index == PartC[i].index) {
 							Kerndelder_jf_if = std::get<2>(tmp);
 							// sum ( jf_m * (if_m/(p0*p0) * dWdt_jf_if)* dWdt_if_jf
-							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((PartC[i].m / (p0 * p0) * Kerndelder_jf_if), std::get<2>(jf));
+							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((PartC[i].m / (p0p0) * Kerndelder_jf_if), std::get<2>(jf));
 						}
 					}
 				}
@@ -761,12 +764,12 @@ void makeAllAfffast(std::vector<iisphparticle>& PartC) {
 						// fluidneighbours jjf
 						if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != PartC[i].index) {
 							//sum( jjf_m /p0*p0 * dWdt_jf_jjf)
-							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 						// boundaryneighbours jjb
 						if (PartC[std::get<0>(jj)].isboundary) {
 							//sum( jjb_m /p0*p0 * dWdt_jf_jjb)
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -779,7 +782,7 @@ void makeAllAfffast(std::vector<iisphparticle>& PartC) {
 						if (PartC[std::get<0>(tmp)].index == PartC[i].index) {
 							Kerndelder_jf_if = std::get<2>(tmp);
 							// sum ( jf_m * (if_m/(p0*p0) * dWdt_jf_if)* dWdt_if_jf
-							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((PartC[i].m / (p0 * p0) * Kerndelder_jf_if), std::get<2>(jf));
+							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((PartC[i].m / (p0p0) * Kerndelder_jf_if), std::get<2>(jf));
 						}
 					}
 				}
@@ -791,12 +794,12 @@ void makeAllAfffast(std::vector<iisphparticle>& PartC) {
 						// fluidneighbours jjf
 						if (PartC[std::get<0>(jj)].isboundary == false) {
 							//sum( jjf_m /p0*p0 * dWdt_jb_jjf)
-							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 						// boundaryneighbours jjb
 						if (PartC[std::get<0>(jj)].isboundary) {
 							//sum( jjb_m /p0*p0 * dWdt_jb_jjb)
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jb += glm::dot(PartC[std::get<0>(jf)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -828,10 +831,10 @@ void makeAllAfffparallel(std::vector<iisphparticle>& PartC) {
 
 					for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
 						if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != Part.index) {
-							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 						if (PartC[std::get<0>(jj)].isboundary) {
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -842,7 +845,7 @@ void makeAllAfffparallel(std::vector<iisphparticle>& PartC) {
 					for (std::tuple<int, glm::vec3, glm::vec3>& tmp : PartC[std::get<0>(jf)].IdNSubKernelder) {
 						if (PartC[std::get<0>(tmp)].index == Part.index) {
 							Kerndelder_jf_if = std::get<2>(tmp);
-							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((Part.m / (p0 * p0) * Kerndelder_jf_if), std::get<2>(jf));
+							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((Part.m / (p0p0) * Kerndelder_jf_if), std::get<2>(jf));
 						}
 					}
 				}
@@ -852,10 +855,10 @@ void makeAllAfffparallel(std::vector<iisphparticle>& PartC) {
 
 					for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
 						if (PartC[std::get<0>(jj)].isboundary == false) {
-							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 						if (PartC[std::get<0>(jj)].isboundary) {
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jb += glm::dot(PartC[std::get<0>(jf)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -887,10 +890,10 @@ void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC) {
 
 					for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
 						if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != Part.index) {
-							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 						if (PartC[std::get<0>(jj)].isboundary) {
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -901,7 +904,7 @@ void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC) {
 					for (std::tuple<int, glm::vec3, glm::vec3>& tmp : PartC[std::get<0>(jf)].IdNSubKernelder) {
 						if (PartC[std::get<0>(tmp)].index == Part.index) {
 							Kerndelder_jf_if = std::get<2>(tmp);
-							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((Part.m / (p0 * p0) * Kerndelder_jf_if), std::get<2>(jf));
+							if_jf2 += PartC[std::get<0>(jf)].m * glm::dot((Part.m / (p0p0) * Kerndelder_jf_if), std::get<2>(jf));
 						}
 					}
 				}
@@ -911,10 +914,10 @@ void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC) {
 
 					for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
 						if (PartC[std::get<0>(jj)].isboundary == false) {
-							jjf += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 						if (PartC[std::get<0>(jj)].isboundary) {
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jb += glm::dot(PartC[std::get<0>(jf)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -952,7 +955,7 @@ void makeAllAfffastwithdens(std::vector<iisphparticle>& PartC) {
 						// boundaryneighbours jjb
 						if (PartC[std::get<0>(jj)].isboundary) {
 							//sum( jjb_m /p0*p0 * dWdt_jf_jjb)
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jf1 += PartC[std::get<0>(jf)].m * glm::dot((-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -983,7 +986,7 @@ void makeAllAfffastwithdens(std::vector<iisphparticle>& PartC) {
 						// boundaryneighbours jjb
 						if (PartC[std::get<0>(jj)].isboundary) {
 							//sum( jjb_m /p0*p0 * dWdt_jb_jjb)
-							jjb += (PartC[std::get<0>(jj)].m / (p0 * p0)) * std::get<2>(jj);
+							jjb += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 						}
 					}
 					if_jb += glm::dot(PartC[std::get<0>(jf)].m * (-jjf - 2 * gammapres * jjb), std::get<2>(jf));
@@ -1077,17 +1080,17 @@ float makeAlldenserrAvg(std::vector<iisphparticle>& var_PartC) {
 void makeAllPresA(std::vector<iisphparticle>& var_PartC) {
 //#pragma omp parallel for
 	for (auto& Part : var_PartC) {
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.presA = glm::vec3(0, 0, 0);
 			glm::vec3 PresAf(0.f, 0.f, 0.f);
 			glm::vec3 PresAb(0.f, 0.f, 0.f);
 			for (std::tuple<int, glm::vec3, glm::vec3>&neig : Part.IdNSubKernelder) {
 				if (Part.index != std::get<0>(neig)) {
 					if (var_PartC[std::get<0>(neig)].isboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressureiter / (p0 * p0)) * std::get<2>(neig);
+						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressureiter / (p0p0)) * std::get<2>(neig);
 					}
 					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0 * p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0 * p0)) * std::get<2>(neig);
+						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 					}
 				}
 			}
@@ -1099,17 +1102,17 @@ void makeAllPresAwithbound(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_MaxParticles; i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.presA = glm::vec3(0, 0, 0);
 			glm::vec3 PresAf(0.f, 0.f, 0.f);
 			glm::vec3 PresAb(0.f, 0.f, 0.f);
 			for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
 				if (Part.index != std::get<0>(neig)) {
 					if (var_PartC[std::get<0>(neig)].isboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0 * p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0 * p0)) * std::get<2>(neig);
+						PresAb -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 					}
 					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0 * p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0 * p0)) * std::get<2>(neig);
+						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 					}
 				}
 			}
@@ -1171,10 +1174,10 @@ void makeAllPresAtwoD(std::vector<iisphparticle>& var_PartC) {
 			for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
 				if (Part.index != std::get<0>(neig)) {
 					if (var_PartC[std::get<0>(neig)].isboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressureiter / (p0 * p0)) * std::get<2>(neig);
+						PresAb -= var_PartC[std::get<0>(neig)].m * (2 * Part.pressureiter / (p0p0)) * std::get<2>(neig);
 					}
 					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0 * p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0 * p0)) * std::get<2>(neig);
+						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 					}
 				}
 			}
@@ -1193,10 +1196,10 @@ void makeAllPresAwithboundtwoD(std::vector<iisphparticle>& var_PartC) {
 			for (std::tuple<int, glm::vec3, glm::vec3>& neig : Part.IdNSubKernelder) {
 				if (Part.index != std::get<0>(neig)) {
 					if (var_PartC[std::get<0>(neig)].isboundary) {
-						PresAb -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0 * p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0 * p0)) * std::get<2>(neig);
+						PresAb -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 					}
 					else {
-						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0 * p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0 * p0)) * std::get<2>(neig);
+						PresAf -= var_PartC[std::get<0>(neig)].m * (Part.pressureiter / (p0p0) + var_PartC[std::get<0>(neig)].pressureiter / (p0p0)) * std::get<2>(neig);
 					}
 				}
 			}
@@ -1395,7 +1398,7 @@ void makeboundmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int
 //#pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == true) {
+		if (Part.isboundary == true && Part.isfloatingboundary ==false) {
 			Part.IdNdistNsub.clear();
 			std::unordered_set<int> uniqueIds; // Set to track unique IDs
 			for (int x = -1; x <= 1; x++) {
@@ -1423,7 +1426,7 @@ void makeboundmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int
 	}
 //#pragma omp parallel for
 	for (auto& Part : var_PartC) {
-		if (Part.isboundary == true) {
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
 			float kernsum = 0;
 			Part.Kernel.clear();
 //#pragma omp parallel for
@@ -1447,7 +1450,7 @@ void makepartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int,
 //#pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false || Part.isfloatingboundary == false) {
 			Part.IdNdistNsub.clear();
 			std::unordered_set<int> uniqueIds; // Set to track unique IDs
 			for (int x = -1; x <= 1; x++) {
@@ -1475,7 +1478,7 @@ void makepartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int,
 	}
 //#pragma omp parallel for
 	for (auto& Part : var_PartC) {
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false && Part.isfloatingboundary == false) {
 			float kernsum = 0;
 			Part.Kernel.clear();
 //#pragma omp parallel for
@@ -1497,7 +1500,7 @@ void makeboundmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map
 //#pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == true) {
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
 			Part.IdNdistNsub.clear();
 			std::unordered_set<int> uniqueIds; // Set to track unique IDs
 			for (int x = -1; x <= 1; x++) {
@@ -1525,7 +1528,7 @@ void makeboundmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map
 	}
 //#pragma omp parallel for
 	for (auto& Part : var_PartC) {
-		if (Part.isboundary == true) {
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
 			float kernsum = 0;
 			Part.Kernel.clear();
 //#pragma omp parallel for
@@ -1577,7 +1580,7 @@ void makepartmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map<
 	}
 //#pragma omp parallel for
 	for (auto& Part : var_PartC) {
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false && Part.isfloatingboundary == false) {
 			float kernsum = 0;
 			Part.Kernel.clear();
 //#pragma omp parallel for
@@ -1593,12 +1596,105 @@ void makepartmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map<
 
 	}
 }
-void calculatecenterofmass(std::vector<iisphparticle>& PartC) {
-	for (int i = 0; i < PartC.size(); ++i) {
-		iisphparticle& Part = PartC[i];
+
+void makefloatingpartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
+	hashmap.clear();
+	insertAllParticlesIntoHashmap(var_PartC, hashmap);
+	//#pragma omp parallel for
+	for (int i = 0; i < var_PartC.size(); ++i) {
+		iisphparticle& Part = var_PartC[i];
 		if (Part.isfloatingboundary == true) {
-			
+			Part.IdNdistNsub.clear();
+			std::unordered_set<int> uniqueIds; // Set to track unique IDs
+			for (int x = -1; x <= 1; x++) {
+				for (int y = -1; y <= 1; y++) {
+					for (int z = -1; z <= 1; z++) {
+						int hash = hashFunction3D(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius, Part.pos.z + z * searchRadius);
+						if (hashmap.find(hash) != hashmap.end()) {
+							for (int idx : hashmap[hash].particles) {
+								if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
+									float distX = var_PartC[idx].pos.x - Part.pos.x;
+									float distY = var_PartC[idx].pos.y - Part.pos.y;
+									float distZ = var_PartC[idx].pos.z - Part.pos.z;
+									float distance = sqrt(distX * distX + distY * distY + distZ * distZ);
+									if (distance < searchRadius && var_PartC[idx].isfloatingboundary) {
+										Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
+										uniqueIds.insert(idx); // Mark this ID as added
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
+	}
+	//#pragma omp parallel for
+	for (auto& Part : var_PartC) {
+		if (Part.isfloatingboundary == true) {
+			float kernsum = 0;
+			Part.Kernel.clear();
+			//#pragma omp parallel for
+			for (const auto& neig : Part.IdNdistNsub) {
+				float d = std::get<1>(neig) / h;
+				float t1 = std::max((1 - d), 0.f);
+				float t2 = std::max((2 - d), 0.f);
+				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
+				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1));
+			}
+			Part.m = 0.7 * p0 / std::max(kernsum, 0.0000000000000001f);
+		}
+
+	}
+}
+void makefloatingpartmass2d(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
+	hashmap.clear();
+	insertAllParticlesIntoHashmap(var_PartC, hashmap);
+	//#pragma omp parallel for
+	for (int i = 0; i < var_PartC.size(); ++i) {
+		iisphparticle& Part = var_PartC[i];
+		if (Part.isfloatingboundary == true) {
+			Part.IdNdistNsub.clear();
+			std::unordered_set<int> uniqueIds; // Set to track unique IDs
+			for (int x = -1; x <= 1; x++) {
+				for (int y = -1; y <= 1; y++) {
+					for (int z = -1; z <= 1; z++) {
+						int hash = hashFunction3D(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius, Part.pos.z + z * searchRadius);
+						if (hashmap.find(hash) != hashmap.end()) {
+							for (int idx : hashmap[hash].particles) {
+								if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
+									float distX = var_PartC[idx].pos.x - Part.pos.x;
+									float distY = var_PartC[idx].pos.y - Part.pos.y;
+									float distZ = var_PartC[idx].pos.z - Part.pos.z;
+									float distance = sqrt(distX * distX + distY * distY + distZ * distZ);
+									if (distance < searchRadius && var_PartC[idx].isfloatingboundary) {
+										Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
+										uniqueIds.insert(idx); // Mark this ID as added
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	//#pragma omp parallel for
+	for (auto& Part : var_PartC) {
+		if (Part.isfloatingboundary == true) {
+			float kernsum = 0;
+			Part.Kernel.clear();
+			//#pragma omp parallel for
+			for (const auto& neig : Part.IdNdistNsub) {
+				float d = std::get<1>(neig) / h;
+				float t1 = std::max((1 - d), 0.f);
+				float t2 = std::max((2 - d), 0.f);
+				Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
+				kernsum += alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1));
+			}
+			Part.m = 0.8 * p0 / std::max(kernsum, 0.0000000000000001f);
+		}
+
 	}
 }
 
@@ -1620,67 +1716,50 @@ void initrigidbodies(std::vector<iisphparticle>& PartC) {
 	for (int i = 0; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
-			Part.m = Part.m * 1;
+			Part.m = Part.m;
 			allrigidmass += Part.m;
 			xCM += Part.m * Part.pos;
-			std::cout << "Particle " << i << " mass: " << Part.m << ", position: (" << Part.pos.x << ", " << Part.pos.y << ", " << Part.pos.z << ")" << std::endl;
+			//std::cout << "Particle " << i << " mass: " << Part.m << ", position: (" << Part.pos.x << ", " << Part.pos.y << ", " << Part.pos.z << ")" << std::endl;
 		}
 	}
 
 	if (allrigidmass > 0) {
 		xCM /= allrigidmass;
 	}
-	std::cout << "Center of mass: (" << xCM.x << ", " << xCM.y << ", " << xCM.z << "), Total mass: " << allrigidmass << std::endl;
+	//std::cout << "Center of mass: (" << xCM.x << ", " << xCM.y << ", " << xCM.z << "), Total mass: " << allrigidmass << std::endl;
 
 	// Compute inertia tensor
 	for (int i = 0; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
 			glm::vec3 r = Part.pos - xCM;
+			Part.relpos = r;
 			float mass = Part.m;
 			glm::mat3 rr = glm::outerProduct(r, r);
 			inertiaTensor -= mass * rr;
-			/*inertiaTensor[0][0] += mass * (r.y * r.y + r.z * r.z);
-			inertiaTensor[1][1] += mass * (r.x * r.x + r.z * r.z);
-			inertiaTensor[2][2] += mass * (r.x * r.x + r.y * r.y);
-			inertiaTensor[0][1] -= mass * r.x * r.y;
-			inertiaTensor[0][2] -= mass * r.x * r.z;
-			inertiaTensor[1][2] -= mass * r.y * r.z;
-			*/
 		}
 	}
-
-	//inertiaTensor[1][0] = inertiaTensor[0][1];
-	//inertiaTensor[2][0] = inertiaTensor[0][2];
-	//inertiaTensor[2][1] = inertiaTensor[1][2];
-
-	std::cout << "Inertia Tensor: \n"
-		<< inertiaTensor[0][0] << " " << inertiaTensor[0][1] << " " << inertiaTensor[0][2] << "\n"
-		<< inertiaTensor[1][0] << " " << inertiaTensor[1][1] << " " << inertiaTensor[1][2] << "\n"
-		<< inertiaTensor[2][0] << " " << inertiaTensor[2][1] << " " << inertiaTensor[2][2] << "\n";
+	//std::cout << "Inertia Tensor: \n"
+	//	<< inertiaTensor[0][0] << " " << inertiaTensor[0][1] << " " << inertiaTensor[0][2] << "\n"
+	//	<< inertiaTensor[1][0] << " " << inertiaTensor[1][1] << " " << inertiaTensor[1][2] << "\n"
+	//	<< inertiaTensor[2][0] << " " << inertiaTensor[2][1] << " " << inertiaTensor[2][2] << "\n";
 
 	if (glm::determinant(inertiaTensor) != 0) {
 		inertiaTensorInverse = glm::inverse(inertiaTensor);
 		I_inv = inertiaTensorInverse;
-		std::cout << "Inertia Tensor Inverse: \n"
-			<< I_inv[0][0] << " " << I_inv[0][1] << " " << I_inv[0][2] << "\n"
-			<< I_inv[1][0] << " " << I_inv[1][1] << " " << I_inv[1][2] << "\n"
-			<< I_inv[2][0] << " " << I_inv[2][1] << " " << I_inv[2][2] << "\n";
+		//std::cout << "Inertia Tensor Inverse: \n"
+		//	<< I_inv[0][0] << " " << I_inv[0][1] << " " << I_inv[0][2] << "\n"
+		//	<< I_inv[1][0] << " " << I_inv[1][1] << " " << I_inv[1][2] << "\n"
+		//	<< I_inv[2][0] << " " << I_inv[2][1] << " " << I_inv[2][2] << "\n";
 	}
 }
 
-glm::mat3 skewSymmetricMatrix(const glm::vec3& v) {
-	return glm::mat3(0.0f, -v.z, v.y,
-		v.z, 0.0f, -v.x,
-		-v.y, v.x, 0.0f);
-}
-
 void updaterigidbody(std::vector<iisphparticle>& PartC) {
-	glm::vec3 torque(0.f);
-	glm::vec3 linforce(0.f);
+	float torque_x = 0.0f, torque_y = 0.0f, torque_z = 0.0f;
+	float linforce_x = 0.0f, linforce_y = 0.0f, linforce_z = 0.0f;
 
-	// Kräfte und Drehmomente berechnen
-//#pragma omp parallel for reduction(+:torque, linforce)
+	// Parallelisierte Schleife mit OpenMP
+#pragma omp parallel for reduction(+:torque_x, torque_y, torque_z, linforce_x, linforce_y, linforce_z)
 	for (int i = var_fluidpart; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
@@ -1688,20 +1767,43 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 			glm::vec3 r = Part.pos - xCM;
 			glm::vec3 t = glm::cross(r, force);
 
-			torque += t;
-			linforce += force;
+			torque_x += t.x;
+			torque_y += t.y;
+			torque_z += t.z;
+
+			linforce_x += force.x;
+			linforce_y += force.y;
+			linforce_z += force.z;
 		}
 	}
 
+	// Kombiniere die Komponenten wieder zu Vektoren
+	glm::vec3 torque(torque_x, torque_y, torque_z);
+	glm::vec3 linforce(linforce_x, linforce_y, linforce_z);
+	torque = torque * 0.01f ;
+	
+
+	xCM += deltaT * vCM;
 	if (allrigidmass > 0) {
 		vCM += deltaT * linforce / allrigidmass;
 	}
-
-	xCM += deltaT * vCM;
-
 	// Orientierungsmatrix aktualisieren
 	glm::mat3 skewOmega = skewSymmetricMatrix(omegarigidbody);
 	A += deltaT * skewOmega * A;
+	// Sicherstellen, dass die Orientierungsmatrix orthonormal bleibt using Gram-Schmidt process
+	glm::vec3 col1 = A[0];
+	glm::vec3 col2 = A[1];
+	glm::vec3 col3 = A[2];
+
+	col1 = glm::normalize(col1);
+
+	col2 = col2 - glm::dot(col2, col1) * col1;
+	col2 = glm::normalize(col2);
+
+	col3 = col3 - glm::dot(col3, col1) * col1 - glm::dot(col3, col2) * col2;
+	col3 = glm::normalize(col3);
+
+	A = glm::mat3(col1, col2, col3);
 	L += deltaT * torque;
 
 	if (glm::determinant(A) != 0) {
@@ -1709,21 +1811,47 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 		glm::mat3 I_inv = A * inertiaTensorInverse * A_T;
 		omegarigidbody = I_inv * L;
 	}
-
-	// Sicherstellen, dass die Orientierungsmatrix orthonormal bleibt
-	glm::vec3 col1 = glm::normalize(A[0]);
-	glm::vec3 col2 = glm::normalize(A[1] - glm::dot(A[1], col1) * col1);
-	glm::vec3 col3 = glm::cross(col1, col2);
-	A = glm::mat3(col1, col2, col3);
-
+	else {
+		// Handle the case where A is not invertible
+		omegarigidbody = glm::vec3(0.f); // or some other appropriate action
+	}
 	// Partikelpositionen und -geschwindigkeiten aktualisieren
 #pragma omp parallel for
 	for (int i = var_fluidpart; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
-			glm::vec3 relpostmp = A * (Part.pos - xCM);
-			Part.vel += glm::cross(omegarigidbody, relpostmp) * deltaT;
-			Part.pos += vCM * deltaT + Part.vel * deltaT; // Position mit linearer Geschwindigkeit aktualisieren
+			glm::vec3 relpostmp = A * (Part.relpos);
+			Part.pos = xCM + relpostmp; // Position mit linearer Geschwindigkeit aktualisieren
+			Part.vel = vCM + glm::cross(omegarigidbody, relpostmp);
 		}
 	}
+}
+
+// Helper function to create a skew-symmetric matrix from a vector
+glm::mat3 skewSymmetricMatrix(const glm::vec3& v) {
+	return glm::mat3(
+		0, -v.z, v.y,
+		v.z, 0, -v.x,
+		-v.y, v.x, 0
+	);
+}
+std::vector<glm::vec3> parseObjFile(const std::string& filePath) {
+	std::vector<glm::vec3> vertices;
+	std::ifstream file(filePath);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open file: " << filePath << std::endl;
+		return vertices;
+	}
+
+	std::string line;
+	while (std::getline(file, line)) {
+		if (line.substr(0, 2) == "v ") {
+			std::istringstream s(line.substr(2));
+			glm::vec3 vertex;
+			s >> vertex.x; s >> vertex.y; s >> vertex.z;
+			vertices.push_back(vertex);
+		}
+	}
+	file.close();
+	return vertices;
 }
