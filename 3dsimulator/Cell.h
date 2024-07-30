@@ -23,9 +23,7 @@ extern float maxvel;
 extern float cfl;
 extern bool cfl_cond;
 extern float cfl_max;
-extern float cfl_min;
 extern float deltaTmax;
-extern float deltaTmin;
 extern float deltaT;
 extern const float h;
 extern const float p0p0;
@@ -104,7 +102,7 @@ extern glm::mat3 I_inv;
 extern glm::mat3 inertiaTensor;
 extern glm::vec3 omegarigidbody;
 extern glm::mat3 inertiaTensorInverse;
-
+extern glm::vec3 torque;
 
 struct Cell {
 	std::vector<int> particles;
@@ -177,3 +175,5 @@ extern void makefloatingpartmass(std::vector<iisphparticle>& var_PartC, std::uno
 extern std::vector<glm::vec3> parseObjFile(const std::string& filePath);
 extern float makesinglekernel2D(glm::vec3& posi, glm::vec3& posj);
 extern void makeBoundPres2D(std::vector<iisphparticle>& var_PartC);
+extern void computeAllDenstwoD(std::vector<iisphparticle>& var_PartC);
+extern glm::mat3 skewSymmetricMatrix2d(const glm::vec3& v);

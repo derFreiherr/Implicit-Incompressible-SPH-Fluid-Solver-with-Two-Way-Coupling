@@ -25,7 +25,7 @@ unsigned int uniformgridhash(float x, float y, float z) {
 
 bool checkcfl(float maxvel) {
 	cfl = maxvel * deltaT / h;
-	if (cfl <= cfl_max && cfl >= cfl_min) {
+	if (cfl <= cfl_max) {
 		cfl_cond = true;
 	}
 	else {
@@ -212,52 +212,64 @@ void MakeAllNonpresA(std::vector<iisphparticle>& var_PartC ) {
 			glm::vec3 ViscAf(0.f, 0.f, 0.f);
 			glm::vec3 ViscAb(0.f, 0.f, 0.f);
 			glm::vec3 surfacetens(0.f, 0.f, 0.f);
-			for (const auto& neig : Part.IdNSubKernelder) {
-				if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary) {
-					ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+			if (Part.isfloatingboundary) {
+				for (const auto& neig : Part.IdNSubKernelder) {
+					if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary) {
+						ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos));
+					}
+					else {
+						ViscAf += (var_PartC[std::get<0>(neig)].m / p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos));
+					}
 				}
-				else {
-					ViscAf += (var_PartC[std::get<0>(neig)].m / /*ParticlesContainer[std::get<0>(neig)].density*/p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
-				}
+				Part.nonpresA = (1.f * ViscAb + 1.f * ViscAf) + gravity * glm::vec3(0, 1, 0);
 			}
-			for (const auto& neig : Part.IdNdistNsub) {
-				if (var_PartC[std::get<0>(neig)].isboundary == false ) {
-					float d = std::get<1>(neig) / h;
-					float t1 = std::max((1 - d), 0.f);
-					float t2 = std::max((2 - d), 0.f);
-					surfacetens += var_PartC[std::get<0>(neig)].m * std::get<1>(neig) * (alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1))) ;
+			else {
+				for (const auto& neig : Part.IdNSubKernelder) {
+					if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary) {
+						ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+					}
+					else {
+						ViscAf += (var_PartC[std::get<0>(neig)].m / /*ParticlesContainer[std::get<0>(neig)].density*/p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+					}
 				}
+				for (const auto& neig : Part.IdNdistNsub) {
+					if (var_PartC[std::get<0>(neig)].isboundary == false && var_PartC[std::get<0>(neig)].isfloatingboundary == false) {
+						float kern = makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos);
+						surfacetens += var_PartC[std::get<0>(neig)].m * std::get<2>(neig) * kern;
+					}
+				}
+				Part.nonpresA = (visc_boundary * ViscAb + visc_fluid * ViscAf) + gravity * glm::vec3(0, 1, 0) - ((surfacetension / Part.m) * surfacetens);
 			}
-			Part.nonpresA = (visc_boundary *ViscAb + visc_fluid*ViscAf) + gravity *glm::vec3(0, 1, 0) - ((surfacetension /Part.m )*  surfacetens);
+			
+			
+			
+			
+			
 		}
 	}
 }
 void MakeAllNonpresAtwoD(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
-	for (int i = 0; i < var_PartC.size(); ++i) {
+	for (int i = 0; i < (var_fluidpart+var_spezialboundpart); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			glm::vec3 ViscAf(0.f, 0.f, 0.f);
-			glm::vec3 ViscAb(0.f, 0.f, 0.f);
-			glm::vec3 surfacetens(0.f, 0.f, 0.f);
-			for (const auto& neig : Part.IdNSubKernelder) {
-				if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary &&!!var_PartC[std::get<0>(neig)].isfloatingboundary) {
-					ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
-				}
-				else {
-					ViscAf += (var_PartC[std::get<0>(neig)].m / /*ParticlesContainer[std::get<0>(neig)].density*/p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
-				}
+		glm::vec3 ViscAf(0.f, 0.f, 0.f);
+		glm::vec3 ViscAb(0.f, 0.f, 0.f);
+		glm::vec3 surfacetens(0.f, 0.f, 0.f);
+		for (const auto& neig : Part.IdNSubKernelder) {
+			if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary && !!var_PartC[std::get<0>(neig)].isfloatingboundary) {
+				ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
 			}
-			for (const auto& neig : Part.IdNdistNsub) {
-				if (var_PartC[std::get<0>(neig)].isboundary == false) {
-					float d = std::get<1>(neig) / h;
-					float t1 = std::max((1 - d), 0.f);
-					float t2 = std::max((2 - d), 0.f);
-					surfacetens += var_PartC[std::get<0>(neig)].m * std::get<1>(neig) * (alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
-				}
+			else {
+				ViscAf += (var_PartC[std::get<0>(neig)].m / /*ParticlesContainer[std::get<0>(neig)].density*/p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
 			}
-			Part.nonpresA = ( visc_boundary * ViscAb + visc_fluid * ViscAf) + gravity * glm::vec3(0, 1, 0) - ((surfacetension / Part.m) * surfacetens) * glm::vec3(1.f,1.f,0.f);
 		}
+		for (const auto& neig : Part.IdNdistNsub) {
+			if (var_PartC[std::get<0>(neig)].isboundary == false && Part.isfloatingboundary == false && var_PartC[std::get<0>(neig)].isfloatingboundary == false) {
+				float kern = makesinglekernel2D(Part.pos, var_PartC[std::get<0>(neig)].pos);
+				surfacetens += var_PartC[std::get<0>(neig)].m * std::get<2>(neig) * kern;
+			}
+		}
+		Part.nonpresA = (visc_boundary * ViscAb + visc_fluid * ViscAf) + gravity * glm::vec3(0, 1, 0) - ((surfacetension / Part.m) * surfacetens) * glm::vec3(1.f, 1.f, 0.f);
 	}
 }
 void MakeAllNonpresAwithdens(std::vector<iisphparticle>& var_PartC) {
@@ -295,11 +307,17 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 //#pragma omp parallel for reduction(+:denserrold, numofp0high)
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
+		Part.density = 0;
 		if (Part.isboundary == false || Part.isfloatingboundary) {
 			Part.denstolow = true;
 			float dens = 0;
+			/*
 			for (float& kern : Part.Kernel) {
 				dens += kern * Part.m;
+			}
+			*/
+			for (const auto& neig : Part.IdNdistNsub) {
+				dens += var_PartC[std::get<0>(neig)].m * makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos);
 			}
 			Part.density = dens;
 			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord &&Part.isboundary == false && Part.isfloatingboundary == false) {
@@ -339,6 +357,69 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 			Part.denstolow = true;
 		}
 		
+	}
+	//std::cout << deabugdens << "   "<< usemefordens.size()<< std::endl;
+	denserrold = (denserrold / usemefordens.size());
+	//denserrold = (denserrold / var_fluidpart);
+}
+void computeAllDenstwoD(std::vector<iisphparticle>& var_PartC) {
+	denserrold = 0;
+	numofp0high = 0;
+	usemefordens.clear();
+	//float deabugdens = 0;
+//#pragma omp parallel for reduction(+:denserrold, numofp0high)
+	for (int i = 0; i < var_PartC.size(); ++i) {
+		iisphparticle& Part = var_PartC[i];
+		Part.density = 0;
+		if (Part.isboundary == false || Part.isfloatingboundary) {
+			Part.denstolow = true;
+			float dens = 0;
+			/*
+			for (float& kern : Part.Kernel) {
+				dens += kern * Part.m;
+			}
+			*/
+			for (const auto& neig : Part.IdNdistNsub) {
+				dens += var_PartC[std::get<0>(neig)].m * makesinglekernel2D(Part.pos, var_PartC[std::get<0>(neig)].pos);
+			}
+			Part.density = dens;
+			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord && Part.isboundary == false && Part.isfloatingboundary == false) {
+				Part.denstolow = false;
+				numofp0high++;
+				if (absinterrupt) {
+					denserrold += 100 * (std::abs(Part.density - p0) / p0);
+					usemefordens.push_back(Part.index);
+					//deabugdens = std::max(deabugdens, Part.density);
+
+				}
+				else {
+					denserrold += 100 * (Part.density - p0) / p0;
+					usemefordens.push_back(Part.index);
+				}
+			}
+
+			/*
+			if (clampp0 == true) {
+				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
+				Part.denstolow = false;
+				numofp0high++;
+				if (absinterrupt) {
+					denserrold += std::abs(Part.density - p0);
+				}
+				else {
+					denserrold += Part.density - p0;
+				}
+			}
+			if (Part.denstolow == true && clamptolow == true) {
+				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
+			}
+			*/
+		}
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
+			Part.density = p0;
+			Part.denstolow = true;
+		}
+
 	}
 	//std::cout << deabugdens << "   "<< usemefordens.size()<< std::endl;
 	denserrold = (denserrold / usemefordens.size());
@@ -488,7 +569,6 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 */
 void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
 	totalcomp = 0;
-	float maxhashnum = 0;
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
@@ -870,7 +950,7 @@ void makeAllAfffparallel(std::vector<iisphparticle>& PartC) {
 				jjf = glm::vec3(0.f, 0.f, 0.f);
 				jjb = glm::vec3(0.f, 0.f, 0.f);
 				for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
-					if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != Part.index) {
+					if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].index != Part.index && PartC[std::get<0>(jj)].isfloatingboundary == false) {
 						jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 					}
 					if (PartC[std::get<0>(jj)].isboundary) {
@@ -886,7 +966,7 @@ void makeAllAfffparallel(std::vector<iisphparticle>& PartC) {
 				jjb = glm::vec3(0.f, 0.f, 0.f);
 
 				for (std::tuple<int, glm::vec3, glm::vec3>& jj : neighbors) {
-					if (PartC[std::get<0>(jj)].isboundary == false) {
+					if (PartC[std::get<0>(jj)].isboundary == false && PartC[std::get<0>(jj)].isfloatingboundary == false) {
 						jjf += (PartC[std::get<0>(jj)].m / (p0p0)) * std::get<2>(jj);
 					}
 					if (PartC[std::get<0>(jj)].isboundary) {
@@ -1739,7 +1819,7 @@ void makefloatingpartmass2d(std::vector<iisphparticle>& var_PartC, std::unordere
 				Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
 				kernsum += alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1));
 			}
-			Part.m = 0.8 * p0 / std::max(kernsum, 0.0000000000000001f);
+			Part.m = 0.7 * p0 / std::max(kernsum, 0.0000000000000001f);
 		}
 
 	}
@@ -1752,7 +1832,12 @@ void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, 
 	rotMat = glm::mat3(1.0f); // Identity matrix
 	xCM = glm::vec3(0.f, 0.f, 0.f);
 	vCM = glm::vec3(0.f, 0.f, 0.f);
-	A = glm::mat3(1.0f); // Identity matrix
+	//A = glm::mat3(1.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 1.f); // Identity matrix
+	A = glm::mat3(1.f);
+	//A[0][0] = 1.f;
+	//A[1][1] = 1.f;
+	//A[2][2] = 1.f;
+	//A = glm::mat3(2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f);
 	L = glm::vec3(0.f, 0.f, 0.f);
 	I_inv = glm::mat3(1.0f); // Identity matrix
 	inertiaTensor = glm::mat3(0.0f);
@@ -1763,7 +1848,7 @@ void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, 
 	for (int i = 0; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
-			Part.m = Part.m;
+			Part.m = Part.m*0.9;
 			allrigidmass += Part.m;
 			xCM += Part.m * Part.pos;
 			//std::cout << "Particle " << i << " mass: " << Part.m << ", position: (" << Part.pos.x << ", " << Part.pos.y << ", " << Part.pos.z << ")" << std::endl;
@@ -1803,54 +1888,44 @@ void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, 
 }
 
 void updaterigidbody(std::vector<iisphparticle>& PartC) {
-	float torque_x = 0.0f, torque_y = 0.0f, torque_z = 0.0f;
-	float linforce_x = 0.0f, linforce_y = 0.0f, linforce_z = 0.0f;
-
+	glm::vec3 torguefac = torque;
+	torque= glm::vec3(0.f, 0.f, 0.f);
+	glm::vec3 linforce(0.f, 0.f, 0.f);
 	// Parallelisierte Schleife mit OpenMP
-#pragma omp parallel for reduction(+:torque_x, torque_y, torque_z, linforce_x, linforce_y, linforce_z)
+//#pragma omp parallel for private(torque, linforce)
 	for (int i = var_fluidpart; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
-			glm::vec3 force = (Part.presA + Part.nonpresA) * Part.m; // Annahme, dass Kräfte Beschleunigungen sind
-			glm::vec3 r = Part.pos - xCM;
-			glm::vec3 t = glm::cross(r, force);
-
-			torque_x += t.x;
-			torque_y += t.y;
-			torque_z += t.z;
-
-			linforce_x += force.x;
-			linforce_y += force.y;
-			linforce_z += force.z;
+			glm::vec3 force = ((Part.presA) + Part.nonpresA) * Part.m; // Annahme, dass Kräfte Beschleunigungen sind
+			glm::vec3 r = Part.pos - xCM; 
+			torque += glm::cross(r, force);;
+			linforce += force;
 		}
 	}
 
-	// Kombiniere die Komponenten wieder zu Vektoren
-	glm::vec3 torque(torque_x, torque_y, torque_z);
-	glm::vec3 linforce(linforce_x, linforce_y, linforce_z);
-	//torque = torque * 0.01f ;
 	
-
+	//torque = torque*0.01f;
+	
+	vCM += deltaT * linforce / allrigidmass;
 	xCM += deltaT * vCM;
-	if (allrigidmass > 0) {
-		vCM += deltaT * linforce / allrigidmass;
-	}
+	
 	// Orientierungsmatrix aktualisieren
 	glm::mat3 skewOmega = skewSymmetricMatrix(omegarigidbody);
 	A += deltaT * skewOmega * A;
+	A = A;
 	// Sicherstellen, dass die Orientierungsmatrix orthonormal bleibt using Gram-Schmidt process
 	glm::vec3 col1 = A[0];
 	glm::vec3 col2 = A[1];
 	glm::vec3 col3 = A[2];
 
-	col1 = glm::normalize(col1);
+	col1 = glm::normalize(A[0]);
 
-	col2 = col2 - glm::dot(col2, col1) * col1;
+	col2 = A[1] - glm::dot(col1, A[1]) * col1;
 	col2 = glm::normalize(col2);
 
-	col3 = col3 - glm::dot(col3, col1) * col1 - glm::dot(col3, col2) * col2;
+	col3 = A[2] - glm::dot(col1, A[2]) * col1 - glm::dot(col2, A[2]) * col2;
 	col3 = glm::normalize(col3);
-
+	
 	A = glm::mat3(col1, col2, col3);
 	L += deltaT * torque;
 
@@ -1864,7 +1939,7 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 		omegarigidbody = glm::vec3(0.f); // or some other appropriate action
 	}
 	// Partikelpositionen und -geschwindigkeiten aktualisieren
-#pragma omp parallel for
+//#pragma omp parallel for
 	for (int i = var_fluidpart; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
@@ -1877,6 +1952,14 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 
 // Helper function to create a skew-symmetric matrix from a vector
 glm::mat3 skewSymmetricMatrix(const glm::vec3& v) {
+	return glm::mat3(
+		0, -v.z, v.y,
+		v.z, 0, -v.x,
+		-v.y, v.x, 0
+	);
+}
+
+glm::mat3 skewSymmetricMatrix2d(const glm::vec3& v) {
 	return glm::mat3(
 		0, -v.z, v.y,
 		v.z, 0, -v.x,

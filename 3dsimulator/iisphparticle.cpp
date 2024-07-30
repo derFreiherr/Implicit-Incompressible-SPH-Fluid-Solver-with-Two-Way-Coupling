@@ -278,7 +278,7 @@ void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 	makeAllKernelAndKernelDerTwoD(PartC);
 	auto end_kern = std::chrono::high_resolution_clock::now();
 	//compute density
-	computeAllDens(PartC);
+	computeAllDenstwoD(PartC);
 	auto end_dens = std::chrono::high_resolution_clock::now();
 	//nonpresAcceleartion
 	MakeAllNonpresAtwoD(PartC);
@@ -2276,7 +2276,7 @@ void watercolumn(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particles
 	var_nx = 25;
 	var_nz = 25;
 	var_fluidpart = var_nx * watercolheight * var_nz;
-	var_spezialboundpart = 2146;
+	var_spezialboundpart = 1302;
 	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
 	hashsize = var_MaxParticles;
 
@@ -2304,14 +2304,15 @@ void watercolumn(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particles
 		}
 	}
 	std::cout << "fluid: " << i << std::endl;
-	std::vector<glm::vec3> duckVertices = parseObjFile("../exportdata/duck.obj");
+	float j = i;
+	std::vector<glm::vec3> duckVertices = parseObjFile("../exportdata/duck2.obj");
 
 	if (duckVertices.empty()) {
 		std::cerr << "No vertices found in the file." << std::endl;
 	}
 
 	for (const auto& vertex : duckVertices) {
-		ParticlesContainer[i].pos = (vertex + glm::vec3(10.f, watercolheight + 0.125f, 10.f) / 40.f) * h * 40.f; // Skalierung
+		ParticlesContainer[i].pos = (vertex + glm::vec3(10.f, watercolheight + 10.125f, 10.f) / 20.f) * h * 20.f; // Skalierung
 		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].a = boundarya;
@@ -2320,7 +2321,7 @@ void watercolumn(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particles
 		ParticlesContainer[i].index = i;
 		i++;
 	}
-
+	std::cout << "object: " << i-j << std::endl;
 	float boden = 0;
 	// Create bottom boundary particles
 	for (int x = -2; x <= 26; x++) {
@@ -2466,7 +2467,7 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	var_nx = 15;
 	var_nz = 15;
 	var_fluidpart = var_nx * watercolheight * var_nz ;
-	var_spezialboundpart = 0;// 2146;
+	var_spezialboundpart = 135;// 2146;
 	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
 	hashsize = var_MaxParticles;
 
@@ -2511,7 +2512,7 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 		i++;
 	}
 	*/
-	/*
+	
 	for (float xi = 0; xi < 5; xi += 1) {
 		for (float yi = 0; yi < 5; yi += 1) {
 			for (float zi = 0; zi < 5; zi += 1) {
@@ -2539,7 +2540,7 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 		}
 	}
 
-	*/
+	
 	std::cout << "Number of particles: " << i << std::endl;
 	float boden = 0;
 	// Create bottom boundary particles
@@ -2853,7 +2854,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	ParticlesContainer.resize(0);
 
 	// Define boundary and fluid parameters
-	int var_boundarypart = 2*150 + 2 * (100)  ;
+	int var_boundarypart = 2*150 + 2 * (100);
 	if (!singlewall) {
 		//gammafloat = 1;
 		var_boundarypart = var_boundarypart = 2*2 * 150 + 2 * 2 * (100);
@@ -2928,6 +2929,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 		i++;
 
 	}
+	
 	std::cout << "fluid: " << i << std::endl;
 	float boden = 0;
 	// Create bottom and top boundary particles

@@ -73,9 +73,7 @@ float visc_fluid = 0.7;// 0.0000011;
 float visc_boundary = 0.3;// 0.0000011;
 float k = 10000;
 float cfl_max = 0.4;
-float cfl_min = 0.3;
 float deltaTmax = 0.01;
-float deltaTmin = 0.00015;
 float cfl = 0;
 bool cfl_cond = false;
 float avgErr = 0.1;
@@ -83,8 +81,8 @@ glm::vec3 gamma = glm::vec3(1, 1, 1);
 float gammafloat = 0.7f;
 float gammapresup = 0.7f;
 float gammadens = 1.f;
-float gammapres = 1.f;
-float gammabound = 1.f;
+float gammapres = 0.7f;
+float gammabound = 0.7f;
 float omega = 0.5;
 float gravity = -9.81f;
 //hash___________________________________________________________________________________________
@@ -244,6 +242,7 @@ glm::mat3 I_inv(0.f);
 glm::mat3 inertiaTensor(0.f);
 glm::vec3 omegarigidbody = glm::vec3(0.f, 0.f, 0.f);
 glm::mat3 inertiaTensorInverse;
+glm::vec3 torque(0.f, 0.f, 0.f);
 
 
 //_________________________________________________________________________________
@@ -471,7 +470,6 @@ int main(void)
 			gammafloat = 1;
 			deltaTmax = 0.01;
 			cfl_max = 0.79;
-			cfl_min = 0.59;
 			deltaT = 0.02;
 			dambreaktest(CameraPosition, var_PartC);
 			dambreaktestscen = false;
@@ -503,9 +501,7 @@ int main(void)
 			exportanimation = false;
 			gammafloat = 0.7;
 			deltaTmax = 0.0009;
-			deltaTmin = 0.0001;
 			cfl_max = 0.5;
-			cfl_min = 0.8;
 			deltaT = 0.01;
 			clampfac = 0;
 			//gammapresup = 0.7;
@@ -582,7 +578,6 @@ int main(void)
 			firstdatapath.copy(changename, 127);
 			gammafloat = 1.0;
 			deltaTmax = 0.01;
-			deltaTmin = 0.00;
 			deltaT = 0.01;
 			visc_boundary = 0.3;
 			visc_fluid = 1;
@@ -645,7 +640,7 @@ int main(void)
 			//boundarya = 70;
 			absinterrupt = true;
 			paussimul = true;
-			jitterfac = 0;
+			//jitterfac = 0;
 			gammapres = 0.7;
 			//setboundmass = true;
 			compbord = 26;
@@ -769,7 +764,6 @@ int main(void)
 			denistyerrormax = 0.1;
 			gammafloat = 0.7;
 			deltaTmax = 0.015;
-			deltaTmin = 0.001;
 			deltaT = 0.009;
 			visc_boundary = 0.025;
 			visc_fluid = 0.25;
@@ -976,9 +970,7 @@ int main(void)
 		//SESPH___________________________________________________________________________________________________________________________________________________________________________________________________
 		if ((ssph && paussimul == false  && TwoDsimul == false)|| (ssph && animationstep == 0 && TwoDsimul == false)) {
 			deltaTmax = 0.09;
-			deltaTmin = 0.00;
 			cfl_max = 0.1;
-			cfl_min = 0.09;
 			ssphAlgo(var_PartC, hashmap);
 			//SSPHalgorythm(ParticlesContainer, hashmap);
 			animationstep++;
@@ -1423,16 +1415,9 @@ int main(void)
 			ImGui::Checkbox("add pseudomass", &setboundmass);
 			ImGui::Checkbox("add particlemass ", &setpartmass);
 			ImGui::InputFloat("deltaTmax", &deltaTmax, 0.001f, 0.1f, "% .4f");
-			ImGui::SliderFloat("deltaTmin", &deltaTmin, 0.001f, 0.1f);
 			ImGui::SliderFloat("cflmax", &cfl_max, 0.1f, 1.f);
-			ImGui::SliderFloat("cflmin", &cfl_min, 0.1f, 1.f);
 			ImGui::SliderFloat("deltaT", &deltaT, 0.00001f, 0.1f);
 			ImGui::SliderFloat("k", &k, 10000, 10000000);
-			ImGui::SliderFloat("viscosity", &viscosity, 0.1, 10);
-			/*
-			ImGui::InputFloat("gamma aff", &gammafloat, 0.1, 2);
-			ImGui::InputFloat("gamma pres update", &gammapresup, 0.1, 2);
-			*/
 			ImGui::InputFloat("gamma1 density", &gammadens, 0.1, 2);
 			ImGui::InputFloat("gamma2 pressure", &gammapres, 0.1, 2);
 			ImGui::InputFloat("gamma3 bound", &gammabound, 0.1, 2);
@@ -1487,6 +1472,7 @@ int main(void)
 			ImGui::Text("overall minimum ypos: %.1f", minypos/h);
 			ImGui::Text("overall maximum ypos: %.1f", maxypos/h);
 			ImGui::Text("current maximum velocity: %.1f", maxvel);
+			ImGui::Text("current torque: %.1f", torque.length);
 		}
 		if (ImGui::CollapsingHeader("single stats")) {
 			ImGui::Text("number of neighbours: %.1f", numNeighofobserving);
