@@ -326,7 +326,7 @@ void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 	currentiter = l;
 		//update velocity and Position
 	makeAllVandP(PartC);
-	updaterigidbody(PartC);
+	updaterigidbody2d(PartC);
 	auto end_o = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_o - end_loop);
 	othercomputationTime = duration.count();
@@ -2700,6 +2700,9 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 
 	// Resize the container to fit all particles
 	ParticlesContainer.resize(var_MaxParticles);
+	for (int l = 0; l < ParticlesContainer.size(); l++) {
+		ParticlesContainer[l].isfloatingboundary == false;
+	}
 	int i = 0;
 	std::srand(std::time(NULL));
 	std::random_device rd;

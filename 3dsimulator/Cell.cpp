@@ -240,36 +240,46 @@ void MakeAllNonpresA(std::vector<iisphparticle>& var_PartC ) {
 				}
 				Part.nonpresA = (visc_boundary * ViscAb + visc_fluid * ViscAf) + gravity * glm::vec3(0, 1, 0) - ((surfacetension / Part.m) * surfacetens);
 			}
-			
-			
-			
-			
-			
 		}
 	}
 }
 void MakeAllNonpresAtwoD(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
-	for (int i = 0; i < (var_fluidpart+var_spezialboundpart); ++i) {
+	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
-		glm::vec3 ViscAf(0.f, 0.f, 0.f);
-		glm::vec3 ViscAb(0.f, 0.f, 0.f);
-		glm::vec3 surfacetens(0.f, 0.f, 0.f);
-		for (const auto& neig : Part.IdNSubKernelder) {
-			if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary && !!var_PartC[std::get<0>(neig)].isfloatingboundary) {
-				ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+		if ((Part.isboundary == false || Part.isfloatingboundary)) {
+			glm::vec3 ViscAf(0.f, 0.f, 0.f);
+			glm::vec3 ViscAb(0.f, 0.f, 0.f);
+			glm::vec3 surfacetens(0.f, 0.f, 0.f);
+			if (Part.isfloatingboundary) {
+				for (const auto& neig : Part.IdNSubKernelder) {
+					if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary) {
+						ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos));
+					}
+					else {
+						ViscAf += (var_PartC[std::get<0>(neig)].m / p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos));
+					}
+				}
+				Part.nonpresA = ((1.f * ViscAb + 1.f * ViscAf) + gravity * glm::vec3(0, 1, 0))* glm::vec3(1, 1, 0);
 			}
 			else {
-				ViscAf += (var_PartC[std::get<0>(neig)].m / /*ParticlesContainer[std::get<0>(neig)].density*/p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+				for (const auto& neig : Part.IdNSubKernelder) {
+					if (var_PartC[std::get<0>(neig)].isboundary && !var_PartC[std::get<0>(neig)].ismovingboundary) {
+						ViscAb += (var_PartC[std::get<0>(neig)].m / p0) * (Part.vel * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+					}
+					else {
+						ViscAf += (var_PartC[std::get<0>(neig)].m / /*ParticlesContainer[std::get<0>(neig)].density*/p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * std::get<1>(neig) / (std::get<1>(neig) * std::get<1>(neig) + 0.01f * h * h)) * std::get<2>(neig);
+					}
+				}
+				for (const auto& neig : Part.IdNdistNsub) {
+					if (var_PartC[std::get<0>(neig)].isboundary == false && var_PartC[std::get<0>(neig)].isfloatingboundary == false) {
+						float kern = makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos);
+						surfacetens += var_PartC[std::get<0>(neig)].m * std::get<2>(neig) * kern;
+					}
+				}
+				Part.nonpresA = ((visc_boundary * ViscAb + visc_fluid * ViscAf) + gravity * glm::vec3(0, 1, 0) - ((surfacetension / Part.m) * surfacetens))*glm::vec3(1,1,0);
 			}
 		}
-		for (const auto& neig : Part.IdNdistNsub) {
-			if (var_PartC[std::get<0>(neig)].isboundary == false && Part.isfloatingboundary == false && var_PartC[std::get<0>(neig)].isfloatingboundary == false) {
-				float kern = makesinglekernel2D(Part.pos, var_PartC[std::get<0>(neig)].pos);
-				surfacetens += var_PartC[std::get<0>(neig)].m * std::get<2>(neig) * kern;
-			}
-		}
-		Part.nonpresA = (visc_boundary * ViscAb + visc_fluid * ViscAf) + gravity * glm::vec3(0, 1, 0) - ((surfacetension / Part.m) * surfacetens) * glm::vec3(1.f, 1.f, 0.f);
 	}
 }
 void MakeAllNonpresAwithdens(std::vector<iisphparticle>& var_PartC) {
@@ -359,8 +369,8 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 		
 	}
 	//std::cout << deabugdens << "   "<< usemefordens.size()<< std::endl;
-	denserrold = (denserrold / usemefordens.size());
-	//denserrold = (denserrold / var_fluidpart);
+	//denserrold = (denserrold / usemefordens.size());
+	denserrold = (denserrold / var_fluidpart);
 }
 void computeAllDenstwoD(std::vector<iisphparticle>& var_PartC) {
 	denserrold = 0;
@@ -1135,7 +1145,8 @@ float makeAlldenserrAvg(std::vector<iisphparticle>& var_PartC) {
 			}
 		}
 		max_singledens = 100 * max_singledens;
-		return densityerroraverage / usemefordens.size();
+		//return densityerroraverage / usemefordens.size();
+		return densityerroraverage / var_fluidpart;
 	}
 	/*
 	if (ignoreincomplete) {
@@ -1848,7 +1859,7 @@ void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, 
 	for (int i = 0; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
-			Part.m = Part.m*0.9;
+			//Part.m = Part.m*0.9;
 			allrigidmass += Part.m;
 			xCM += Part.m * Part.pos;
 			//std::cout << "Particle " << i << " mass: " << Part.m << ", position: (" << Part.pos.x << ", " << Part.pos.y << ", " << Part.pos.z << ")" << std::endl;
@@ -1904,10 +1915,10 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 	}
 
 	
-	//torque = torque*0.01f;
+	//torque = torque*0.1f;
 	
-	vCM += deltaT * linforce / allrigidmass;
-	xCM += deltaT * vCM;
+	vCM += (deltaT * linforce / allrigidmass);
+	xCM += ( deltaT * vCM);
 	
 	// Orientierungsmatrix aktualisieren
 	glm::mat3 skewOmega = skewSymmetricMatrix(omegarigidbody);
@@ -1944,12 +1955,73 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
 			glm::vec3 relpostmp = A * (Part.relpos);
-			Part.pos = xCM + relpostmp; // Position mit linearer Geschwindigkeit aktualisieren
-			Part.vel = vCM + glm::cross(omegarigidbody, relpostmp);
+			Part.pos = (xCM + relpostmp); // Position mit linearer Geschwindigkeit aktualisieren
+			Part.vel = (vCM + glm::cross(omegarigidbody, relpostmp));
 		}
 	}
 }
+void updaterigidbody2d(std::vector<iisphparticle>& PartC) {
+	glm::vec3 torguefac = torque;
+	torque = glm::vec3(0.f, 0.f, 0.f);
+	glm::vec3 linforce(0.f, 0.f, 0.f);
+	// Parallelisierte Schleife mit OpenMP
+//#pragma omp parallel for private(torque, linforce)
+	for (int i = var_fluidpart; i < PartC.size(); ++i) {
+		iisphparticle& Part = PartC[i];
+		if (Part.isfloatingboundary) {
+			glm::vec3 force = ((Part.presA) + Part.nonpresA) * Part.m; // Annahme, dass Kräfte Beschleunigungen sind
+			glm::vec3 r = Part.pos - xCM;
+			torque += glm::cross(r, force);;
+			linforce += force;
+		}
+	}
 
+
+	torque = torque * 0.1f;
+
+	vCM += glm::vec3(1, 1, 0) * (deltaT * linforce / allrigidmass);
+	xCM += glm::vec3(1, 1, 0) * (deltaT * vCM);
+
+	// Orientierungsmatrix aktualisieren
+	glm::mat3 skewOmega = skewSymmetricMatrix(omegarigidbody);
+	A += deltaT * skewOmega * A;
+	A = A;
+	// Sicherstellen, dass die Orientierungsmatrix orthonormal bleibt using Gram-Schmidt process
+	glm::vec3 col1 = A[0];
+	glm::vec3 col2 = A[1];
+	glm::vec3 col3 = A[2];
+
+	col1 = glm::normalize(A[0]);
+
+	col2 = A[1] - glm::dot(col1, A[1]) * col1;
+	col2 = glm::normalize(col2);
+
+	col3 = A[2] - glm::dot(col1, A[2]) * col1 - glm::dot(col2, A[2]) * col2;
+	col3 = glm::normalize(col3);
+
+	A = glm::mat3(col1, col2, col3);
+	L += deltaT * torque;
+
+	if (glm::determinant(A) != 0) {
+		glm::mat3 A_T = glm::transpose(A);
+		glm::mat3 I_inv = A * inertiaTensorInverse * A_T;
+		omegarigidbody = I_inv * L;
+	}
+	else {
+		// Handle the case where A is not invertible
+		omegarigidbody = glm::vec3(0.f); // or some other appropriate action
+	}
+	// Partikelpositionen und -geschwindigkeiten aktualisieren
+//#pragma omp parallel for
+	for (int i = var_fluidpart; i < PartC.size(); ++i) {
+		iisphparticle& Part = PartC[i];
+		if (Part.isfloatingboundary) {
+			glm::vec3 relpostmp = A * (Part.relpos);
+			Part.pos = glm::vec3(1, 1, 0) * (xCM + relpostmp); // Position mit linearer Geschwindigkeit aktualisieren
+			Part.vel = glm::vec3(1, 1, 0) * (vCM + glm::cross(omegarigidbody, relpostmp));
+		}
+	}
+}
 // Helper function to create a skew-symmetric matrix from a vector
 glm::mat3 skewSymmetricMatrix(const glm::vec3& v) {
 	return glm::mat3(

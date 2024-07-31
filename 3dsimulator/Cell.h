@@ -177,3 +177,4 @@ extern float makesinglekernel2D(glm::vec3& posi, glm::vec3& posj);
 extern void makeBoundPres2D(std::vector<iisphparticle>& var_PartC);
 extern void computeAllDenstwoD(std::vector<iisphparticle>& var_PartC);
 extern glm::mat3 skewSymmetricMatrix2d(const glm::vec3& v);
+extern void updaterigidbody2d(std::vector<iisphparticle>& PartC);

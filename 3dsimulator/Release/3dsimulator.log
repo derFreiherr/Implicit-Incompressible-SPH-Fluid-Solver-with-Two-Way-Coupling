@@ -1,166 +1,129 @@
-﻿  iisphparticle.cpp
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(84,14): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(84,14): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(84,14): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(84,14): warning C4244:             genType=float
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(84,14): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(156,40): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(156,40): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(156,40): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(156,40): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(156,40): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(158,35): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(158,35): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(158,35): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(158,35): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(158,35): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(160,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(160,30): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(160,30): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(160,30): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(160,30): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(162,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(162,31): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(162,31): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(162,31): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(162,31): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(164,32): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(164,32): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(164,32): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(164,32): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(164,32): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(166,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(166,31): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(166,31): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(166,31): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(166,31): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(168,36): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(168,36): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(168,36): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(168,36): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(168,36): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(170,37): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(170,37): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(170,37): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(170,37): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(170,37): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(172,28): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(172,28): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(172,28): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(172,28): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(172,28): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(243,40): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(243,40): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(243,40): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(243,40): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(243,40): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(245,35): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(245,35): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(245,35): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(245,35): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(245,35): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(247,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(247,30): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(247,30): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(247,30): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(247,30): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(249,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(249,31): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(249,31): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(249,31): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(249,31): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(251,32): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(251,32): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(251,32): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(251,32): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(251,32): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(253,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(253,31): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(253,31): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(253,31): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(253,31): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(255,36): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(255,36): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(255,36): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(255,36): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(255,36): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(257,37): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(257,37): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(257,37): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(257,37): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(257,37): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(259,28): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(259,28): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(259,28): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(259,28): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(259,28): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(332,39): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(332,39): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(332,39): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(332,39): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(332,39): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(334,34): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(334,34): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(334,34): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(334,34): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(334,34): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(336,29): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(336,29): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(336,29): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(336,29): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(336,29): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(338,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(338,30): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(338,30): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(338,30): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(338,30): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(340,31): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(340,31): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(340,31): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(340,31): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(340,31): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(342,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(342,30): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(342,30): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(342,30): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(342,30): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(344,35): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(344,35): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(344,35): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(344,35): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(344,35): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(346,36): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(346,36): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(346,36): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(346,36): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(346,36): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(348,27): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(348,27): warning C4244:         with
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(348,27): warning C4244:         [
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(348,27): warning C4244:             _Rep=__int64
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(348,27): warning C4244:         ]
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(361,16): warning C4305: "=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(872,17): warning C4305: "+=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(1077,17): warning C4305: "-=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(1450,17): warning C4305: "+=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(1655,17): warning C4305: "-=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2118,17): warning C4305: "+=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2269,15): warning C4305: "=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2286,22): warning C4244: "Argument": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2307,10): warning C4244: "Initialisierung": Konvertierung von "int" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2460,15): warning C4305: "=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2477,22): warning C4244: "Argument": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2687,15): warning C4305: "=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2704,22): warning C4244: "Argument": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2723,39): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2874,22): warning C4244: "Argument": Konvertierung von "time_t" in "unsigned int", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(2892,39): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(3039,16): warning C4305: "=": Verkürzung von "double" in "float"
-D:\gitbachelor\3dsimulator\iisphparticle.cpp(3191,16): warning C4305: "=": Verkürzung von "double" in "float"
+﻿  Cell.cpp
+D:\gitbachelor\3dsimulator\Cell.cpp(23,9): warning C4244: "return": Konvertierung von "float" in "unsigned int", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(90,39): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(90,39): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(90,39): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(90,39): warning C4244:             _Rep=__int64
+D:\gitbachelor\3dsimulator\Cell.cpp(90,39): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(92,34): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(92,34): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(92,34): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(92,34): warning C4244:             _Rep=__int64
+D:\gitbachelor\3dsimulator\Cell.cpp(92,34): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(94,29): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(94,29): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(94,29): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(94,29): warning C4244:             _Rep=__int64
+D:\gitbachelor\3dsimulator\Cell.cpp(94,29): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(96,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(96,30): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(96,30): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(96,30): warning C4244:             _Rep=__int64
+D:\gitbachelor\3dsimulator\Cell.cpp(96,30): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(124,39): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(124,39): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(124,39): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(124,39): warning C4244:             _Rep=__int64
+D:\gitbachelor\3dsimulator\Cell.cpp(124,39): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(126,34): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(126,34): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(126,34): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(126,34): warning C4244:             _Rep=__int64
+D:\gitbachelor\3dsimulator\Cell.cpp(126,34): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(128,29): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(128,29): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(128,29): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(128,29): warning C4244:             _Rep=__int64
+D:\gitbachelor\3dsimulator\Cell.cpp(128,29): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(130,30): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(130,30): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(130,30): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(130,30): warning C4244:             _Rep=__int64
+D:\gitbachelor\3dsimulator\Cell.cpp(130,30): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(136,19): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(146,19): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(200,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(209,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(248,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(318,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(381,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(467,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(489,58): warning C4244: "Argument": Konvertierung von "double" in "_Ty", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(489,58): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(489,58): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(489,58): warning C4244:             _Ty=float
+D:\gitbachelor\3dsimulator\Cell.cpp(489,58): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(492,46): warning C4244: "Argument": Konvertierung von "double" in "_Ty", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(492,46): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(492,46): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(492,46): warning C4244:             _Ty=float
+D:\gitbachelor\3dsimulator\Cell.cpp(492,46): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(501,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(523,86): warning C4244: "Argument": Konvertierung von "double" in "_Ty", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(523,86): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(523,86): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(523,86): warning C4244:             _Ty=float
+D:\gitbachelor\3dsimulator\Cell.cpp(523,86): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(526,74): warning C4244: "Argument": Konvertierung von "double" in "_Ty", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(526,74): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(526,74): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(526,74): warning C4244:             _Ty=float
+D:\gitbachelor\3dsimulator\Cell.cpp(526,74): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(583,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(619,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(622,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(665,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(668,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(679,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(707,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(710,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1136,21): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1286,55): warning C4244: "return": Konvertierung von "double" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1295,59): warning C4244: "return": Konvertierung von "double" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1476,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1486,23): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1486,23): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(1486,23): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(1486,23): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(1486,23): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(1490,19): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1490,19): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(1490,19): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(1490,19): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(1490,19): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(1491,19): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1491,19): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(1491,19): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(1491,19): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(1491,19): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(1495,19): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1495,19): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(1495,19): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(1495,19): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(1495,19): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(1496,19): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1496,19): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(1496,19): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(1496,19): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(1496,19): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(1537,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1589,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1639,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1691,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1742,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1783,22): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1792,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1833,22): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(1859,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1875,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1907,32): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1954,32): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(1969,32): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(2016,32): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
 Release\part.obj : warning LNK4042: Objekt mehrmals angegeben; zusätzliche Objekte werden ignoriert.
   Code wird generiert.
-  8 of 3057 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  21 of 3070 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    37 functions had inline decision re-evaluated but remain unchanged
+    46 functions had inline decision re-evaluated but remain unchanged
   Codegenerierung ist abgeschlossen.
   3dsimulator.vcxproj -> D:\gitbachelor\Release\3dsimulator.exe
