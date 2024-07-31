@@ -1915,7 +1915,7 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 	}
 
 	
-	//torque = torque*0.1f;
+	torque = torque*0.1f;
 	
 	vCM += (deltaT * linforce / allrigidmass);
 	xCM += ( deltaT * vCM);

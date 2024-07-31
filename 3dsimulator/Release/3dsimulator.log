@@ -122,8 +122,8 @@ D:\gitbachelor\3dsimulator\Cell.cpp(1969,32): warning C4018: "<": Konflikt zwisc
 D:\gitbachelor\3dsimulator\Cell.cpp(2016,32): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
 Release\part.obj : warning LNK4042: Objekt mehrmals angegeben; zusätzliche Objekte werden ignoriert.
   Code wird generiert.
-  21 of 3070 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
+  19 of 3068 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    46 functions had inline decision re-evaluated but remain unchanged
+    44 functions had inline decision re-evaluated but remain unchanged
   Codegenerierung ist abgeschlossen.
   3dsimulator.vcxproj -> D:\gitbachelor\Release\3dsimulator.exe

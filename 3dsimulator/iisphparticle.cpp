@@ -357,6 +357,7 @@ void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 void var_init(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
 	var_fluidpart = var_nx * var_ny * var_nz + 250;
+	var_spezialboundpart = 0;
 	if (singlewall) {
 		gammafloat = 0.7;
 		var_MaxParticles = var_nx * var_ny * var_nz + (var_oneway * var_oneway * 6) ;
@@ -569,6 +570,7 @@ void var_init(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesCon
 
 void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
+	var_spezialboundpart = 0;
 	gammafloat = 1.f;
 	var_fluidpart = 8 * 9 * 195;
 	// fluid + startfloor + (start walls) + big floor + big walls + obstacles
@@ -1147,6 +1149,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 
 void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
+	var_spezialboundpart = 0;
 	gammafloat = 1.f;
 	var_fluidpart = 8 * 9 * 195;
 	// fluid + startfloor + (start walls) + big floor + big walls + obstacles
@@ -1724,6 +1727,7 @@ void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& Partic
 }
 void var_real_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
+	var_spezialboundpart = 0;
 	gammafloat = 1.f;
 	var_fluidpart = 8 * 9 * 65 + 5*7*140;
 	// fluid + startfloor + (start walls) + big floor + big walls + obstacles
@@ -2456,18 +2460,18 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	ParticlesContainer.resize(0);
 
 	// Define boundary and fluid parameters
-	int var_boundarypart = 19 * 19 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20)  ;
+	int var_boundarypart =25+ 19 * 19 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20)  ;
 	gammafloat = 0.7;
 	if (!singlewall) {
 		//gammafloat = 1;
-		var_boundarypart = 19 * 19 *2 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 19 * 2 * (watercolheight + 20);
+		var_boundarypart =25+ 19 * 19 *2 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 19 * 2 * (watercolheight + 20);
 	}
 
 	// Parameters for the fluid particles
 	var_nx = 15;
 	var_nz = 15;
 	var_fluidpart = var_nx * watercolheight * var_nz ;
-	var_spezialboundpart = 135;// 2146;
+	var_spezialboundpart = 125;// 2146;
 	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
 	hashsize = var_MaxParticles;
 
@@ -2527,8 +2531,9 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 			}
 		}
 	}
+	std::cout << "Number of particles: " << i << std::endl;
 	for (float xi = 0; xi < 5; xi += 1) {
-		for (float yi = 0; yi < 2; yi += 1) {
+		for (float yi = 0; yi < 5; yi += 1) {
 			ParticlesContainer[i].pos = glm::vec3((xi + 5) * h, (9 + watercolheight) * h, (yi + 5) * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
@@ -2539,9 +2544,9 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 			i++;
 		}
 	}
-
+	std::cout << "Number of bound  particles: " << i << std::endl;
 	
-	std::cout << "Number of particles: " << i << std::endl;
+	
 	float boden = 0;
 	// Create bottom boundary particles
 	for (int x = -2; x <= 16; x++) {
@@ -3034,6 +3039,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 
 void moving_boundary(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
+	var_spezialboundpart = 0;
 	var_nx = var_oneway - 2;
 	var_nz = var_oneway - 2;
 	var_ny = 15;
@@ -3186,6 +3192,7 @@ void moving_boundary(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 }
 void dambreaktest(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
+	var_spezialboundpart = 0;
 	var_nx = 54;
 	var_ny = 30;
 	var_nz = 68;
@@ -3312,6 +3319,7 @@ void dambreaktest(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particle
 }
 void smalldambreaktest(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
+	var_spezialboundpart = 0;
 	var_nx = 54;
 	var_ny = 30;
 	var_nz = 33;

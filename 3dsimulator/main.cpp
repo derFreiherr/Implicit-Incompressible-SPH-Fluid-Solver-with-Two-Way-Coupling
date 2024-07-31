@@ -409,6 +409,8 @@ int main(void)
 	
 	do
 	{
+		auto start_alltime = std::chrono::high_resolution_clock::now();
+
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//imgui
@@ -420,8 +422,7 @@ int main(void)
 		double delta = currentTime - lastTime;
 		lastTime = currentTime;
 
-		auto start_alltime = std::chrono::high_resolution_clock::now();
-
+		
 		computeMatricesFromInputs();
 		glm::mat4 ProjectionMatrix = getProjectionMatrix();
 		glm::mat4 ViewMatrix = getViewMatrix();
@@ -492,14 +493,14 @@ int main(void)
 			surfacetension = 0.08;
 			currentitermax = 1000;
 			denistyerrormax = 0.1;
-			jitterfac = 0;
-			gammapres = 0.7;
+			//jitterfac = 0;
+			//gammapres = 0.7;
 			visc_fluid = 0.0025;
 			visc_boundary = 0.0000025;
 			absinterrupt = true;
 			singlewall = true;
 			exportanimation = false;
-			gammafloat = 0.7;
+			//gammafloat = 0.7;
 			deltaTmax = 0.0009;
 			cfl_max = 0.5;
 			deltaT = 0.01;
@@ -715,7 +716,7 @@ int main(void)
 			watercolheight = 50;
 			deltaTmax = 0.0009;
 			cfl_max = 0.7;
-			var_nx = 40;
+			var_nx = 120;
 			var_ny = 80;
 			gammabound = 0.7;
 			gammapres = 0.5;
@@ -1173,7 +1174,10 @@ int main(void)
 				maxiter = currentiter;
 			}
 			avgiter += currentiter;
-			totalComputationTime = (duration_alltime.count() > 0.0f) ? duration_alltime.count() : 1.0f;
+			totalComputationTime = duration_alltime.count();
+			
+			totalComputationTime = totalComputationTime;
+			std::cout << totalComputationTime << std::endl;
 			if (totalComputationTime > maxcomptime) {
 				maxcomptime = totalComputationTime;
 			}
@@ -1240,7 +1244,7 @@ int main(void)
 			paussimul = true;
 		}
 		ImGui::Checkbox("pause", &paussimul);
-		ImGui::Text("fps: %.1f", 1 / delta);
+		ImGui::Text("fps: %.4f", 1 / (totalComputationTime/1000000));
 		ImGui::Checkbox("reset stats", &resetvalues);
 		ImGui::Text("density deviation: %.3f %%", densitysnew.back() );
 		ImGui::Text("density deviation old: %.3f %%", densitys.back());
@@ -1252,7 +1256,7 @@ int main(void)
 		ImGui::Text("max comp time    %.1f ms",maxcomptime);
 		ImGui::Text("max iterations    %.1d",maxiter);
 		ImGui::Text("total simulation time    %.1f", totaltimeanimated);
-		ImGui::Text("simtime per sec    %.3f", deltaT/delta);
+		ImGui::Text("simtime per sec    %.3f", deltaT/(totalComputationTime/1000000));
 		//ImGui::Text("simtime/comptime    %.1f", simcomptime);
 		ImGui::Text("maximum density current: %.3f %%", max_singledens);
 		ImGui::Text("maximum density ever: %.3f %%",maxdenserralltime);
@@ -1272,7 +1276,7 @@ int main(void)
 			{
 				// Set column headers
 				ImGui::TableSetupColumn("Timer");
-				ImGui::TableSetupColumn("Time (ms)");
+				ImGui::TableSetupColumn("Time (ns)");
 				ImGui::TableSetupColumn("Percentage (%)");
 				ImGui::TableHeadersRow();
 
@@ -1281,7 +1285,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("Neighbour Search Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", neighSearchTime);
+				ImGui::Text("%.3f ns", neighSearchTime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", (neighSearchTime / (totalComputationTime )) * 100);
 
@@ -1290,7 +1294,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("Drawing Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", drawingTime);
+				ImGui::Text("%.3f ns", drawingTime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", (drawingTime / (totalComputationTime )) * 100);
 
@@ -1299,7 +1303,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("Kernel Computation Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", kerneltime);
+				ImGui::Text("%.3f ns", kerneltime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", ((kerneltime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
@@ -1307,7 +1311,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("density Computation Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", densitytime);
+				ImGui::Text("%.3f ns", densitytime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", ((densitytime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
@@ -1315,7 +1319,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("non pressure acce Computation Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", nonpresatime);
+				ImGui::Text("%.3f ns", nonpresatime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", ((nonpresatime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
@@ -1323,7 +1327,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("pred vel Computation Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", predveltime);
+				ImGui::Text("%.3f ns", predveltime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", ((predveltime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
@@ -1331,7 +1335,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("sf Computation Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", computeallsftime);
+				ImGui::Text("%.3f ns", computeallsftime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", ((computeallsftime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
@@ -1339,7 +1343,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("aff Computation Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", computeallafftime);
+				ImGui::Text("%.3f ns", computeallafftime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", ((computeallafftime) / (totalComputationTime )) * 100);
 				// Row for Other Computation Time
@@ -1347,7 +1351,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("loop Computation Time");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", looptime);
+				ImGui::Text("%.3f ns", looptime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", ((looptime) / (totalComputationTime )) * 100);
 				// Row for Total Computation Time
@@ -1355,7 +1359,7 @@ int main(void)
 				ImGui::TableSetColumnIndex(0);
 				ImGui::Text("ridgidbodytime");
 				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%.1f ms", othercomputationTime);
+				ImGui::Text("%.3f ns", othercomputationTime);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%.1f%%", ((othercomputationTime) / (totalComputationTime)) * 100);
 
