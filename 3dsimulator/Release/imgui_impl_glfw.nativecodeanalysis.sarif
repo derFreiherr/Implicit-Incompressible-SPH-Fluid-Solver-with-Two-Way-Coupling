@@ -20,7 +20,7 @@
       "artifacts": [
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui_impl_glfw.cpp"
+            "uri": "file:///d:/gitbachelor/imgui/imgui_impl_glfw.cpp"
           },
           "roles": [
             "analysisTarget"
@@ -31,7 +31,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui.h"
+            "uri": "file:///d:/gitbachelor/imgui/imgui.h"
           },
           "hashes": {
             "sha-256": "52a624ec22f961bf4570a6859449394466376bc059d76d1e303f8f631570f58e"
@@ -39,7 +39,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imconfig.h"
+            "uri": "file:///d:/gitbachelor/imgui/imconfig.h"
           },
           "hashes": {
             "sha-256": "a253e82c1960f8aa7594a51a8ac606a6235738c923f12d67a7742e88bf07ed63"
@@ -47,7 +47,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui_impl_glfw.h"
+            "uri": "file:///d:/gitbachelor/imgui/imgui_impl_glfw.h"
           },
           "hashes": {
             "sha-256": "8d2de69476f844b01a9a64eb188fdd1cf1f93b7499e16d7afcadacab72f40bf1"
@@ -55,7 +55,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/linking/glfw-3.4.bin.win32/include/glfw/glfw3.h"
+            "uri": "file:///d:/gitbachelor/linking/glfw-3.4.bin.win32/include/glfw/glfw3.h"
           },
           "hashes": {
             "sha-256": "aa370985f6b493bbe0358a36ab49f5780a6397c0209c6d98a62143dea595b73c"
@@ -63,7 +63,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/linking/glfw-3.4.bin.win32/include/glfw/glfw3native.h"
+            "uri": "file:///d:/gitbachelor/linking/glfw-3.4.bin.win32/include/glfw/glfw3native.h"
           },
           "hashes": {
             "sha-256": "40035881fdc02a9ab265c2086338f749a0411e1c15b68fada678fa34e8bd8958"

@@ -81,6 +81,21 @@
     <ClCompile Include="densitycomputation.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="rigidbodies.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="kernelz.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="simulationframes.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="massinits.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="helperz.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controls.hpp">
@@ -129,6 +144,21 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="densitycomputation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="rigidbodies.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="kernelz.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="simulationframes.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="massinits.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="helperz.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

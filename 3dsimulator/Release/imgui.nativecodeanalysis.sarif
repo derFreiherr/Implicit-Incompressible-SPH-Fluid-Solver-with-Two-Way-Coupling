@@ -13,7 +13,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                  "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                 },
                 "region": {
                   "startLine": 6314,
@@ -40,7 +40,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6306,
@@ -54,7 +54,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6307,
@@ -68,7 +68,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6308,
@@ -87,7 +87,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6310,
@@ -106,7 +106,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6312,
@@ -125,7 +125,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6314,
@@ -144,7 +144,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6317,
@@ -158,7 +158,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6314,
@@ -177,7 +177,7 @@
                       "location": {
                         "physicalLocation": {
                           "artifactLocation": {
-                            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+                            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
                           },
                           "region": {
                             "startLine": 6314,
@@ -216,7 +216,7 @@
       "artifacts": [
         {
           "location": {
-            "uri": "file:///D:/bachelorarbeit/imgui/imgui.cpp"
+            "uri": "file:///D:/gitbachelor/imgui/imgui.cpp"
           },
           "roles": [
             "analysisTarget",
@@ -228,7 +228,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui.h"
+            "uri": "file:///d:/gitbachelor/imgui/imgui.h"
           },
           "hashes": {
             "sha-256": "52a624ec22f961bf4570a6859449394466376bc059d76d1e303f8f631570f58e"
@@ -236,7 +236,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imconfig.h"
+            "uri": "file:///d:/gitbachelor/imgui/imconfig.h"
           },
           "hashes": {
             "sha-256": "a253e82c1960f8aa7594a51a8ac606a6235738c923f12d67a7742e88bf07ed63"
@@ -244,7 +244,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui_internal.h"
+            "uri": "file:///d:/gitbachelor/imgui/imgui_internal.h"
           },
           "hashes": {
             "sha-256": "654e447d93249a855ae0f1541df7674ac6f6959e221eceb789bea0cf4db58993"
@@ -252,7 +252,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imstb_textedit.h"
+            "uri": "file:///d:/gitbachelor/imgui/imstb_textedit.h"
           },
           "hashes": {
             "sha-256": "6cb9de88e714f42bdbdc25ba190f01e346a2b6eba727c2044acccc7e70966c70"

@@ -47,6 +47,11 @@ using namespace glm;
 #include <neighboursearch.h>
 #include <scenarios.h>
 #include <densitycomputation.h>
+#include <rigidbodies.h>
+#include <helperz.h>
+#include <kernelz.h>
+#include <simulationframes.h>
+#include <massinits.h>
 #include <iisphparticle.h>
 #include<part.h>
 #include <chrono>

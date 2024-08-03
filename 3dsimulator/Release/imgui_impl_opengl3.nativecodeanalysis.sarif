@@ -13,7 +13,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3_loader.h"
+                  "uri": "file:///D:/gitbachelor/imgui/imgui_impl_opengl3_loader.h"
                 },
                 "region": {
                   "startLine": 707,
@@ -41,7 +41,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3.cpp"
+                  "uri": "file:///D:/gitbachelor/imgui/imgui_impl_opengl3.cpp"
                 },
                 "region": {
                   "startLine": 306,
@@ -69,7 +69,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3.cpp"
+                  "uri": "file:///D:/gitbachelor/imgui/imgui_impl_opengl3.cpp"
                 },
                 "region": {
                   "startLine": 761,
@@ -105,7 +105,7 @@
       "artifacts": [
         {
           "location": {
-            "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3_loader.h"
+            "uri": "file:///D:/gitbachelor/imgui/imgui_impl_opengl3_loader.h"
           },
           "roles": [
             "resultFile"
@@ -116,7 +116,7 @@
         },
         {
           "location": {
-            "uri": "file:///D:/bachelorarbeit/imgui/imgui_impl_opengl3.cpp"
+            "uri": "file:///D:/gitbachelor/imgui/imgui_impl_opengl3.cpp"
           },
           "roles": [
             "analysisTarget",
@@ -128,7 +128,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui.h"
+            "uri": "file:///d:/gitbachelor/imgui/imgui.h"
           },
           "hashes": {
             "sha-256": "52a624ec22f961bf4570a6859449394466376bc059d76d1e303f8f631570f58e"
@@ -136,7 +136,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imconfig.h"
+            "uri": "file:///d:/gitbachelor/imgui/imconfig.h"
           },
           "hashes": {
             "sha-256": "a253e82c1960f8aa7594a51a8ac606a6235738c923f12d67a7742e88bf07ed63"
@@ -144,7 +144,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui_impl_opengl3.h"
+            "uri": "file:///d:/gitbachelor/imgui/imgui_impl_opengl3.h"
           },
           "hashes": {
             "sha-256": "b296402bdcc77324008254a5cb883d2882d57c0eef3e490d4bed5e87c05465da"

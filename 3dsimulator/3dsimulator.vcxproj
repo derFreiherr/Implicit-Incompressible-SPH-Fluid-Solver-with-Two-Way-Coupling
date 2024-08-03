@@ -148,13 +148,18 @@
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="controls.cpp" />
     <ClCompile Include="densitycomputation.cpp" />
+    <ClCompile Include="helperz.cpp" />
     <ClCompile Include="iisphparticle.cpp" />
+    <ClCompile Include="kernelz.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="massinits.cpp" />
     <ClCompile Include="neighboursearch.cpp" />
     <ClCompile Include="part.cpp" />
     <ClCompile Include="part.h" />
+    <ClCompile Include="rigidbodies.cpp" />
     <ClCompile Include="scenarios.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="simulationframes.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,10 +174,15 @@
     <ClInclude Include="Cell.h" />
     <ClInclude Include="controls.hpp" />
     <ClInclude Include="densitycomputation.h" />
+    <ClInclude Include="helperz.h" />
     <ClInclude Include="iisphparticle.h" />
+    <ClInclude Include="kernelz.h" />
+    <ClInclude Include="massinits.h" />
     <ClInclude Include="neighboursearch.h" />
+    <ClInclude Include="rigidbodies.h" />
     <ClInclude Include="scenarios.h" />
     <ClInclude Include="shader.hpp" />
+    <ClInclude Include="simulationframes.h" />
     <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <ItemGroup>

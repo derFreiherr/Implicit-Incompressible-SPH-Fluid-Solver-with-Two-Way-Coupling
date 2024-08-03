@@ -111,53 +111,39 @@ struct Cell {
 class iisphparticle;
 struct Particle;
 
-extern void makecfltrue(std::vector<iisphparticle>& var_PartC);
-extern bool checkcfl(float maxvel);
-extern void makeAllKernelAndKernelDer(std::vector<iisphparticle>& var_PartC);
+
+
 extern void MakeAllNonpresA(std::vector<iisphparticle>& var_PartC); 
 extern void MakeAllNonpresAwithdens(std::vector<iisphparticle>& var_PartC);
+
 extern void PredictAllVel(std::vector<iisphparticle>& var_PartC);
+
 extern void computeAllSF(std::vector<iisphparticle>& var_PartC);
+
 extern void makeAllAff1(std::vector<iisphparticle>& PartC);
 extern void makeAllAfffast(std::vector<iisphparticle>& PartC);
 extern void makeAllAfffastwithdens(std::vector<iisphparticle>& PartC);
+
 extern void makeAllPresA(std::vector<iisphparticle>& var_PartC);
 extern void makeAllPresAwithdens(std::vector<iisphparticle>& var_PartC);
+
 extern void makeAllAPupdatePres(std::vector<iisphparticle>& var_PartC);
+
 extern void secondloop(std::vector<iisphparticle>& var_PartC);
+
 extern void makeAllVandP(std::vector<iisphparticle>& var_PartC);
-extern void ssphAlgo(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap);
+
 extern void computeAllPres(std::vector<iisphparticle>& var_PartC);
 extern void makeAllA(std::vector<iisphparticle>& var_PartC);
-extern void makeboundmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
-extern void makepartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
+
 extern void MakeAllNonpresAtwoD(std::vector<iisphparticle>& var_PartC);
-extern void makeAllKernelAndKernelDerTwoD(std::vector<iisphparticle>& var_PartC);
 extern void makeAllPresAtwoD(std::vector<iisphparticle>& var_PartC);
-extern void makepartmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
-extern void makeboundmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
+
 extern void makeAllPresAwithbound(std::vector<iisphparticle>& var_PartC);
 extern void makeBoundPres(std::vector<iisphparticle>& var_PartC);
-extern float makesinglekernel(glm::vec3& posi, glm::vec3& posj);
-extern glm::vec3 makesinglekernelder(glm::vec3& posi, glm::vec3& posj);
 extern void makeAllPresAwithboundtwoD(std::vector<iisphparticle>& var_PartC);
 extern void makeAllAtwoD(std::vector<iisphparticle>& var_PartC);
-void ssphAlgotwoD(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap);
 extern void makeAllAfffparallel(std::vector<iisphparticle>& PartC);
 extern void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC);
-extern void calculatecenterofmass(std::vector<iisphparticle>& PartC);
-extern void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap);
-extern void updaterigidbody(std::vector<iisphparticle>& PartC);
-extern glm::mat3 skewSymmetricMatrix(const glm::vec3& v);
-extern void makefloatingpartmass2d(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
-extern void makefloatingpartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
-extern std::vector<glm::vec3> parseObjFile(const std::string& filePath);
-extern float makesinglekernel2D(glm::vec3& posi, glm::vec3& posj);
 extern void makeBoundPres2D(std::vector<iisphparticle>& var_PartC);
-extern glm::mat3 skewSymmetricMatrix2d(const glm::vec3& v);
-extern void updaterigidbody2d(std::vector<iisphparticle>& PartC);
-extern void computeAllDens(std::vector<iisphparticle>& var_PartC);
-extern void computeAllDenstwoD(std::vector<iisphparticle>& var_PartC);
-extern void computeAllDensSSPH(std::vector<iisphparticle>& var_PartC);
-extern void computeAllDensErr(std::vector<iisphparticle>& var_PartC);
-extern float makeAlldenserrAvg(std::vector<iisphparticle>& var_PartC);
+

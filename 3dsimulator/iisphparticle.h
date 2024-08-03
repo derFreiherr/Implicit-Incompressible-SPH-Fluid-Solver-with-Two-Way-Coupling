@@ -7,6 +7,12 @@
 #include <chrono>
 #include <Cell.h>
 #include <neighboursearch.h>
+#include <densitycomputation.h>
+#include <helperz.h>
+#include <kernelz.h>
+#include <simulationframes.h>
+#include <rigidbodies.h>
+#include <massinits.h>
 #include "Eigen/Dense"
 using namespace Eigen;
 
@@ -77,7 +83,6 @@ public:
 	}
 	*/
 };
-extern void var_iisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap);
-extern void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap);
+
 
 

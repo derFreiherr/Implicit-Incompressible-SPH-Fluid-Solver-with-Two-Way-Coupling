@@ -13,7 +13,7 @@
             {
               "physicalLocation": {
                 "artifactLocation": {
-                  "uri": "file:///D:/bachelorarbeit/3dsimulator/shader.cpp"
+                  "uri": "file:///D:/gitbachelor/3dsimulator/shader.cpp"
                 },
                 "region": {
                   "startLine": 34,
@@ -49,7 +49,7 @@
       "artifacts": [
         {
           "location": {
-            "uri": "file:///D:/bachelorarbeit/3dsimulator/shader.cpp"
+            "uri": "file:///D:/gitbachelor/3dsimulator/shader.cpp"
           },
           "roles": [
             "analysisTarget",
@@ -61,7 +61,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/linking/glew-2.1.0/include/gl/glew.h"
+            "uri": "file:///d:/gitbachelor/linking/glew-2.1.0/include/gl/glew.h"
           },
           "hashes": {
             "sha-256": "1a2d50dc00a69940838cb3b5413cf7a7ac3cee8078672f27ffbfa2d3b88ad344"
@@ -69,7 +69,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/3dsimulator/shader.hpp"
+            "uri": "file:///d:/gitbachelor/3dsimulator/shader.hpp"
           },
           "hashes": {
             "sha-256": "2772ba44cc1b6fdc05e16b2832067702361642540ef0749c18e613325907516d"

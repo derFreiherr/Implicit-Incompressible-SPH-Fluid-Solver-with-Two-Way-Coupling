@@ -20,7 +20,7 @@
       "artifacts": [
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui_demo.cpp"
+            "uri": "file:///d:/gitbachelor/imgui/imgui_demo.cpp"
           },
           "roles": [
             "analysisTarget"
@@ -31,7 +31,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imgui.h"
+            "uri": "file:///d:/gitbachelor/imgui/imgui.h"
           },
           "hashes": {
             "sha-256": "52a624ec22f961bf4570a6859449394466376bc059d76d1e303f8f631570f58e"
@@ -39,7 +39,7 @@
         },
         {
           "location": {
-            "uri": "file:///d:/bachelorarbeit/imgui/imconfig.h"
+            "uri": "file:///d:/gitbachelor/imgui/imconfig.h"
           },
           "hashes": {
             "sha-256": "a253e82c1960f8aa7594a51a8ac606a6235738c923f12d67a7742e88bf07ed63"
