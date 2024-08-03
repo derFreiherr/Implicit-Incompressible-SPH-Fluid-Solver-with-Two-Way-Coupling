@@ -13,6 +13,8 @@
 #include <simulationframes.h>
 #include <rigidbodies.h>
 #include <massinits.h>
+#include <Affz.h>
+#include <boundarypres.h>
 #include "Eigen/Dense"
 using namespace Eigen;
 
@@ -40,6 +42,7 @@ extern int obstaclea;
 extern float maxavgdensdeviation;
 extern bool singlewall;
 extern int watercolheight;
+
 class iisphparticle
 {
 public:

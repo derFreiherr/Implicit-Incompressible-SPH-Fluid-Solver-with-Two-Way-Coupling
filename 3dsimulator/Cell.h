@@ -113,16 +113,14 @@ struct Particle;
 
 
 
+
+
 extern void MakeAllNonpresA(std::vector<iisphparticle>& var_PartC); 
 extern void MakeAllNonpresAwithdens(std::vector<iisphparticle>& var_PartC);
 
 extern void PredictAllVel(std::vector<iisphparticle>& var_PartC);
 
 extern void computeAllSF(std::vector<iisphparticle>& var_PartC);
-
-extern void makeAllAff1(std::vector<iisphparticle>& PartC);
-extern void makeAllAfffast(std::vector<iisphparticle>& PartC);
-extern void makeAllAfffastwithdens(std::vector<iisphparticle>& PartC);
 
 extern void makeAllPresA(std::vector<iisphparticle>& var_PartC);
 extern void makeAllPresAwithdens(std::vector<iisphparticle>& var_PartC);
@@ -140,10 +138,9 @@ extern void MakeAllNonpresAtwoD(std::vector<iisphparticle>& var_PartC);
 extern void makeAllPresAtwoD(std::vector<iisphparticle>& var_PartC);
 
 extern void makeAllPresAwithbound(std::vector<iisphparticle>& var_PartC);
-extern void makeBoundPres(std::vector<iisphparticle>& var_PartC);
+
 extern void makeAllPresAwithboundtwoD(std::vector<iisphparticle>& var_PartC);
 extern void makeAllAtwoD(std::vector<iisphparticle>& var_PartC);
-extern void makeAllAfffparallel(std::vector<iisphparticle>& PartC);
-extern void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC);
-extern void makeBoundPres2D(std::vector<iisphparticle>& var_PartC);
+
+
 

@@ -96,6 +96,12 @@
     <ClCompile Include="helperz.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Affz.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="boundarypres.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controls.hpp">
@@ -159,6 +165,12 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="helperz.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Affz.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="boundarypres.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

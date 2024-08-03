@@ -52,6 +52,8 @@ using namespace glm;
 #include <kernelz.h>
 #include <simulationframes.h>
 #include <massinits.h>
+#include <Affz.h>
+#include <boundarypres.h>
 #include <iisphparticle.h>
 #include<part.h>
 #include <chrono>

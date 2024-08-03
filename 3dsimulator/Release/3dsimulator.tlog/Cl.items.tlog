@@ -5,6 +5,8 @@ D:\gitbachelor\imgui\imgui_impl_glfw.cpp;D:\gitbachelor\3dsimulator\Release\imgu
 D:\gitbachelor\imgui\imgui_impl_opengl3.cpp;D:\gitbachelor\3dsimulator\Release\imgui_impl_opengl3.obj
 D:\gitbachelor\imgui\imgui_tables.cpp;D:\gitbachelor\3dsimulator\Release\imgui_tables.obj
 D:\gitbachelor\imgui\imgui_widgets.cpp;D:\gitbachelor\3dsimulator\Release\imgui_widgets.obj
+D:\gitbachelor\3dsimulator\Affz.cpp;D:\gitbachelor\3dsimulator\Release\Affz.obj
+D:\gitbachelor\3dsimulator\boundarypres.cpp;D:\gitbachelor\3dsimulator\Release\boundarypres.obj
 D:\gitbachelor\3dsimulator\Cell.cpp;D:\gitbachelor\3dsimulator\Release\Cell.obj
 D:\gitbachelor\3dsimulator\controls.cpp;D:\gitbachelor\3dsimulator\Release\controls.obj
 D:\gitbachelor\3dsimulator\densitycomputation.cpp;D:\gitbachelor\3dsimulator\Release\densitycomputation.obj
