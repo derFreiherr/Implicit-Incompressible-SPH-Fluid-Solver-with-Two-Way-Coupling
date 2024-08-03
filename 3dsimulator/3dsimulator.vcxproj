@@ -147,10 +147,13 @@
     <ClCompile Include="..\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="controls.cpp" />
+    <ClCompile Include="densitycomputation.cpp" />
     <ClCompile Include="iisphparticle.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="neighboursearch.cpp" />
     <ClCompile Include="part.cpp" />
     <ClCompile Include="part.h" />
+    <ClCompile Include="scenarios.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
@@ -165,7 +168,10 @@
     <ClInclude Include="..\imgui\imstb_truetype.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="controls.hpp" />
+    <ClInclude Include="densitycomputation.h" />
     <ClInclude Include="iisphparticle.h" />
+    <ClInclude Include="neighboursearch.h" />
+    <ClInclude Include="scenarios.h" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="texture.hpp" />
   </ItemGroup>

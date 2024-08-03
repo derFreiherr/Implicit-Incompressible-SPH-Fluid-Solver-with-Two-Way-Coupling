@@ -6,6 +6,7 @@
 #include <glm/gtx/norm.hpp>
 #include <chrono>
 #include <Cell.h>
+#include <neighboursearch.h>
 #include "Eigen/Dense"
 using namespace Eigen;
 

@@ -7,9 +7,12 @@ D:\gitbachelor\imgui\imgui_tables.cpp;D:\gitbachelor\3dsimulator\Release\imgui_t
 D:\gitbachelor\imgui\imgui_widgets.cpp;D:\gitbachelor\3dsimulator\Release\imgui_widgets.obj
 D:\gitbachelor\3dsimulator\Cell.cpp;D:\gitbachelor\3dsimulator\Release\Cell.obj
 D:\gitbachelor\3dsimulator\controls.cpp;D:\gitbachelor\3dsimulator\Release\controls.obj
+D:\gitbachelor\3dsimulator\densitycomputation.cpp;D:\gitbachelor\3dsimulator\Release\densitycomputation.obj
 D:\gitbachelor\3dsimulator\iisphparticle.cpp;D:\gitbachelor\3dsimulator\Release\iisphparticle.obj
 D:\gitbachelor\3dsimulator\main.cpp;D:\gitbachelor\3dsimulator\Release\main.obj
+D:\gitbachelor\3dsimulator\neighboursearch.cpp;D:\gitbachelor\3dsimulator\Release\neighboursearch.obj
 D:\gitbachelor\3dsimulator\part.cpp;D:\gitbachelor\3dsimulator\Release\part.obj
 D:\gitbachelor\3dsimulator\part.h;D:\gitbachelor\3dsimulator\Release\part.obj
+D:\gitbachelor\3dsimulator\scenarios.cpp;D:\gitbachelor\3dsimulator\Release\scenarios.obj
 D:\gitbachelor\3dsimulator\shader.cpp;D:\gitbachelor\3dsimulator\Release\shader.obj
 D:\gitbachelor\3dsimulator\texture.cpp;D:\gitbachelor\3dsimulator\Release\texture.obj

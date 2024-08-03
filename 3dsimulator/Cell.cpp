@@ -1,27 +1,8 @@
 #include <Cell.h>
 #include <iisphparticle.h>
 #include <part.h>
-unsigned int hashFunction3D(float x, float y, float z)
-{
-	int ix = static_cast<int>(std::floor(x / cellsize));
-	int iy = static_cast<int>(std::floor(y / cellsize));
-	int iz = static_cast<int>(std::floor(z / cellsize));
-	return ((ix * p1) ^ (iy * p2) ^ (iz * p3)) % hashsize;
-}
 
-unsigned int hashFunction2D(float x, float y)
-{
-	int ix = static_cast<int>(std::floor(x / cellsize));
-	int iy = static_cast<int>(std::floor(y / cellsize));
-	return ((ix * p1) ^ (iy * p2)) % hashsize;
-}
 
-unsigned int uniformgridhash(float x, float y, float z) {
-	int xi = static_cast<int>(std::floor(x / cellsize));
-	int yi = static_cast<int>(std::floor(y / cellsize));
-	int zi = static_cast<int>(std::floor(z / cellsize));
-	return (xi + yi * gridbreite + zi * gridhöhe);
-}
 
 bool checkcfl(float maxvel) {
 	cfl = maxvel * deltaT / h;
@@ -131,6 +112,245 @@ void ssphAlgotwoD(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cel
 	densitys.push_back(0.f);
 	densitysnew.push_back(denserrold);
 }
+void computeAllDens(std::vector<iisphparticle>& var_PartC) {
+	denserrold = 0;
+	numofp0high = 0;
+	usemefordens.clear();
+	//float deabugdens = 0;
+//#pragma omp parallel for private(denserrold, numofp0high, usemefordens)
+	for (int i = 0; i < var_PartC.size(); ++i) {
+		iisphparticle& Part = var_PartC[i];
+		Part.density = 0;
+		if (Part.isboundary == false || Part.isfloatingboundary) {
+			Part.denstolow = true;
+			float dens = 0;
+			/*
+			for (float& kern : Part.Kernel) {
+				dens += kern * Part.m;
+			}
+			*/
+			for (const auto& neig : Part.IdNdistNsub) {
+				dens += var_PartC[std::get<0>(neig)].m * makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos);
+			}
+			Part.density = dens;
+			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord && Part.isboundary == false && Part.isfloatingboundary == false) {
+				Part.denstolow = false;
+				numofp0high++;
+				if (absinterrupt) {
+					denserrold += 100 * (std::abs(Part.density - p0) / p0);
+					usemefordens.push_back(Part.index);
+					//deabugdens = std::max(deabugdens, Part.density);
+
+				}
+				else {
+					denserrold += 100 * (Part.density - p0) / p0;
+					usemefordens.push_back(Part.index);
+				}
+			}
+
+			/*
+			if (clampp0 == true) {
+				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
+				Part.denstolow = false;
+				numofp0high++;
+				if (absinterrupt) {
+					denserrold += std::abs(Part.density - p0);
+				}
+				else {
+					denserrold += Part.density - p0;
+				}
+			}
+			if (Part.denstolow == true && clamptolow == true) {
+				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
+			}
+			*/
+		}
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
+			Part.density = p0;
+			Part.denstolow = true;
+		}
+
+	}
+	//std::cout << deabugdens << "   "<< usemefordens.size()<< std::endl;
+	denserrold = (denserrold / usemefordens.size());
+	//denserrold = (denserrold / var_fluidpart);
+}
+void computeAllDenstwoD(std::vector<iisphparticle>& var_PartC) {
+	denserrold = 0;
+	numofp0high = 0;
+	usemefordens.clear();
+	//float deabugdens = 0;
+//#pragma omp parallel for reduction(+:denserrold, numofp0high)
+	for (int i = 0; i < var_PartC.size(); ++i) {
+		iisphparticle& Part = var_PartC[i];
+		Part.density = 0;
+		if (Part.isboundary == false || Part.isfloatingboundary) {
+			Part.denstolow = true;
+			float dens = 0;
+			/*
+			for (float& kern : Part.Kernel) {
+				dens += kern * Part.m;
+			}
+			*/
+			for (const auto& neig : Part.IdNdistNsub) {
+				dens += var_PartC[std::get<0>(neig)].m * makesinglekernel2D(Part.pos, var_PartC[std::get<0>(neig)].pos);
+			}
+			Part.density = dens;
+			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord && Part.isboundary == false && Part.isfloatingboundary == false) {
+				Part.denstolow = false;
+				numofp0high++;
+				if (absinterrupt) {
+					denserrold += 100 * (std::abs(Part.density - p0) / p0);
+					usemefordens.push_back(Part.index);
+					//deabugdens = std::max(deabugdens, Part.density);
+
+				}
+				else {
+					denserrold += 100 * (Part.density - p0) / p0;
+					usemefordens.push_back(Part.index);
+				}
+			}
+
+			/*
+			if (clampp0 == true) {
+				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
+				Part.denstolow = false;
+				numofp0high++;
+				if (absinterrupt) {
+					denserrold += std::abs(Part.density - p0);
+				}
+				else {
+					denserrold += Part.density - p0;
+				}
+			}
+			if (Part.denstolow == true && clamptolow == true) {
+				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
+			}
+			*/
+		}
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
+			Part.density = p0;
+			Part.denstolow = true;
+		}
+
+	}
+	//std::cout << deabugdens << "   "<< usemefordens.size()<< std::endl;
+	denserrold = (denserrold / usemefordens.size());
+	//denserrold = (denserrold / var_fluidpart);
+}
+
+void computeAllDensSSPH(std::vector<iisphparticle>& var_PartC) {
+	denserrold = 0;
+	numofp0high = 0;
+	//#pragma omp parallel for
+	for (auto& Part : var_PartC) {
+		if (Part.isboundary == false || Part.isfloatingboundary) {
+			float dens = 0;
+			for (float& kern : Part.Kernel) {
+				dens += kern * Part.m;
+			}
+			dens = std::max(dens, p0);
+			Part.density = dens;
+			Part.denstolow = false;
+			numofp0high++;
+			if (absinterrupt) {
+				denserrold += std::abs(Part.density - p0);
+			}
+			else {
+				denserrold += Part.density - p0;
+			}
+		}
+		if (Part.isboundary == true && Part.isfloatingboundary == false) {
+			Part.density = p0;
+		}
+	}
+	denserrold = 100 * (denserrold / numofp0high) / p0;
+}
+void computeAllDensErr(std::vector<iisphparticle>& var_PartC) {
+#pragma omp parallel for
+	for (int i = 0; i < var_MaxParticles; i++) {
+		iisphparticle& Part = var_PartC[i];
+		if (Part.isboundary == false) {
+			Part.densityerror = (Part.AP - Part.sf) / p0;
+		}
+	}
+}
+
+
+float makeAlldenserrAvg(std::vector<iisphparticle>& var_PartC) {
+	float densityerroraverage = 0.f;
+	max_singledens = 0;
+	if (ignorep0tolow) {
+#pragma omp parallel for reduction(+:densityerroraverage)
+		for (int i = 0; i < usemefordens.size(); ++i) {
+			iisphparticle& Part = var_PartC[usemefordens[i]];
+			if (absinterrupt) {
+				densityerroraverage += 100 * std::abs(Part.densityerror);
+				max_singledens = std::max(max_singledens, std::abs(Part.densityerror));
+			}
+			else {
+				densityerroraverage += 100 * Part.densityerror;
+				max_singledens = std::max(max_singledens, std::abs(Part.densityerror));
+			}
+		}
+		max_singledens = 100 * max_singledens;
+		return densityerroraverage / usemefordens.size();
+		//return densityerroraverage / var_fluidpart;
+	}
+	/*
+	if (ignoreincomplete) {
+#pragma omp parallel for reduction(+:densityerroraverage)
+		for (int i = 0; i < var_MaxParticles; ++i) {
+			iisphparticle& Part = var_PartC[i];
+			if (Part.isboundary == false && Part.computeme == true) {
+				if (absinterrupt) {
+					densityerroraverage += std::abs(Part.densityerror);
+				}
+				else {
+					densityerroraverage += Part.densityerror;
+				}
+			}
+		}
+		return densityerroraverage / totalcomp;
+	}
+
+	if (ignorep0tolow) {
+//#pragma omp parallel for reduction(+:densityerroraverage)
+		for (int i = 0; i < var_MaxParticles; ++i) {
+			iisphparticle& Part = var_PartC[i];
+			//if (Part.isboundary == false && Part.denstolow == false) {
+			if (Part.density >= p0 /* && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord  && Part.isboundary == false) {
+				if (absinterrupt) {
+					densityerroraverage += std::abs(Part.densityerror);
+				}
+				else {
+					densityerroraverage += Part.densityerror;
+				}
+			}
+		}
+		return (100* (densityerroraverage / numofp0high)/p0);
+	}
+
+	if (ignoreincomplete == false && ignorep0tolow == false) {
+#pragma omp parallel for reduction(+:densityerroraverage)
+		for (int i = 0; i < var_MaxParticles; ++i) {
+			iisphparticle& Part = var_PartC[i];
+			if (Part.isboundary == false) {
+				if (absinterrupt) {
+					densityerroraverage += std::abs(Part.densityerror);
+				}
+				else {
+					densityerroraverage += Part.densityerror;
+				}
+			}
+		}
+		return densityerroraverage / var_fluidpart;
+	}
+	*/
+	return 0.f; // default return in case all conditions are false
+}
+
+
 void computeAllPres(std::vector<iisphparticle>&  var_PartC) {
 #pragma omp parallel for
 for (int i = 0; i < var_PartC.size(); ++i) {
@@ -309,159 +529,8 @@ void MakeAllNonpresAwithdens(std::vector<iisphparticle>& var_PartC) {
 		}
 	}
 }
-void computeAllDens(std::vector<iisphparticle>& var_PartC) {
-	denserrold = 0;
-	numofp0high = 0;
-	usemefordens.clear();
-	//float deabugdens = 0;
-#pragma omp parallel for private(denserrold, numofp0high, usemefordens)
-	for (int i = 0; i < var_PartC.size(); ++i) {
-		iisphparticle& Part = var_PartC[i];
-		Part.density = 0;
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			Part.denstolow = true;
-			float dens = 0;
-			/*
-			for (float& kern : Part.Kernel) {
-				dens += kern * Part.m;
-			}
-			*/
-			for (const auto& neig : Part.IdNdistNsub) {
-				dens += var_PartC[std::get<0>(neig)].m * makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos);
-			}
-			Part.density = dens;
-			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord &&Part.isboundary == false && Part.isfloatingboundary == false) {
-				Part.denstolow = false;
-				numofp0high++;
-				if (absinterrupt) {
-					denserrold += 100*(std::abs(Part.density - p0)/p0);
-					usemefordens.push_back(Part.index);
-					//deabugdens = std::max(deabugdens, Part.density);
 
-				}
-				else {
-					denserrold += 100*(Part.density - p0)/p0;
-					usemefordens.push_back(Part.index);
-				}
-			}
 
-			/*
-			if (clampp0 == true) {
-				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
-				Part.denstolow = false;
-				numofp0high++;
-				if (absinterrupt) {
-					denserrold += std::abs(Part.density - p0);
-				}
-				else {
-					denserrold += Part.density - p0;
-				}
-			}
-			if (Part.denstolow == true && clamptolow == true) {
-				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
-			}
-			*/
-		}
-		if (Part.isboundary == true && Part.isfloatingboundary == false) {
-			Part.density = p0;
-			Part.denstolow = true;
-		}
-		
-	}
-	//std::cout << deabugdens << "   "<< usemefordens.size()<< std::endl;
-	denserrold = (denserrold / usemefordens.size());
-	//denserrold = (denserrold / var_fluidpart);
-}
-void computeAllDenstwoD(std::vector<iisphparticle>& var_PartC) {
-	denserrold = 0;
-	numofp0high = 0;
-	usemefordens.clear();
-	//float deabugdens = 0;
-//#pragma omp parallel for reduction(+:denserrold, numofp0high)
-	for (int i = 0; i < var_PartC.size(); ++i) {
-		iisphparticle& Part = var_PartC[i];
-		Part.density = 0;
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			Part.denstolow = true;
-			float dens = 0;
-			/*
-			for (float& kern : Part.Kernel) {
-				dens += kern * Part.m;
-			}
-			*/
-			for (const auto& neig : Part.IdNdistNsub) {
-				dens += var_PartC[std::get<0>(neig)].m * makesinglekernel2D(Part.pos, var_PartC[std::get<0>(neig)].pos);
-			}
-			Part.density = dens;
-			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord && Part.isboundary == false && Part.isfloatingboundary == false) {
-				Part.denstolow = false;
-				numofp0high++;
-				if (absinterrupt) {
-					denserrold += 100 * (std::abs(Part.density - p0) / p0);
-					usemefordens.push_back(Part.index);
-					//deabugdens = std::max(deabugdens, Part.density);
-
-				}
-				else {
-					denserrold += 100 * (Part.density - p0) / p0;
-					usemefordens.push_back(Part.index);
-				}
-			}
-
-			/*
-			if (clampp0 == true) {
-				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
-				Part.denstolow = false;
-				numofp0high++;
-				if (absinterrupt) {
-					denserrold += std::abs(Part.density - p0);
-				}
-				else {
-					denserrold += Part.density - p0;
-				}
-			}
-			if (Part.denstolow == true && clamptolow == true) {
-				Part.density = std::max(dens, p0 - p0 * denistyerrormax / 100 * clampfac);
-			}
-			*/
-		}
-		if (Part.isboundary == true && Part.isfloatingboundary == false) {
-			Part.density = p0;
-			Part.denstolow = true;
-		}
-
-	}
-	//std::cout << deabugdens << "   "<< usemefordens.size()<< std::endl;
-	denserrold = (denserrold / usemefordens.size());
-	//denserrold = (denserrold / var_fluidpart);
-}
-void computeAllDensSSPH(std::vector<iisphparticle>& var_PartC) {
-	denserrold = 0;
-	numofp0high = 0;
-//#pragma omp parallel for
-	for (auto& Part : var_PartC) {
-		if (Part.isboundary == false || Part.isfloatingboundary) {
-			float dens = 0;
-			for (float& kern : Part.Kernel) {
-				dens += kern * Part.m;
-			}
-			dens = std::max(dens, p0);
-			Part.density = dens;
-			Part.denstolow = false;
-			numofp0high++;
-			if (absinterrupt) {
-				denserrold += std::abs(Part.density - p0);
-			}
-			else {
-				denserrold += Part.density - p0;
-			}
-		}
-		if (Part.isboundary == true && Part.isfloatingboundary == false) {
-			Part.density = p0;
-		}
-	}
-	denserrold = 100 * (denserrold / numofp0high) / p0;
-}
 void makeAllKernelAndKernelDer(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
@@ -577,206 +646,7 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 	}
 }
 */
-void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
-	totalcomp = 0;
-#pragma omp parallel for
-	for (int i = 0; i < var_PartC.size(); ++i) {
-		iisphparticle& Part = var_PartC[i];
-		Part.IdNdistNsub.clear();
-		Part.drawme = false;
-		Part.computeme = false;
-		Part.Aff = 0;
-		std::unordered_set<int> uniqueIds; // Set to track unique IDs
 
-		for (int x = -1; x <= 1; x++) {
-			for (int y = -1; y <= 1; y++) {
-				for (int z = -1; z <= 1; z++) {
-					int hash = hashFunction3D(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius, Part.pos.z + z * searchRadius);
-					if (hashmap.find(hash) != hashmap.end()) {
-						for (int idx : hashmap[hash].particles) {
-							if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
-								/*
-								float distX = var_PartC[idx].pos.x - Part.pos.x;
-								float distY = var_PartC[idx].pos.y - Part.pos.y;
-								float distZ = var_PartC[idx].pos.z - Part.pos.z;
-								float distance = sqrt(distX * distX + distY * distY + distZ * distZ);
-								*/
-								float distance = glm::distance(var_PartC[idx].pos, Part.pos);
-								if (distance <= searchRadius) {
-									Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
-									uniqueIds.insert(idx); // Mark this ID as added
-									//if (var_PartC[idx].isboundary && Part.isboundary == false) {
-									//	Part.drawme = true;
-									//}
-
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		if (Part.IdNdistNsub.size() < animationneighbourscount && (Part.isboundary == false || Part.ismovingboundary == true)) {
-			Part.drawme = true;
-		}
-		if (Part.IdNdistNsub.size() > compbord) {
-			Part.computeme = true;
-			totalcomp++;
-		}
-	}
-}
-
-
-
-
-void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
-	totalcomp = 0;
-#pragma omp parallel for
-	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); ++i) {
-		iisphparticle& Part = var_PartC[i];
-		Part.IdNdistNsub.clear();
-		Part.drawme = false;
-		Part.computeme = false;
-		Part.Aff = 0;
-		std::unordered_set<int> uniqueIds; // Set to track unique IDs
-		for (int x = -1; x <= 1; x++) {
-			for (int y = -1; y <= 1; y++) {
-				int hash = hashFunction2D(Part.pos.x + x * searchRadius, Part.pos.y + y * searchRadius);
-				if (hashmap.find(hash) != hashmap.end()) {
-					for (int idx : hashmap[hash].particles) {
-						if (uniqueIds.find(idx) == uniqueIds.end()) { // Check if ID is already added
-							float distX = var_PartC[idx].pos.x - Part.pos.x;
-							float distY = var_PartC[idx].pos.y - Part.pos.y;
-							float distance = sqrt(distX * distX + distY * distY);
-							if (distance <= searchRadius) {
-
-								Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
-								uniqueIds.insert(idx); // Mark this ID as added
-								//if (var_PartC[idx].isboundary && Part.isboundary == false) {
-								//	Part.drawme = true;
-								//}
-
-							}
-						}
-					}
-				}
-			}
-		}
-		if (Part.IdNdistNsub.size() < animationneighbourscount) {
-			Part.drawme = true;
-		}
-		if (Part.IdNdistNsub.size() > compbord) {
-			Part.computeme = true;
-			totalcomp++;
-		}
-		
-	}
-}
-void clearuniformgrid() {
-#pragma omp parallel for
-	for (int i = 0; i < uniformgidvec1D.size(); i++) {
-		uniformgidvec1D[i].clear();
-	}
-}
-void insertparticlesinuniformgrid(std::vector<iisphparticle>& var_PartC) {
-	for (int i = 0; i < var_MaxParticles; i++) {
-		iisphparticle &Part = var_PartC[i];
-		uniformgidvec1D[uniformgridhash(Part.pos.x, Part.pos.y, Part.pos.z)].push_back(Part.index);
-	}
-}
-void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC) {
-	totalcomp = 0;
-#pragma omp parallel for
-	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); ++i) {
-		iisphparticle& Part = var_PartC[i];
-		Part.IdNdistNsub.clear();
-		Part.drawme = false;
-		Part.computeme = false;
-		Part.Aff = 0;
-		for (int x = -1; x <= 1; x++) {
-			for (int y = -1; y <= 1; y++) {
-				int cellindex = uniformgridhash(Part.pos.x + (x* searchRadius) , Part.pos.y + (y* searchRadius),0.f);
-				for (int idx: uniformgidvec1D[cellindex]){
-					float distX = var_PartC[idx].pos.x - Part.pos.x;
-					float distY = var_PartC[idx].pos.y - Part.pos.y;
-					float distance = sqrt(distX * distX + distY * distY);
-					if (distance <= searchRadius) {
-						Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
-							
-					}
-				}
-			}
-		}
-		if (Part.IdNdistNsub.size() < animationneighbourscount) {
-			Part.drawme = true;
-		}
-		if (Part.IdNdistNsub.size() > compbord) {
-			Part.computeme = true;
-			totalcomp++;
-		}
-	}
-}
-void findAllNeighbourscompact3D(std::vector<iisphparticle>& var_PartC) {
-	totalcomp = 0;
-#pragma omp parallel for
-	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); ++i) {
-		iisphparticle& Part = var_PartC[i];
-		Part.IdNdistNsub.clear();
-		Part.drawme = false;
-		Part.computeme = false;
-		Part.Aff = 0;
-		std::unordered_set<int> uniqueIds;
-		for (int x = -1; x <= 1; x++) {
-			for (int y = -1; y <= 1; y++) {
-				for (int z = -1; z <= 1; z++) {
-					int cellindex = uniformgridhash(Part.pos.x + (x * searchRadius), Part.pos.y + (y * searchRadius), Part.pos.z + (z * searchRadius));
-					for (int idx : uniformgidvec1D[cellindex]) {
-						if (uniqueIds.find(idx) == uniqueIds.end()) {
-							float distance = glm::distance(var_PartC[idx].pos, Part.pos);
-							if (distance <= searchRadius) {
-								Part.IdNdistNsub.push_back(std::make_tuple(idx, distance, Part.pos - var_PartC[idx].pos));
-								uniqueIds.insert(idx);
-							}
-						}
-					}
-				}
-			}
-		}
-		if (Part.IdNdistNsub.size() < animationneighbourscount) {
-			Part.drawme = true;
-		}
-		if (Part.IdNdistNsub.size() > compbord) {
-			Part.computeme = true;
-			totalcomp++;
-		}
-	}
-}
-
-
-void insertAllParticlesIntoHashmap(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
-#pragma omp parallel for
-	for (int i = 0; i < var_MaxParticles; ++i) {
-		if (var_PartC[i].pos.y < upperviualbord && var_PartC[i].pos.y > lowervisualbord) {
-			int hash = hashFunction3D(var_PartC[i].pos.x, var_PartC[i].pos.y, var_PartC[i].pos.z);
-#pragma omp critical
-			{
-				hashmap[hash].particles.push_back(i);
-			}
-		}
-	}
-}
-void insertAllParticlesIntoHashmap2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
-#pragma omp parallel for
-	for (int i = 0; i < var_MaxParticles; ++i) {
-		if (var_PartC[i].pos.y < upperviualbord && var_PartC[i].pos.y > lowervisualbord) {
-			int hash = hashFunction2D(var_PartC[i].pos.x, var_PartC[i].pos.y);
-#pragma omp critical
-			{
-				hashmap[hash].particles.push_back(i);
-			}
-		}
-	}
-}
 void computeAllSF(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_MaxParticles; i++) {
@@ -1155,88 +1025,8 @@ void makeAllAfffastwithdens(std::vector<iisphparticle>& PartC) {
 		}
 	}
 }
-void computeAllDensErr(std::vector<iisphparticle>& var_PartC) {
-#pragma omp parallel for
-	for (int i = 0; i < var_MaxParticles; i++) {
-		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
-			Part.densityerror = (Part.AP - Part.sf)/p0;
-		}
-	}
-}
 
-float makeAlldenserrAvg(std::vector<iisphparticle>& var_PartC) {
-	float densityerroraverage = 0.f;
-	max_singledens = 0;
-	if (ignorep0tolow) {
-#pragma omp parallel for reduction(+:densityerroraverage)
-		for (int i = 0; i < usemefordens.size(); ++i) {
-			iisphparticle& Part = var_PartC[usemefordens[i]];
-			if (absinterrupt) {
-				densityerroraverage += 100 * std::abs(Part.densityerror);
-				max_singledens = std::max(max_singledens, std::abs(Part.densityerror));
-			}
-			else {
-				densityerroraverage += 100 * Part.densityerror;
-				max_singledens = std::max(max_singledens, std::abs(Part.densityerror));
-			}
-		}
-		max_singledens = 100 * max_singledens;
-		return densityerroraverage / usemefordens.size();
-		//return densityerroraverage / var_fluidpart;
-	}
-	/*
-	if (ignoreincomplete) {
-#pragma omp parallel for reduction(+:densityerroraverage)
-		for (int i = 0; i < var_MaxParticles; ++i) {
-			iisphparticle& Part = var_PartC[i];
-			if (Part.isboundary == false && Part.computeme == true) {
-				if (absinterrupt) {
-					densityerroraverage += std::abs(Part.densityerror);
-				}
-				else {
-					densityerroraverage += Part.densityerror;
-				}
-			}
-		}
-		return densityerroraverage / totalcomp;
-	}
-	
-	if (ignorep0tolow) {
-//#pragma omp parallel for reduction(+:densityerroraverage)
-		for (int i = 0; i < var_MaxParticles; ++i) {
-			iisphparticle& Part = var_PartC[i];
-			//if (Part.isboundary == false && Part.denstolow == false) {
-			if (Part.density >= p0 /* && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord  && Part.isboundary == false) {
-				if (absinterrupt) {
-					densityerroraverage += std::abs(Part.densityerror);
-				}
-				else {
-					densityerroraverage += Part.densityerror;
-				}
-			}
-		}
-		return (100* (densityerroraverage / numofp0high)/p0);
-	}
-	
-	if (ignoreincomplete == false && ignorep0tolow == false) {
-#pragma omp parallel for reduction(+:densityerroraverage)
-		for (int i = 0; i < var_MaxParticles; ++i) {
-			iisphparticle& Part = var_PartC[i];
-			if (Part.isboundary == false) {
-				if (absinterrupt) {
-					densityerroraverage += std::abs(Part.densityerror);
-				}
-				else {
-					densityerroraverage += Part.densityerror;
-				}
-			}
-		}
-		return densityerroraverage / var_fluidpart;
-	}
-	*/
-	return 0.f; // default return in case all conditions are false
-}
+
 void makeAllPresA(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); i++) {

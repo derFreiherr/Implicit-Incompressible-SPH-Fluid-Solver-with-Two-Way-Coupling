@@ -72,6 +72,15 @@
     <ClCompile Include="part.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="neighboursearch.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="scenarios.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="densitycomputation.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controls.hpp">
@@ -111,6 +120,15 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Cell.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="neighboursearch.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="scenarios.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="densitycomputation.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

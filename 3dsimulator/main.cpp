@@ -44,6 +44,9 @@ using namespace glm;
 #include <string>
 #include <fstream>
 #include <Cell.h>
+#include <neighboursearch.h>
+#include <scenarios.h>
+#include <densitycomputation.h>
 #include <iisphparticle.h>
 #include<part.h>
 #include <chrono>
