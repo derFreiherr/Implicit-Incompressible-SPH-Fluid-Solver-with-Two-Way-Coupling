@@ -103,7 +103,8 @@ extern glm::mat3 inertiaTensor;
 extern glm::vec3 omegarigidbody;
 extern glm::mat3 inertiaTensorInverse;
 extern glm::vec3 torque;
-
+extern bool addfloating;
+extern std::vector<std::vector<int>> uniformgidvec1D;
 struct Cell {
 	std::vector<int> particles;
 };
@@ -164,7 +165,7 @@ extern unsigned int hashFunction2D(float x, float y);
 extern void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
 extern void insertAllParticlesIntoHashmap2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
 extern void makeAllAfffparallel(std::vector<iisphparticle>& PartC);
-extern void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap);
+extern void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC);
 extern void makeAllAfffparallelfast(std::vector<iisphparticle>& PartC);
 extern void calculatecenterofmass(std::vector<iisphparticle>& PartC);
 extern void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap);
@@ -178,3 +179,6 @@ extern void makeBoundPres2D(std::vector<iisphparticle>& var_PartC);
 extern void computeAllDenstwoD(std::vector<iisphparticle>& var_PartC);
 extern glm::mat3 skewSymmetricMatrix2d(const glm::vec3& v);
 extern void updaterigidbody2d(std::vector<iisphparticle>& PartC);
+extern void clearuniformgrid();
+extern void insertparticlesinuniformgrid(std::vector<iisphparticle>& var_PartC);
+extern void findAllNeighbourscompact3D(std::vector<iisphparticle>& var_PartC);

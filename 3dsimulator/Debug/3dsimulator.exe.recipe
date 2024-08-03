@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\bachelorarbeit\Debug\3dsimulator.exe</FullPath>
+      <FullPath>D:\gitbachelor\Debug\3dsimulator.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

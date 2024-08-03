@@ -97,10 +97,13 @@ void var_iisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 		makecfltrue(PartC);
 
 		auto start_n = std::chrono::high_resolution_clock::now();
-		hashmap.clear();
-		insertAllParticlesIntoHashmap(PartC, hashmap);
+		//hashmap.clear();
+		//insertAllParticlesIntoHashmap(PartC, hashmap);
 		//findneighbours
-		findAllNeighbours(PartC, hashmap);
+		//findAllNeighbours(PartC, hashmap);
+		clearuniformgrid();
+		insertparticlesinuniformgrid(PartC);
+		findAllNeighbourscompact3D(PartC);
 		auto end_n = std::chrono::high_resolution_clock::now();
 		//makeKernel and Kernelder
 		makeAllKernelAndKernelDer(PartC);
@@ -269,10 +272,13 @@ void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 	makecfltrue(PartC);
 
 	auto start_n = std::chrono::high_resolution_clock::now();
-	hashmap.clear();
-	insertAllParticlesIntoHashmap2D(PartC, hashmap);
+	//hashmap.clear();
+	//insertAllParticlesIntoHashmap2D(PartC, hashmap);
 	//findneighbours
-	findAllNeighbours2D(PartC, hashmap);
+	//findAllNeighbours2D(PartC, hashmap);
+	clearuniformgrid();
+	insertparticlesinuniformgrid(PartC);
+	findAllNeighbourscompact2D(PartC);
 	auto end_n = std::chrono::high_resolution_clock::now();
 	//makeKernel and Kernelder
 	makeAllKernelAndKernelDerTwoD(PartC);
@@ -356,7 +362,7 @@ void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 
 void var_init(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
-	var_fluidpart = var_nx * var_ny * var_nz + 250;
+	var_fluidpart = var_nx * var_ny * var_nz;
 	var_spezialboundpart = 0;
 	if (singlewall) {
 		gammafloat = 0.7;
@@ -370,11 +376,16 @@ void var_init(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesCon
 	hashsize = var_MaxParticles;
 	ParticlesContainer.resize(var_MaxParticles);
 	int i = 0;
+	std::srand(std::time(NULL));
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<> dis(-jitterfac, jitterfac);
 	for (int x = 0; x < (var_nx ); x++) {
 		for (int y = 0; y < (var_ny ); y++) {
 			for (int z = 0; z < (var_nz ); z++) {
 				////ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
-				ParticlesContainer[i].pos = glm::vec3((x + 2) * (h*1), (y + 1) * (h*1), (z + 1) * (h*1));
+				double rando = dis(gen);
+				ParticlesContainer[i].pos = glm::vec3((x + rando+2) * h, (y + rando+1) * h, (z + rando+1) * h);
 				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].a = 250;
@@ -382,81 +393,6 @@ void var_init(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesCon
 				ParticlesContainer[i].index = i;
 				i += 1;
 			}
-		}
-	}
-	std::cout << i << std::endl;
-	// Bottom and top faces
-	for (int xi = 0; xi < 5; xi++) {
-		for (int yi = 0; yi < 5; yi++) {
-			// Bottom
-			ParticlesContainer[i].pos = glm::vec3((xi + var_oneway /2) * h, (1 + watercolheight) * h, (yi+ var_oneway /2) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = false;
-			ParticlesContainer[i].isfloatingboundary = true;
-			ParticlesContainer[i].index = i;
-			i++;
-
-			// Top
-			ParticlesContainer[i].pos = glm::vec3((xi + var_oneway / 2) * h, (1 + watercolheight + 4) * h, (yi + var_oneway / 2) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = false;
-			ParticlesContainer[i].isfloatingboundary = true;
-			ParticlesContainer[i].index = i;
-			i++;
-		}
-	}
-
-	// Front and back faces
-	for (int xi = 0; xi < 5; xi++) {
-		for (int zi = 0; zi < 5; zi++) {
-			// Front
-			ParticlesContainer[i].pos = glm::vec3((xi + var_oneway / 2) * h, (1 + watercolheight + zi) * h, (var_oneway / 2)*h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = false;
-			ParticlesContainer[i].isfloatingboundary = true;
-			ParticlesContainer[i].index = i;
-			i++;
-
-			// Back
-			ParticlesContainer[i].pos = glm::vec3((xi + var_oneway / 2) * h, (1 + watercolheight + zi) * h, (4+ var_oneway / 2) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = false;
-			ParticlesContainer[i].isfloatingboundary = true;
-			ParticlesContainer[i].index = i;
-			i++;
-		}
-	}
-
-	// Left and right faces
-	for (int yi = 0; yi < 5; yi++) {
-		for (int zi = 0; zi < 5; zi++) {
-			// Left
-			ParticlesContainer[i].pos = glm::vec3((var_oneway / 2) * h, (1 + watercolheight + zi) * h, (yi + var_oneway / 2) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = false;
-			ParticlesContainer[i].isfloatingboundary = true;
-			ParticlesContainer[i].index = i;
-			i++;
-
-			// Right
-			ParticlesContainer[i].pos = glm::vec3((var_oneway / 2) * h, (1 + watercolheight + zi) * h,( yi+ var_oneway / 2) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = false;
-			ParticlesContainer[i].isfloatingboundary = true;
-			ParticlesContainer[i].index = i;
-			i++;
 		}
 	}
 	std::cout << i << std::endl;
@@ -1725,6 +1661,220 @@ void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& Partic
 		}
 	}
 }
+void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
+	// Clear the container
+	ParticlesContainer.resize(0);
+
+	// Define boundary and fluid parameters
+	int var_boundarypart = 25 + 19 * 19 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20);
+	gammafloat = 0.7;
+	if (!singlewall) {
+		//gammafloat = 1;
+		var_boundarypart = 25 + 19 * 19 * 2 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 19 * 2 * (watercolheight + 20);
+	}
+
+	// Parameters for the fluid particles
+	var_nx = 15;
+	var_nz = 15;
+	var_fluidpart = var_nx * watercolheight * var_nz;
+	var_spezialboundpart = 125;
+	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
+	hashsize = var_MaxParticles;
+
+	// Resize the container to fit all particles
+	ParticlesContainer.resize(var_MaxParticles);
+	int i = 0;
+	std::srand(std::time(NULL));
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<> dis(-jitterfac, jitterfac);
+	const double offset = 10.0;
+
+	// Create fluid particles
+	for (int x = 0; x < var_nx; x++) {
+		for (int y = 0; y < watercolheight; y++) {
+			for (int z = 0; z < var_nz; z++) {
+				double rando = dis(gen);
+				ParticlesContainer[i].pos = glm::vec3((x + rando + offset) * h, (y + rando + offset) * h, (z + rando + offset) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = 250;
+				ParticlesContainer[i].isboundary = false;
+				ParticlesContainer[i].index = i;
+				i++;
+			}
+		}
+	}
+
+	for (float xi = 0; xi < 5; xi += 1) {
+		for (float yi = 0; yi < 5; yi += 1) {
+			for (float zi = 0; zi < 5; zi += 1) {
+				ParticlesContainer[i].pos = glm::vec3((xi + 5 + offset) * h, (10 + watercolheight + yi + offset) * h, (zi + 5 + offset) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = false;
+				ParticlesContainer[i].isfloatingboundary = true;
+				ParticlesContainer[i].index = i;
+				i++;
+			}
+		}
+	}
+	std::cout << "Number of particles: " << i << std::endl;
+
+	for (float xi = 0; xi < 5; xi += 1) {
+		for (float yi = 0; yi < 5; yi += 1) {
+			ParticlesContainer[i].pos = glm::vec3((xi + 5 + offset) * h, (9 + watercolheight + offset) * h, (yi + 5 + offset) * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].isfloatingboundary = false;
+			ParticlesContainer[i].index = i;
+			i++;
+		}
+	}
+	std::cout << "Number of bound particles: " << i << std::endl;
+
+	float boden = 0;
+	// Create bottom boundary particles
+	for (int x = -2; x <= 16; x++) {
+		for (int y = -2; y <= -1; y++) {
+			for (int z = -2; z <= 16; z++) {
+				if (y > -2 || !singlewall) {
+					ParticlesContainer[i].pos = glm::vec3((x + offset) * h, (y + offset) * h, (z + offset) * h);
+					ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+					ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+					ParticlesContainer[i].a = boundarya;
+					ParticlesContainer[i].isboundary = true;
+					ParticlesContainer[i].index = i;
+					i++;
+					boden++;
+				}
+			}
+		}
+	}
+	std::cout << "boden: " << boden << std::endl;
+
+	// Create front and back single
+	float frontandback = 0;
+	for (int x = 0; x <= 14; x++) {
+		for (int y = 0; y < watercolheight + 20; y++) {
+			ParticlesContainer[i].pos = glm::vec3((x + offset) * h, (y + offset) * h, (-1 + offset) * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].index = i;
+			frontandback++;
+			i++;
+			ParticlesContainer[i].pos = glm::vec3((x + offset) * h, (y + offset) * h, (15 + offset) * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].index = i;
+			frontandback++;
+			i++;
+		}
+	}
+	std::cout << "vorder und rück wände single: " << frontandback << std::endl;
+
+	// Create front and back double
+	frontandback = 0;
+	if (!singlewall) {
+		for (int x = -1; x < 16; x++) {
+			for (int y = 0; y < watercolheight + 20; y++) {
+				ParticlesContainer[i].pos = glm::vec3((x + offset) * h, (y + offset) * h, (-2 + offset) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = true;
+				ParticlesContainer[i].index = i;
+				i++;
+				frontandback++;
+				ParticlesContainer[i].pos = glm::vec3((x + offset) * h, (y + offset) * h, (16 + offset) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = true;
+				ParticlesContainer[i].index = i;
+				i++;
+				frontandback++;
+			}
+		}
+		std::cout << "vorder und rück wände double: " << frontandback << std::endl;
+	}
+
+	int leftandright = 0;
+	// Create left and right single
+	for (int z = -1; z <= 15; z++) {
+		for (int y = 0; y < watercolheight + 20; y++) {
+			ParticlesContainer[i].pos = glm::vec3((-1 + offset) * h, (y + offset) * h, (z + offset) * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+			leftandright++;
+			ParticlesContainer[i].pos = glm::vec3((15 + offset) * h, (y + offset) * h, (z + offset) * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+			leftandright++;
+		}
+	}
+	std::cout << "left und right wände single: " << leftandright << std::endl;
+
+	// Create left and right double
+	leftandright = 0;
+	if (!singlewall) {
+		for (int z = -2; z <= 16; z++) {
+			for (int y = 0; y < watercolheight + 20; y++) {
+				ParticlesContainer[i].pos = glm::vec3((-2 + offset) * h, (y + offset) * h, (z + offset) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = true;
+				ParticlesContainer[i].index = i;
+				i++;
+				leftandright++;
+				ParticlesContainer[i].pos = glm::vec3((16 + offset) * h, (y + offset) * h, (z + offset) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = true;
+				ParticlesContainer[i].index = i;
+				i++;
+				leftandright++;
+			}
+		}
+		std::cout << "left und right wände double: " << leftandright << std::endl;
+	}
+
+	// Finalize particle properties
+	for (int j = 0; j < var_MaxParticles; j++) {
+		ParticlesContainer[j].ismovingboundary = false;
+		ParticlesContainer[j].resetvalues();
+		if (ParticlesContainer[j].isboundary) {
+			ParticlesContainer[j].a = boundarya;
+		}
+		else {
+			ParticlesContainer[j].a = 250;
+		}
+		if (ParticlesContainer[j].isfloatingboundary) {
+			ParticlesContainer[j].a = 200;
+			ParticlesContainer[j].r = 200;
+			ParticlesContainer[j].b = 0;
+			ParticlesContainer[j].g = 0;
+		}
+	}
+}
+
 void var_real_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
 	var_spezialboundpart = 0;
@@ -2455,270 +2605,48 @@ void watercolumn(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particles
 	}
 }
 
-void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
+
+void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>&ParticlesContainer) {
 	// Clear the container
 	ParticlesContainer.resize(0);
 
 	// Define boundary and fluid parameters
-	int var_boundarypart =25+ 19 * 19 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20)  ;
+	int var_boundarypart = 19 + 2 * (watercolheight + 100);
 	gammafloat = 0.7;
 	if (!singlewall) {
 		//gammafloat = 1;
-		var_boundarypart =25+ 19 * 19 *2 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 19 * 2 * (watercolheight + 20);
+		var_boundarypart = 2 * 19 + 2 * 2 * (watercolheight + 100) + 40;
 	}
 
 	// Parameters for the fluid particles
-	var_nx = 15;
-	var_nz = 15;
-	var_fluidpart = var_nx * watercolheight * var_nz ;
-	var_spezialboundpart = 125;// 2146;
-	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
-	hashsize = var_MaxParticles;
-
-	// Resize the container to fit all particles
-	ParticlesContainer.resize(var_MaxParticles);
-	int i = 0;
-	std::srand(std::time(NULL));
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<> dis(-jitterfac, jitterfac);
-	// Create fluid particles
-	for (int x = 0; x < var_nx; x++) {
-		for (int y = 0; y < watercolheight; y++) {
-			for (int z = 0; z < var_nz; z++) {
-				double rando = dis(gen);
-				double randomnum = jitterfac * static_cast<double>(std::rand()) / (RAND_MAX );
-				ParticlesContainer[i].pos = glm::vec3((x+rando) * h, (y + rando) * h, (z + rando) * h);
-				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].a = 250;
-				ParticlesContainer[i].isboundary = false;
-				ParticlesContainer[i].index = i;
-				i++;
-			}
-		}
-	}
-	/*
-	std::vector<glm::vec3> duckVertices = parseObjFile("../exportdata/duck.obj");
-
-	if (duckVertices.empty()) {
-		std::cerr << "No vertices found in the file." << std::endl;
+	var_spezialboundpart = 0;
+	if (addfloating) {
+		var_spezialboundpart = 36;
 	}
 
-	for (const auto& vertex : duckVertices) {
-		ParticlesContainer[i].pos = (vertex + glm::vec3(5.f,watercolheight+2.f, 5.f)/60.f) * h*60.f; // Skalierung
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
-	}
-	*/
-	
-	for (float xi = 0; xi < 5; xi += 1) {
-		for (float yi = 0; yi < 5; yi += 1) {
-			for (float zi = 0; zi < 5; zi += 1) {
-				ParticlesContainer[i].pos = glm::vec3((xi + 5) * h, (10 +watercolheight + yi) * h, (zi+5) * h);
-				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].a = boundarya;
-				ParticlesContainer[i].isboundary = false;
-				ParticlesContainer[i].isfloatingboundary = true;
-				ParticlesContainer[i].index = i;
-				i++;
-			}
-		}
-	}
-	std::cout << "Number of particles: " << i << std::endl;
-	for (float xi = 0; xi < 5; xi += 1) {
-		for (float yi = 0; yi < 5; yi += 1) {
-			ParticlesContainer[i].pos = glm::vec3((xi + 5) * h, (9 + watercolheight) * h, (yi + 5) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = true;
-			ParticlesContainer[i].isfloatingboundary = false;
-			ParticlesContainer[i].index = i;
-			i++;
-		}
-	}
-	std::cout << "Number of bound  particles: " << i << std::endl;
-	
-	
-	float boden = 0;
-	// Create bottom boundary particles
-	for (int x = -2; x <= 16; x++) {
-		for (int y = -2; y <= -1; y++) {
-			for (int z = -2; z <= 16; z++) {
-				if (y > -2 || !singlewall) {
-					ParticlesContainer[i].pos = glm::vec3((x) * h, y * h, (z ) * h);
-					ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-					ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-					ParticlesContainer[i].a = boundarya;
-					ParticlesContainer[i].isboundary = true;
-					ParticlesContainer[i].index = i;
-					i++;
-					boden++;
-				}
-			}
-		}
-	}
-	std::cout << "boden: " << boden << std::endl;
-	// Create front and back single
-	float frontandback = 0;
-	for (int x = 0; x <= 14; x++) {
-		for (int y = 0; y < watercolheight + 20; y++) {
-			ParticlesContainer[i].pos = glm::vec3((x)*h, y * h, (-1)*h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = true;
-			ParticlesContainer[i].index = i;
-			frontandback++;
-			i++;
-			ParticlesContainer[i].pos = glm::vec3((x)*h, y * h, (15) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = true;
-			ParticlesContainer[i].index = i;
-			frontandback++;
-			i++;
-		}
-	}
-	std::cout << " vorder und rück wände single : " << frontandback << std::endl;
-	// Create front and back double
-	frontandback = 0;
-	if (!singlewall) {
-		for (int x = -1; x < 16; x++) {
-			for (int y = 0; y < watercolheight + 20; y++) {
-				ParticlesContainer[i].pos = glm::vec3((x)*h, y * h, (-2) * h);
-				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].a = boundarya;
-				ParticlesContainer[i].isboundary = true;
-				ParticlesContainer[i].index = i;
-				i++;
-				frontandback++;
-				ParticlesContainer[i].pos = glm::vec3((x)*h, y * h, (16) * h);
-				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].a = boundarya;
-				ParticlesContainer[i].isboundary = true;
-				ParticlesContainer[i].index = i;
-				i++;
-				frontandback++;
-			}
-		}
-		std::cout << " vorder und rück wände double : " << frontandback << std::endl;
-	}
-	int leftandright = 0;
-	// Create left and right single
-	for (int z = -1; z <= 15; z++) {
-		for (int y = 0; y < watercolheight + 20; y++) {
-			ParticlesContainer[i].pos = glm::vec3((-1)*h, y * h, (z) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = true;
-			ParticlesContainer[i].index = i;
-			i++;
-			leftandright++;
-			ParticlesContainer[i].pos = glm::vec3((15)*h, y * h, (z) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = true;
-			ParticlesContainer[i].index = i;
-			i++;
-			leftandright++;
-		}
-	}
-	std::cout << " left und right wände single : " << leftandright << std::endl;
-	// Create left and right double
-	leftandright = 0;
-	if (!singlewall) {
-		for (int z = -2; z <= 16; z++) {
-			for (int y = 0; y < watercolheight + 20; y++) {
-				ParticlesContainer[i].pos = glm::vec3((-2)*h, y * h, (z) * h);
-				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].a = boundarya;
-				ParticlesContainer[i].isboundary = true;
-				ParticlesContainer[i].index = i;
-				i++;
-				leftandright++;
-				ParticlesContainer[i].pos = glm::vec3((16)*h, y * h, (z) * h);
-				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-				ParticlesContainer[i].a = boundarya;
-				ParticlesContainer[i].isboundary = true;
-				ParticlesContainer[i].index = i;
-				i++;
-				leftandright++;
-			}
-		}
-		std::cout << " left und right wände double : " << leftandright << std::endl;
-	}
-	
-	// Finalize particle properties
-	for (int j = 0; j < var_MaxParticles; j++) {
-		ParticlesContainer[j].ismovingboundary = false;
-		ParticlesContainer[j].resetvalues();
-		if (ParticlesContainer[j].isboundary) {
-			ParticlesContainer[j].a = boundarya;
-		}
-		else {
-			ParticlesContainer[j].a = 250;
-		}
-		if (ParticlesContainer[j].isfloatingboundary) {
-			ParticlesContainer[j].a = 200;
-			ParticlesContainer[j].r = 200;
-			ParticlesContainer[j].b = 0;
-			ParticlesContainer[j].g = 0;
-
-		}
-	}
-}
-
-void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
-	// Clear the container
-	ParticlesContainer.resize(0);
-
-	// Define boundary and fluid parameters
-	int var_boundarypart = 19 + 2 * (watercolheight + 100) ;
-	gammafloat = 0.7;
-	if (!singlewall) {
-		//gammafloat = 1;
-		var_boundarypart = 2* 19 + 2* 2 * (watercolheight + 100)+40;
-	}
-
-	// Parameters for the fluid particles
-	var_spezialboundpart = 36;
 	var_nx = 15;
 	var_nz = 1;
-	var_fluidpart = var_nx * watercolheight * var_nz  ;
+	var_fluidpart = var_nx * watercolheight * var_nz;
 	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
 	hashsize = var_MaxParticles;
 
 	// Resize the container to fit all particles
 	ParticlesContainer.resize(var_MaxParticles);
 	for (int l = 0; l < ParticlesContainer.size(); l++) {
-		ParticlesContainer[l].isfloatingboundary == false;
+		ParticlesContainer[l].isfloatingboundary = false;
 	}
 	int i = 0;
 	std::srand(std::time(NULL));
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<> dis(-jitterfac, jitterfac);
+	const double offset = 5.0;
+
 	// Create fluid particles
 	for (int x = 0; x < var_nx; x++) {
 		for (int y = 0; y < watercolheight; y++) {
 			double rando = dis(gen);
-			double randomnum = jitterfac * static_cast<double>(std::rand()) / (RAND_MAX);
-			ParticlesContainer[i].pos = glm::vec3((x + rando) * h, (y + rando) * h,0* h);
+			ParticlesContainer[i].pos = glm::vec3((x + rando + offset) * h, (y + rando + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = 250;
@@ -2727,55 +2655,51 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 			i++;
 		}
 	}
-	
-	for (float xi = 0; xi < 4.5; xi = xi + 0.5) {
-		ParticlesContainer[i].pos = glm::vec3((xi + 2) * h, (watercolheight+1) * h, (0) * h);
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		//ParticlesContainer[i].isboundary = true;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
+	if (addfloating) {
+		for (float xi = 0; xi < 4.5; xi = xi + 0.5) {
+			ParticlesContainer[i].pos = glm::vec3((xi + 2 + offset) * h, (watercolheight + 1 + offset) * h, 0 * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = false;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
 
-		ParticlesContainer[i].pos = glm::vec3((0 + 2) * h, (watercolheight+1 + xi) * h, (0) * h);
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		//ParticlesContainer[i].isboundary = true;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
-		ParticlesContainer[i].pos = glm::vec3((4 + 2) * h, (watercolheight+1 + xi) * h, (0) * h);
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		//ParticlesContainer[i].isboundary = true;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
-		ParticlesContainer[i].pos = glm::vec3((xi + 2) * h, (watercolheight+1 + 4) * h, (0) * h);
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		//ParticlesContainer[i].isboundary = true;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
-
+			ParticlesContainer[i].pos = glm::vec3((0 + 2 + offset) * h, (watercolheight + 1 + xi + offset) * h, 0 * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = false;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+			ParticlesContainer[i].pos = glm::vec3((4 + 2 + offset) * h, (watercolheight + 1 + xi + offset) * h, 0 * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = false;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+			ParticlesContainer[i].pos = glm::vec3((xi + 2 + offset) * h, (watercolheight + 1 + 4 + offset) * h, 0 * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = false;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+		}
 	}
+
 	std::cout << "fluid: " << i << std::endl;
 	float boden = 0;
 	// Create bottom boundary particles
 	for (int x = -2; x <= 16; x++) {
 		for (int y = -2; y <= -1; y++) {
-			
 			if (y > -2 || !singlewall) {
-				ParticlesContainer[i].pos = glm::vec3((x)*h, y * h, (0)*h);
+				ParticlesContainer[i].pos = glm::vec3((x + offset) * h, (y + offset) * h, 0 * h);
 				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].a = boundarya;
@@ -2783,7 +2707,6 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 				ParticlesContainer[i].index = i;
 				i++;
 				boden++;
-				
 			}
 		}
 	}
@@ -2792,7 +2715,7 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 	// Create left and right single
 
 	for (int y = 0; y < watercolheight + 100; y++) {
-		ParticlesContainer[i].pos = glm::vec3((-1) * h, y * h, (0)*h);
+		ParticlesContainer[i].pos = glm::vec3((-1 + offset) * h, (y + offset) * h, 0 * h);
 		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].a = boundarya;
@@ -2800,7 +2723,7 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 		ParticlesContainer[i].index = i;
 		i++;
 		leftandright++;
-		ParticlesContainer[i].pos = glm::vec3((15) * h, y * h, (0)*h);
+		ParticlesContainer[i].pos = glm::vec3((15 + offset) * h, (y + offset) * h, 0 * h);
 		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].a = boundarya;
@@ -2815,7 +2738,7 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 	leftandright = 0;
 	if (!singlewall) {
 		for (int y = 0; y < watercolheight + 100; y++) {
-			ParticlesContainer[i].pos = glm::vec3((-2) * h, y * h, (0) * h);
+			ParticlesContainer[i].pos = glm::vec3((-2 + offset) * h, (y + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = boundarya;
@@ -2823,7 +2746,7 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 			ParticlesContainer[i].index = i;
 			i++;
 			leftandright++;
-			ParticlesContainer[i].pos = glm::vec3((16) * h, y * h, (0) * h);
+			ParticlesContainer[i].pos = glm::vec3((16 + offset) * h, (y + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = boundarya;
@@ -2834,7 +2757,6 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 		}
 		std::cout << " left und right wände double : " << leftandright << std::endl;
 	}
-	
 
 	// Finalize particle properties
 	for (int j = 0; j < var_MaxParticles; j++) {
@@ -2849,28 +2771,31 @@ void watercolumnTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 		}
 		if (ParticlesContainer[j].isfloatingboundary) {
 			ParticlesContainer[j].a = 200;
+
+
 			ParticlesContainer[j].r = 200;
 			ParticlesContainer[j].b = 0;
 			ParticlesContainer[j].g = 0;
-
 		}
 	}
 }
-
 void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	// Clear the container
 	ParticlesContainer.resize(0);
 
 	// Define boundary and fluid parameters
-	int var_boundarypart = 2*150 + 2 * (100);
+	int var_boundarypart = 2 * 150 + 2 * (100);
 	if (!singlewall) {
 		//gammafloat = 1;
-		var_boundarypart = var_boundarypart = 2*2 * 150 + 2 * 2 * (100);
+		var_boundarypart = 2 * 2 * 150 + 2 * 2 * (100);
 	}
 
 	// Parameters for the fluid particles
-	var_spezialboundpart = 36;
-	
+	var_spezialboundpart = 0;
+	if (addfloating) {
+		var_spezialboundpart = 36;
+	}
+
 	var_nz = 1;
 	var_fluidpart = var_nx * var_ny * 1;
 	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
@@ -2883,11 +2808,13 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<> dis(-jitterfac, jitterfac);
+	const double offset = 10.0;
+
 	// Create fluid particles
 	for (int x = 0; x < var_nx; x++) {
 		for (int y = 0; y < var_ny; y++) {
 			double rando = dis(gen);
-			ParticlesContainer[i].pos = glm::vec3((x + rando) * h, (y + rando) * h, 0 * h);
+			ParticlesContainer[i].pos = glm::vec3((x + rando + offset) * h, (y + rando + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = 250;
@@ -2896,56 +2823,51 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 			i++;
 		}
 	}
-	
-	for (float xi = 0; xi < 4.5; xi = xi + 0.5) {
-		ParticlesContainer[i].pos = glm::vec3((xi + 2 + var_nx) * h, (1 + var_ny) * h, (0) * h);
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		//ParticlesContainer[i].isboundary = true;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
+	if (addfloating) {
+		for (float xi = 0; xi < 4.5; xi = xi + 0.5) {
+			ParticlesContainer[i].pos = glm::vec3((xi + 2 + var_nx + offset) * h, (1 + var_ny + offset) * h, 0 * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = false;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
 
-		ParticlesContainer[i].pos = glm::vec3((0 + 2 + var_nx) * h, (1 + xi + var_ny) * h, (0) * h);
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		//ParticlesContainer[i].isboundary = true;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
-		ParticlesContainer[i].pos = glm::vec3((4 + 2 + var_nx) * h, (1 + xi + var_ny) * h, (0) * h);
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		//ParticlesContainer[i].isboundary = true;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
-		ParticlesContainer[i].pos = glm::vec3((xi + 2 + var_nx) * h, (1 + 4 + var_ny) * h, (0) * h);
-		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-		ParticlesContainer[i].a = boundarya;
-		//ParticlesContainer[i].isboundary = true;
-		ParticlesContainer[i].isboundary = false;
-		ParticlesContainer[i].isfloatingboundary = true;
-		ParticlesContainer[i].index = i;
-		i++;
-
+			ParticlesContainer[i].pos = glm::vec3((0 + 2 + var_nx + offset) * h, (1 + xi + var_ny + offset) * h, 0 * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = false;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+			ParticlesContainer[i].pos = glm::vec3((4 + 2 + var_nx + offset) * h, (1 + xi + var_ny + offset) * h, 0 * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = false;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+			ParticlesContainer[i].pos = glm::vec3((xi + 2 + var_nx + offset) * h, (1 + 4 + var_ny + offset) * h, 0 * h);
+			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+			ParticlesContainer[i].a = boundarya;
+			ParticlesContainer[i].isboundary = false;
+			ParticlesContainer[i].isfloatingboundary = true;
+			ParticlesContainer[i].index = i;
+			i++;
+		}
 	}
-	
+
 	std::cout << "fluid: " << i << std::endl;
 	float boden = 0;
 	// Create bottom and top boundary particles
 	for (int x = -2; x <= 148; x++) {
 		for (int y = -2; y <= -1; y++) {
-
 			if (y > -2 || !singlewall) {
-				ParticlesContainer[i].pos = glm::vec3((x)*h, y * h, (0) * h);
+				ParticlesContainer[i].pos = glm::vec3((x + offset) * h, (y + offset) * h, 0 * h);
 				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].a = boundarya;
@@ -2953,7 +2875,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 				ParticlesContainer[i].index = i;
 				i++;
 				boden++;
-				ParticlesContainer[i].pos = glm::vec3((x)*h, (100+y) * h, (0) * h);
+				ParticlesContainer[i].pos = glm::vec3((x + offset) * h, (100 + y + offset) * h, 0 * h);
 				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 				ParticlesContainer[i].a = boundarya;
@@ -2961,7 +2883,6 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 				ParticlesContainer[i].index = i;
 				i++;
 				boden++;
-
 			}
 		}
 	}
@@ -2969,8 +2890,8 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	int leftandright = 0;
 	// Create left and right single
 
-	for (int y = 0; y <  100; y++) {
-		ParticlesContainer[i].pos = glm::vec3((-1) * h, y * h, (0) * h);
+	for (int y = 0; y < 100; y++) {
+		ParticlesContainer[i].pos = glm::vec3((-1 + offset) * h, (y + offset) * h, 0 * h);
 		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].a = boundarya;
@@ -2978,7 +2899,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 		ParticlesContainer[i].index = i;
 		i++;
 		leftandright++;
-		ParticlesContainer[i].pos = glm::vec3((147) * h, y * h, (0) * h);
+		ParticlesContainer[i].pos = glm::vec3((147 + offset) * h, (y + offset) * h, 0 * h);
 		ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 		ParticlesContainer[i].a = boundarya;
@@ -2992,8 +2913,8 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	// Create left and right double
 	leftandright = 0;
 	if (!singlewall) {
-		for (int y = 0; y <  100; y++) {
-			ParticlesContainer[i].pos = glm::vec3((-2) * h, y * h, (0) * h);
+		for (int y = 0; y < 100; y++) {
+			ParticlesContainer[i].pos = glm::vec3((-2 + offset) * h, (y + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = boundarya;
@@ -3001,7 +2922,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 			ParticlesContainer[i].index = i;
 			i++;
 			leftandright++;
-			ParticlesContainer[i].pos = glm::vec3((148) * h, y * h, (0) * h);
+			ParticlesContainer[i].pos = glm::vec3((148 + offset) * h, (y + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = boundarya;
@@ -3029,14 +2950,9 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 			ParticlesContainer[j].r = 200;
 			ParticlesContainer[j].b = 0;
 			ParticlesContainer[j].g = 0;
-
 		}
 	}
 }
-
-
-
-
 void moving_boundary(glm::vec3 CameraPosition, std::vector<iisphparticle>& ParticlesContainer) {
 	ParticlesContainer.resize(0);
 	var_spezialboundpart = 0;

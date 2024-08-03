@@ -210,10 +210,12 @@ bool colordens = false;
 bool colorpres = false;
 bool setboundmass = true;
 bool setpartmass = true;
+bool addfloating = false;
 float gammapart = 1;
 float jitterfac = 0.01;
 float maxdenserrold = 0;
 bool resetvalues = false;
+bool updateviewpos = true;
 std::vector<float> maxvels;
 std::vector<int> usemefordens;
 std::vector<float> cfls;
@@ -243,7 +245,7 @@ glm::mat3 inertiaTensor(0.f);
 glm::vec3 omegarigidbody = glm::vec3(0.f, 0.f, 0.f);
 glm::mat3 inertiaTensorInverse;
 glm::vec3 torque(0.f, 0.f, 0.f);
-
+std::vector<std::vector<int>> uniformgidvec1D;
 
 //_________________________________________________________________________________
 int windowedWidth = 2048;//small1600;
@@ -438,14 +440,16 @@ int main(void)
 		if (start) {
 			upperviualbord = 100;
 			lowervisualbord = -10;
-			position = glm::vec3(4, 2, 30);
+			if (updateviewpos) {
+				position = glm::vec3(4, 2, 30);
+			}
+			
 			firstdatapath = "breakingDam";
 			firstdatapath.copy(changename, 127);
 			var_init(CameraPosition, var_PartC);
 			start = false;
 			maketesla = false;
 			maketeslaclosed = false;
-			currentitermax = 10;
 			sizefac = 1 / h * 0.1;
 			if (setboundmass) {
 				makeboundmass(var_PartC, hashmap);
@@ -464,7 +468,10 @@ int main(void)
 			visc_boundary = 0.11;
 			absinterrupt = false;
 			singlewall =false;
-			position = glm::vec3(14, 5, 50);
+			if (updateviewpos) {
+				position = glm::vec3(14, 5, 50);
+			}
+			
 			firstdatapath = "breakingDamTest";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
@@ -483,19 +490,22 @@ int main(void)
 				makepartmass(var_PartC, hashmap);
 			}
 		}if (smalldambreaktestscen) {
-			upperviualbord = 120*h;
-			lowervisualbord = -10;
-			position = glm::vec3(15, 5, 50);
+			upperviualbord = 58*h;
+			lowervisualbord = -1*h;
+			if (updateviewpos) {
+				position = glm::vec3(15, 5, 50);
+			}
+			
 			firstdatapath = "breakingDamTestSmall";
 			firstdatapath.copy(changename, 127);
 			fixeddt = false;
-			clampfac = 2.;
-			surfacetension = 0.08;
+			clampfac = 0.;
+			//surfacetension = 0.08;
 			currentitermax = 1000;
 			denistyerrormax = 0.1;
 			//jitterfac = 0;
 			//gammapres = 0.7;
-			visc_fluid = 0.0025;
+			visc_fluid = 0.025;
 			visc_boundary = 0.0000025;
 			absinterrupt = true;
 			singlewall = true;
@@ -527,7 +537,10 @@ int main(void)
 			upperviualbord = 210;
 			obstaclea = 50;
 			lowervisualbord = -10;
-			position = glm::vec3(12, 6, 40);
+			if (updateviewpos) {
+				position = glm::vec3(12, 6, 40);
+			}
+			
 			firstdatapath = "Obstacles";
 			firstdatapath.copy(changename, 127);
 			gammafloat = 1;
@@ -550,7 +563,9 @@ int main(void)
 			upperviualbord = 210;
 			lowervisualbord = -10;
 			obstaclea = 50;
-			position = glm::vec3(12, 6, 40);
+			if (updateviewpos) {
+				position = glm::vec3(12, 6, 40);
+			}
 			firstdatapath = "Tesla";
 			firstdatapath.copy(changename, 127);
 			gammafloat = 1.0;;
@@ -574,7 +589,9 @@ int main(void)
 			upperviualbord = 210;
 			lowervisualbord = -10;
 			obstaclea = 50;
-			position = glm::vec3(12, 6, 40);
+			if (updateviewpos) {
+				position = glm::vec3(12, 6, 40);
+			}
 			firstdatapath = "ObstaclesClosed";
 			firstdatapath.copy(changename, 127);
 			gammafloat = 1.0;
@@ -599,7 +616,10 @@ int main(void)
 			upperviualbord = 200 + watercolheight;
 			lowervisualbord = -10;
 			k = 500000;
-			position = glm::vec3(1, 7, 45);
+			if (updateviewpos) {
+				position = glm::vec3(1, 7, 45);
+			}
+			
 			firstdatapath = "WaterColumn";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
@@ -627,13 +647,19 @@ int main(void)
 			initrigidbodies(var_PartC, hashmap);
 		}
 		if (smallwatercol) {
+			gridbreite = 200;
+			gridhöhe = 200;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200 + watercolheight)* gridbreite*gridhöhe);
 			//gammapres = 0.5;
 			//gammabound = 1.3;
 			deltaTmax = 0.001;
 			upperviualbord = 200 + watercolheight*h;
 			lowervisualbord = -10;
 			k = 500000;
-			position = glm::vec3(1, 7, 45);
+			if (updateviewpos) {
+				position = glm::vec3(1, 7, 45);
+			}
 			firstdatapath = "SmallWaterColumn";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
@@ -664,23 +690,30 @@ int main(void)
 			ssph = false;
 		}
 		if (TwoDwatercol) {
+			gridbreite = 20;
+			gridhöhe = 0;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200+watercolheight)*gridbreite);
 			TwoDsimul = true;
 			iisph = false; 
 			ssph = false; 
 			//jitterfac = 0.01f;
 			//watercolheight = 10;
 			deltaTmax = 0.0009;
-			cfl_max = 0.015;
+			cfl_max = 0.15;
 			//jitterfac = 0;
 			//gammabound = 0.6;
 			//gammapres = 0.5;
 			//singlewall = false;
 			//setpartmass = true;
 			//setboundmass = true;
-			upperviualbord = 200 + watercolheight;
-			lowervisualbord = -10;
+			upperviualbord = (watercolheight+200)*h;
+			lowervisualbord = 0;
 			k = 400000000;
-			position = glm::vec3(1, 4, 25);
+			if (updateviewpos) {
+				position = glm::vec3(1, 4, 25);
+			}
+			
 			firstdatapath = "/2dWatercol50/gammabound" + std::to_string(gammabound) +"gammapres"+ std::to_string(gammapres);
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
@@ -713,6 +746,10 @@ int main(void)
 			iisph = false;
 			ssph = false;
 			//jitterfac = 0.f;
+			gridbreite = 200;
+			gridhöhe = 0;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((100)* gridbreite);
 			watercolheight = 50;
 			deltaTmax = 0.0009;
 			cfl_max = 0.7;
@@ -725,7 +762,9 @@ int main(void)
 			upperviualbord =150;
 			lowervisualbord = -10;
 			k = 400000000;
-			position = glm::vec3(10, 2, 45);
+			if (updateviewpos) {
+				position = glm::vec3(10, 5, 35);
+			}
 			firstdatapath = "SmallWaterColumn";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
@@ -752,7 +791,10 @@ int main(void)
 		if (rotatinganimation) {
 			upperviualbord = 200;
 			lowervisualbord = -10;
-			position = glm::vec3(1, 2, 30);
+			if (updateviewpos) {
+				position = glm::vec3(1, 2, 30);
+			}
+			
 			firstdatapath = "Blender";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
@@ -924,7 +966,7 @@ int main(void)
 				std::cerr << "Fehler beim Öffnen der Datei." << std::endl;
 				return -1;
 			}
-#pragma omp parallel for
+//#pragma omp parallel for
 				for (int i = 0; i < var_PartC.size(); ++i) {
 					iisphparticle& part = var_PartC[i];
 				//if(part.isboundary == true ){
@@ -933,6 +975,9 @@ int main(void)
 					std::string yPos = std::to_string(part.pos.y);
 					std::string zPos = std::to_string(part.pos.z);
 					std::string isbound = std::to_string(part.ismovingboundary);
+					if (part.ismovingboundary == false) {
+						isbound = std::to_string(part.isfloatingboundary);
+					}
 					/*
 					if (part.a == obstaclea) {
 						isbound = std::to_string(1);
@@ -1047,7 +1092,7 @@ int main(void)
 		int ParticlesCount = 0;
 
 		for (iisphparticle& p : var_PartC) {
-			if ((showallpart || (showboundandouter && (p.drawme == true || p.isboundary)) || (showouter&& (p.drawme == true) ))&& p.pos.y < upperviualbord-1 && p.pos.y > lowervisualbord+1){
+			if ((showallpart || (showboundandouter && (p.drawme == true || p.isboundary)) || (showouter&& (p.drawme == true) ))&& p.pos.y < upperviualbord && p.pos.y > lowervisualbord){
 				g_particule_position_size_data[4 * ParticlesCount + 0] = p.pos.x * sizefac;
 				g_particule_position_size_data[4 * ParticlesCount + 1] = p.pos.y * sizefac;
 				g_particule_position_size_data[4 * ParticlesCount + 2] = p.pos.z * sizefac;
@@ -1177,7 +1222,6 @@ int main(void)
 			totalComputationTime = duration_alltime.count();
 			
 			totalComputationTime = totalComputationTime;
-			std::cout << totalComputationTime << std::endl;
 			if (totalComputationTime > maxcomptime) {
 				maxcomptime = totalComputationTime;
 			}
@@ -1244,6 +1288,7 @@ int main(void)
 			paussimul = true;
 		}
 		ImGui::Checkbox("pause", &paussimul);
+		ImGui::Checkbox("update Pos", &updateviewpos);
 		ImGui::Text("fps: %.4f", 1 / (totalComputationTime/1000000));
 		ImGui::Checkbox("reset stats", &resetvalues);
 		ImGui::Text("density deviation: %.3f %%", densitysnew.back() );
@@ -1375,6 +1420,7 @@ int main(void)
 
 		}
 		if (ImGui::CollapsingHeader("scene")) {
+			ImGui::Checkbox("add floating", &addfloating);
 			ImGui::Checkbox("teslavalve", &realtesla);
 			ImGui::Checkbox("obstacles open", &tesla);
 			ImGui::Checkbox("obstacles closed", &teslaclosed);
@@ -1428,8 +1474,7 @@ int main(void)
 			ImGui::InputFloat("jitterfactor ", &jitterfac, 0, 1);
 			ImGui::InputFloat("gamma particled", &gammapart, 0.1, 2);
 			ImGui::SliderFloat("omega ", &omega, 0.1, 1);
-			ImGui::SliderFloat("surfacetension ", &surfacetension, 0, 1);
-
+			ImGui::InputFloat("surfacetension ", &surfacetension, 0, 1);
 			ImGui::SliderInt("maximum iterations ", &currentitermax, 1, 1000);
 			ImGui::SliderFloat("maximum density deviation ", &denistyerrormax,0.01,1);
 			ImGui::SliderFloat("gravity ", &gravity, -19.81, 19.81);
