@@ -105,6 +105,12 @@ extern glm::mat3 inertiaTensorInverse;
 extern glm::vec3 torque;
 extern bool addfloating;
 extern std::vector<std::vector<int>> uniformgidvec1D;
+extern bool uniformgridneighsearch;
+extern bool pressuredextrapolatebound;
+extern float overallminxpos;
+extern float overallminypos;
+extern float overallminzpos;
+extern float massfac;
 struct Cell {
 	std::vector<int> particles;
 };

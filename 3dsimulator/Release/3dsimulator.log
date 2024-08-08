@@ -1,19 +1,39 @@
-﻿  neighboursearch.cpp
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(8,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(23,9): warning C4244: "return": Konvertierung von "float" in "unsigned int", möglicher Datenverlust
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(49,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(52,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(84,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(87,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(139,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(169,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(172,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(213,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-D:\gitbachelor\3dsimulator\neighboursearch.cpp(216,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+﻿  Cell.cpp
+D:\gitbachelor\3dsimulator\Cell.cpp(11,19): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(21,19): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(75,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(84,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(123,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(424,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+D:\gitbachelor\3dsimulator\Cell.cpp(434,23): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(434,23): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(434,23): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(434,23): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(434,23): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(438,19): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(438,19): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(438,19): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(438,19): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(438,19): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(439,19): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(439,19): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(439,19): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(439,19): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(439,19): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(443,19): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(443,19): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(443,19): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(443,19): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(443,19): warning C4244:         ]
+D:\gitbachelor\3dsimulator\Cell.cpp(444,19): warning C4244: "=": Konvertierung von "genType" in "unsigned char", möglicher Datenverlust
+D:\gitbachelor\3dsimulator\Cell.cpp(444,19): warning C4244:         with
+D:\gitbachelor\3dsimulator\Cell.cpp(444,19): warning C4244:         [
+D:\gitbachelor\3dsimulator\Cell.cpp(444,19): warning C4244:             genType=float
+D:\gitbachelor\3dsimulator\Cell.cpp(444,19): warning C4244:         ]
 Release\part.obj : warning LNK4042: Objekt mehrmals angegeben; zusätzliche Objekte werden ignoriert.
   Code wird generiert.
-  0 of 3177 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  6 of 3185 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    38 functions had inline decision re-evaluated but remain unchanged
   Codegenerierung ist abgeschlossen.
   3dsimulator.vcxproj -> D:\gitbachelor\Release\3dsimulator.exe

@@ -71,7 +71,7 @@ int var_MaxParticles = var_nx * var_ny * var_nz + (var_oneway * var_oneway * 12)
 int var_spezialboundpart = 0;
 //constants__________________________________________________________________
 float pi_F = glm::pi<float>();
-const float h = 0.015625;
+const float h =0.015625;// 0.0039090625;//
 const float p0 = 1000;
 const float p0p0 = p0*p0;
 const float alpha = 1 / (4 * pi_F * h * h * h); //8 / (pi_F*h*h*h);// 
@@ -256,7 +256,12 @@ glm::vec3 omegarigidbody = glm::vec3(0.f, 0.f, 0.f);
 glm::mat3 inertiaTensorInverse;
 glm::vec3 torque(0.f, 0.f, 0.f);
 std::vector<std::vector<int>> uniformgidvec1D;
-
+bool uniformgridneighsearch = true;
+bool pressuredextrapolatebound = false;
+float overallminxpos = 0.f;
+float overallminypos = 0.f;
+float overallminzpos = 0.f;
+float massfac = 1;
 //_________________________________________________________________________________
 int windowedWidth = 2048;//small1600;
 int windowedHeight = 1152;//small900;
@@ -448,6 +453,10 @@ int main(void)
 		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 		//init
 		if (start) {
+			gridbreite = var_oneway +5;
+			gridhöhe = var_oneway + 5;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((var_oneway + 5) * var_oneway + 5 * var_oneway + 5);
 			upperviualbord = 100;
 			lowervisualbord = -10;
 			if (updateviewpos) {
@@ -469,6 +478,10 @@ int main(void)
 			}
 		}
 		if (dambreaktestscen) {
+			gridbreite = 250;
+			gridhöhe = 200;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200) * gridbreite * gridhöhe);
 			upperviualbord = 100;
 			lowervisualbord = -10;
 			fixeddt = false;
@@ -500,6 +513,10 @@ int main(void)
 				makepartmass(var_PartC, hashmap);
 			}
 		}if (smalldambreaktestscen) {
+			gridbreite = 250;
+			gridhöhe = 200;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200) * gridbreite * gridhöhe);
 			upperviualbord = 58*h;
 			lowervisualbord = -1*h;
 			if (updateviewpos) {
@@ -544,6 +561,10 @@ int main(void)
 			initrigidbodies(var_PartC, hashmap);
 		}
 		if (tesla) {
+			gridbreite = 250;
+			gridhöhe = 200;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200) * gridbreite * gridhöhe);
 			upperviualbord = 210;
 			obstaclea = 50;
 			lowervisualbord = -10;
@@ -570,6 +591,10 @@ int main(void)
 			}
 		}
 		if (realtesla) {
+			gridbreite = 250;
+			gridhöhe = 200;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200)* gridbreite* gridhöhe);
 			upperviualbord = 210;
 			lowervisualbord = -10;
 			obstaclea = 50;
@@ -596,6 +621,10 @@ int main(void)
 			}
 		}
 		if (teslaclosed) {
+			gridbreite = 250;
+			gridhöhe = 200;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200)* gridbreite* gridhöhe);
 			upperviualbord = 210;
 			lowervisualbord = -10;
 			obstaclea = 50;
@@ -621,6 +650,10 @@ int main(void)
 			}
 		}
 		if (watercol) {
+			gridbreite = 200;
+			gridhöhe = 200;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200 + watercolheight)* gridbreite* gridhöhe);
 			gammapres = 0.7;
 			deltaTmax = 0.0008;
 			upperviualbord = 200 + watercolheight;
@@ -756,14 +789,14 @@ int main(void)
 			iisph = false;
 			ssph = false;
 			//jitterfac = 0.f;
-			gridbreite = 200;
+			gridbreite = 300;
 			gridhöhe = 0;
 			cellsize = 2 * h;
-			uniformgidvec1D.resize((100)* gridbreite);
+			uniformgidvec1D.resize((200)* gridbreite);
 			watercolheight = 50;
 			deltaTmax = 0.0009;
 			cfl_max = 0.7;
-			var_nx = 120;
+			var_nx = 20;
 			var_ny = 80;
 			gammabound = 0.7;
 			gammapres = 0.5;
@@ -799,6 +832,10 @@ int main(void)
 			initrigidbodies(var_PartC, hashmap);
 		}
 		if (rotatinganimation) {
+			gridbreite = var_oneway + 5;
+			gridhöhe = var_oneway + 5;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((gridbreite)* gridbreite* gridhöhe);
 			upperviualbord = 200;
 			lowervisualbord = -10;
 			if (updateviewpos) {
@@ -1058,7 +1095,9 @@ int main(void)
 		neighbouraverage = 0;
 //#pragma omp parallel for
 		for (int i = 0; i < var_MaxParticles; i++) {
-
+			overallminxpos = std::min(overallminxpos, var_PartC[i].pos.x);
+			overallminypos = std::min(overallminypos, var_PartC[i].pos.y);
+			overallminzpos = std::min(overallminzpos, var_PartC[i].pos.z);
 			if (var_PartC[i].index == observing && observing != var_MaxParticles + 1) {
 				var_PartC[i].r = 255;
 				var_PartC[i].g = 0;
@@ -1425,9 +1464,9 @@ int main(void)
 		if (ImGui::CollapsingHeader("integration setting")) {
 			ImGui::Checkbox("iisph", &iisph);
 			ImGui::Checkbox("ssph", &ssph);
-			ImGui::Checkbox("single algorythm", &makesingle);
+			ImGui::Checkbox("uniform grid", &uniformgridneighsearch);
+			ImGui::Checkbox("ssph pressure boundarys", &pressuredextrapolatebound);
 			ImGui::Checkbox("2D iisph", &TwoDsimul);
-
 		}
 		if (ImGui::CollapsingHeader("scene")) {
 			ImGui::Checkbox("add floating", &addfloating);
@@ -1482,6 +1521,7 @@ int main(void)
 			ImGui::InputFloat("gamma2 pressure", &gammapres, 0.1, 2);
 			ImGui::InputFloat("gamma3 bound", &gammabound, 0.1, 2);
 			ImGui::InputFloat("jitterfactor ", &jitterfac, 0, 1);
+			ImGui::InputFloat("rigidboundarymass", &massfac, 0.1, 2);
 			ImGui::InputFloat("gamma particled", &gammapart, 0.1, 2);
 			ImGui::SliderFloat("omega ", &omega, 0.1, 1);
 			ImGui::InputFloat("surfacetension ", &surfacetension, 0, 1);
