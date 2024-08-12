@@ -1,0 +1,27 @@
+einführung
+warum wichtig, warum schwierig
+was für aufgaben in dem bericht
+Navier stokes- sph- fluidlöser
+anfang von ergebnissen erstmal software und hardware
+matriken kann man am anfang machen muss aber nicht
+die testscenarien begründen. bei den experimenten dreiteilung
+1. motivation .. diesr und jener zusammenhang bsp iterationszahl einfluss auf dichtefehler
+2. man nimmt dritten test case bsp. also graphen oder bild zeigen.
+3. diskussion. also dieser und dieser aspekt sind wichtig. 
+nach results kommt conclusion
+hauptergebnisse zusammenfassen. ziele und conclusion sollen zusammengehören. ziel kopieren und sagen dass es geklappt hat.
+limitations auch rein. vorsichtig sein bei limitations also bissi diplomatisch nicht allwissend. ausblick kann man machen, aber vorsichtig.
+introduction
+navierstokes
+sph
+sph fluidlöser(algorythmus)
+IIsph
+analysis and comparison
+conclusion
+ganz schick:: ppe und dann iisph
+diskretisierung in laplace p
+wie navierstokes und sph
+iisph und ppe
+erst ppe dann diskretisierung
+divergenz der geschwindigkeitänderung ist nichts anderes als laplace p
+genaue abgrenzung in gliederung auch wiederholen
