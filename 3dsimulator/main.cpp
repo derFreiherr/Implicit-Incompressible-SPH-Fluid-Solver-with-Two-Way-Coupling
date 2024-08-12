@@ -1294,6 +1294,12 @@ int main(void)
 			iterations.clear();
 			densdiffes.clear();
 			maxvels.clear();
+			densitysnew.push_back(0);
+			densitys.push_back(0);
+			cfls.push_back(0);
+			iterations.push_back(0);
+			densdiffes.push_back(0);
+			maxvels.push_back(0);
 			maxavgdensdeviation = 0;
 			currentiter = 0;
 			maxiter = 0;
@@ -1330,7 +1336,7 @@ int main(void)
 			ImGui::PlotLines("maximum velocity", maxvels.data(), maxvels.size(), 0, nullptr, 0, overallmaxvel, ImVec2(0, 80));
 
 		}
-		
+		ImGui::End();
 		ImGui::Begin("schiebereglermachine");
 		if (ImGui::Button("Step Simulation")) {
 			StepSimulation(var_PartC, hashmap);

@@ -1,80 +1,60 @@
-d:\gitbachelor\3dsimulator\release\vc143.pdb
-d:\gitbachelor\3dsimulator\release\imgui.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\imgui.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\imgui_demo.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\imgui_demo.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\imgui_draw.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\imgui_draw.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\imgui_impl_glfw.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\imgui_impl_glfw.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\imgui_impl_opengl3.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\imgui_impl_opengl3.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\imgui_tables.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\imgui_tables.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\imgui_widgets.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\imgui_widgets.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\cell.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\cell.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\controls.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\controls.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\densitycomputation.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\densitycomputation.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\helperz.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\helperz.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\iisphparticle.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\iisphparticle.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\kernelz.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\kernelz.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\main.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\main.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\massinits.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\massinits.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\neighboursearch.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\neighboursearch.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\part.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\part.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\rigidbodies.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\rigidbodies.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\scenarios.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\scenarios.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\scenarios.obj
-d:\gitbachelor\3dsimulator\release\rigidbodies.obj
-d:\gitbachelor\3dsimulator\release\part.obj
-d:\gitbachelor\3dsimulator\release\neighboursearch.obj
-d:\gitbachelor\3dsimulator\release\massinits.obj
-d:\gitbachelor\3dsimulator\release\main.obj
-d:\gitbachelor\3dsimulator\release\kernelz.obj
-d:\gitbachelor\3dsimulator\release\iisphparticle.obj
-d:\gitbachelor\3dsimulator\release\helperz.obj
-d:\gitbachelor\3dsimulator\release\densitycomputation.obj
-d:\gitbachelor\3dsimulator\release\controls.obj
-d:\gitbachelor\3dsimulator\release\cell.obj
-d:\gitbachelor\3dsimulator\release\imgui_widgets.obj
-d:\gitbachelor\3dsimulator\release\imgui_tables.obj
-d:\gitbachelor\3dsimulator\release\imgui_impl_opengl3.obj
-d:\gitbachelor\3dsimulator\release\imgui_impl_glfw.obj
-d:\gitbachelor\3dsimulator\release\imgui_draw.obj
-d:\gitbachelor\3dsimulator\release\imgui_demo.obj
-d:\gitbachelor\3dsimulator\release\imgui.obj
-d:\gitbachelor\3dsimulator\release\shader.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\shader.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\simulationframes.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\simulationframes.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\texture.nativecodeanalysis.sarif
-d:\gitbachelor\3dsimulator\release\texture.nativecodeanalysis.xml
-d:\gitbachelor\3dsimulator\release\texture.obj
-d:\gitbachelor\3dsimulator\release\simulationframes.obj
-d:\gitbachelor\3dsimulator\release\shader.obj
-d:\gitbachelor\release\3dsimulator.exe
-d:\gitbachelor\release\3dsimulator.pdb
-d:\gitbachelor\3dsimulator\release\3dsimulator.ipdb
-d:\gitbachelor\3dsimulator\release\3dsimulator.iobj
-d:\gitbachelor\3dsimulator\release\vc.nativecodeanalysis.all.xml
-d:\gitbachelor\3dsimulator\release\3dsimulator.tlog\cl.command.1.tlog
-d:\gitbachelor\3dsimulator\release\3dsimulator.tlog\cl.items.tlog
-d:\gitbachelor\3dsimulator\release\3dsimulator.tlog\cl.read.1.tlog
-d:\gitbachelor\3dsimulator\release\3dsimulator.tlog\cl.write.1.tlog
-d:\gitbachelor\3dsimulator\release\3dsimulator.tlog\link.command.1.tlog
-d:\gitbachelor\3dsimulator\release\3dsimulator.tlog\link.read.1.tlog
-d:\gitbachelor\3dsimulator\release\3dsimulator.tlog\link.secondary.1.tlog
-d:\gitbachelor\3dsimulator\release\3dsimulator.tlog\link.write.1.tlog
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\vc143.pdb
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\part.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\neighboursearch.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\massinits.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\main.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\kernelz.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\iisphparticle.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\helperz.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\densitycomputation.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\controls.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\cell.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\boundarypres.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\affz.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_widgets.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_tables.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_impl_opengl3.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_impl_glfw.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_draw.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_demo.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\texture.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\simulationframes.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\shader.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\scenarios.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\rigidbodies.obj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\release\3dsimulator.exe
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\release\3dsimulator.pdb
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.ipdb
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.iobj
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\cell.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\controls.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\densitycomputation.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\helperz.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\iisphparticle.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_demo.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_draw.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_impl_glfw.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_impl_opengl3.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_tables.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\imgui_widgets.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\kernelz.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\main.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\massinits.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\neighboursearch.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\part.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\rigidbodies.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\scenarios.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\shader.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\simulationframes.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\texture.nativecodeanalysis.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\vc.nativecodeanalysis.all.xml
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.tlog\cl.command.1.tlog
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.tlog\cl.items.tlog
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.tlog\cl.read.1.tlog
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.tlog\cl.write.1.tlog
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.tlog\link.command.1.tlog
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.tlog\link.read.1.tlog
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.tlog\link.secondary.1.tlog
+c:\users\owald\onedrive\alte cloud+\embeddedsystems\8.semester\gitbachelor\3dsimulator\release\3dsimulator.tlog\link.write.1.tlog
