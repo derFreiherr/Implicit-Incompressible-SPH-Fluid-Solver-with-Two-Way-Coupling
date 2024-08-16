@@ -1,112 +1,16 @@
-﻿  main.cpp
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(80,14): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(81,17): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(82,18): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(83,21): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(85,15): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(86,17): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(89,14): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(145,23): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(225,17): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(456,28): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(457,27): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(472,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(484,46): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(489,22): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(490,17): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(491,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(502,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(503,14): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(504,13): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(519,46): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(532,22): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(535,17): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(536,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(541,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(543,13): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(567,46): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(578,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(579,13): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(580,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(597,44): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(607,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(608,13): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(609,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(627,44): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(637,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(638,13): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(639,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(656,61): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(657,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(658,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(659,25): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(675,22): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(676,17): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(677,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(696,61): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(699,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(714,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(717,22): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(718,17): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(719,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(739,47): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(745,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(746,14): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(768,22): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(769,17): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(770,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(772,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(795,32): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(797,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(798,14): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(801,17): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(819,22): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(820,17): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(821,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(835,28): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(836,27): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(838,51): warning C4244: "Argument": Konvertierung von "float" in "const unsigned int", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(854,22): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(855,17): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(856,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(857,13): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(858,20): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(932,22): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1017,23): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1065,16): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1066,14): warning C4305: "=": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1077,6): warning C4551: Dem Funktionsaufruf fehlt die Argumentliste
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1263,34): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1263,34): warning C4244:         with
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1263,34): warning C4244:         [
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1263,34): warning C4244:             _Rep=__int64
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1263,34): warning C4244:         ]
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1271,49): warning C4244: "=": Konvertierung von "_Rep" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1271,49): warning C4244:         with
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1271,49): warning C4244:         [
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1271,49): warning C4244:             _Rep=__int64
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1271,49): warning C4244:         ]
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1282,25): warning C4244: "Argument": Konvertierung von "int" in "_Ty", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1282,25): warning C4244:         with
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1282,25): warning C4244:         [
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1282,25): warning C4244:             _Ty=float
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1282,25): warning C4244:         ]
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1323,17): warning C4244: "=": Konvertierung von "int" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1335,94): warning C4244: "Argument": Konvertierung von "int" in "float", möglicher Datenverlust
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1492,65): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1526,52): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1527,53): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1528,51): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1530,53): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1531,53): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1532,41): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1535,70): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1536,53): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1536,46): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1537,61): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1538,58): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1541,50): warning C4305: "Argument": Verkürzung von "double" in "float"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\main.cpp(1548,40): warning C4305: "Argument": Verkürzung von "double" in "float"
+﻿  neighboursearch.cpp
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(8,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(14,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(53,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(56,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(65,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(90,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(93,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(148,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(178,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(181,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(222,31): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\neighboursearch.cpp(225,31): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
 imgui.obj : warning LNK4075: /EDITANDCONTINUE wird aufgrund der Angabe von /OPT:ICF ignoriert.
 Debug\part.obj : warning LNK4042: Objekt mehrmals angegeben; zusätzliche Objekte werden ignoriert.
 LINK : warning LNK4098: Standardbibliothek "MSVCRT" steht in Konflikt mit anderen Bibliotheken; /NODEFAULTLIB:Bibliothek verwenden.

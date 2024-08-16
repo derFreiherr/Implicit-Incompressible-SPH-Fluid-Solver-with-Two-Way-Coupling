@@ -241,8 +241,14 @@ float massobserving = 0;
 float nonpresaobserving = 0;
 float presaobserving = 0;
 float sumkernelderobserving = 0;
+float sumkernelderobservingy = 0;
+float sumkernelderobservingz = 0;
 float sumkernelobserving = 0;
 float allrigidmass = 0;
+float observingposx = 0;
+float observingposy = 0;
+float observingposz = 0;
+
 glm::vec3 posofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
 glm::vec3 velofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
 glm::mat3x3 rotMat = glm::mat3x3(0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
@@ -453,12 +459,12 @@ int main(void)
 		glm::mat4 ViewProjectionMatrix = ProjectionMatrix * ViewMatrix;
 		//init
 		if (start) {
-			gridbreite = var_oneway +5;
-			gridhöhe = var_oneway + 5;
+			gridbreite = var_oneway *2;
+			gridhöhe = var_oneway *2;
 			cellsize = 2 * h;
-			uniformgidvec1D.resize((var_oneway + 5) * var_oneway + 5 * var_oneway + 5);
-			upperviualbord = 100;
-			lowervisualbord = -10;
+			uniformgidvec1D.resize((var_oneway *2) * var_oneway *2 * var_oneway *2);
+			upperviualbord = (var_oneway+10)*h;
+			lowervisualbord = -1*h;
 			if (updateviewpos) {
 				position = glm::vec3(4, 2, 30);
 			}
@@ -561,28 +567,29 @@ int main(void)
 			initrigidbodies(var_PartC, hashmap);
 		}
 		if (tesla) {
-			gridbreite = 250;
-			gridhöhe = 200;
-			cellsize = 2 * h;
-			uniformgidvec1D.resize((200) * gridbreite * gridhöhe);
-			upperviualbord = 210;
-			obstaclea = 50;
-			lowervisualbord = -10;
-			if (updateviewpos) {
-				position = glm::vec3(12, 6, 40);
-			}
-			
 			firstdatapath = "Obstacles";
-			firstdatapath.copy(changename, 127);
-			gammafloat = 1;
-			deltaTmax = 0.015;
-			deltaT = 0.01;
-			visc_boundary = 0.3;
-			visc_fluid = 1;
 			var_teslavalve(CameraPosition, var_PartC);
 			tesla = false;
 			maketesla = true;
 			maketeslaclosed = false;
+			TwoDsimul = false;
+			gridbreite = 250;
+			gridhöhe = 200;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200)* gridbreite* gridhöhe);
+			upperviualbord = 210 * h;
+			lowervisualbord = -10 * h;
+			obstaclea = 50;
+			if (updateviewpos) {
+				position = glm::vec3(12, 6, 40);
+			}
+
+			firstdatapath.copy(changename, 127);
+			gammafloat = 1.0;
+			deltaTmax = 0.001;
+			deltaT = 0.01;
+			visc_boundary = 0.0003;
+			visc_fluid = 0.01;
 			if (setboundmass) {
 				makeboundmass(var_PartC, hashmap);
 			}
@@ -621,27 +628,33 @@ int main(void)
 			}
 		}
 		if (teslaclosed) {
+			firstdatapath = "ObstaclesClosed";
+			teslaclosed = false;
+			maketeslaclosed = true;
+			maketesla = false;
+			iisph = true;
+			ssph = false;
+			TwoDsimul = false;
+			var_teslavalveclosed(CameraPosition, var_PartC);
+
 			gridbreite = 250;
 			gridhöhe = 200;
 			cellsize = 2 * h;
 			uniformgidvec1D.resize((200)* gridbreite* gridhöhe);
-			upperviualbord = 210;
-			lowervisualbord = -10;
+			upperviualbord = 210*h;
+			lowervisualbord = -10*h;
 			obstaclea = 50;
 			if (updateviewpos) {
 				position = glm::vec3(12, 6, 40);
 			}
-			firstdatapath = "ObstaclesClosed";
+
 			firstdatapath.copy(changename, 127);
 			gammafloat = 1.0;
-			deltaTmax = 0.01;
+			deltaTmax = 0.001;
 			deltaT = 0.01;
-			visc_boundary = 0.3;
-			visc_fluid = 1;
-			var_teslavalveclosed(CameraPosition, var_PartC);
-			teslaclosed = false;
-			maketeslaclosed = true;
-			maketesla = false;
+			visc_boundary = 0.0003;
+			visc_fluid = 0.01;
+			
 			if (setboundmass) {
 				makeboundmass(var_PartC, hashmap);
 			}
@@ -832,8 +845,8 @@ int main(void)
 			initrigidbodies(var_PartC, hashmap);
 		}
 		if (rotatinganimation) {
-			gridbreite = var_oneway + 5;
-			gridhöhe = var_oneway + 5;
+			gridbreite = var_oneway *2;
+			gridhöhe = var_oneway *2;
 			cellsize = 2 * h;
 			uniformgidvec1D.resize((gridbreite)* gridbreite* gridhöhe);
 			upperviualbord = 200;
@@ -852,11 +865,11 @@ int main(void)
 			var_nz = 48;
 			baseRotationSpeed = 0.0;
 			denistyerrormax = 0.1;
-			gammafloat = 0.7;
-			deltaTmax = 0.015;
-			deltaT = 0.009;
-			visc_boundary = 0.025;
-			visc_fluid = 0.25;
+			deltaTmax = 0.001;
+			upperviualbord = 200 + watercolheight * h;
+			lowervisualbord = -10;
+			visc_fluid = 0.025;
+			visc_boundary = 0.0000025;
 			moving_boundary(CameraPosition, var_PartC);
 			rotatinganimation = false;
 			if (setboundmass) {
@@ -1095,21 +1108,50 @@ int main(void)
 		neighbouraverage = 0;
 //#pragma omp parallel for
 		for (int i = 0; i < var_MaxParticles; i++) {
+			var_PartC[i].drawme = false;
+			if (var_PartC[i].isboundary) {
+				var_PartC[i].r = 44;
+				var_PartC[i].g = 2;
+				var_PartC[i].r = 25;
+				var_PartC[i].a = boundarya;
+			}
+			if (var_PartC[i].ismovingboundary || var_PartC[i].isfloatingboundary) {
+				var_PartC[i].a = obstaclea;
+			}
+			if (i == 11428) {
+				iisphparticle& INterPart = var_PartC[i];
+			}
+		}
+		for (int i = 0; i < var_MaxParticles; i++) {
 			overallminxpos = std::min(overallminxpos, var_PartC[i].pos.x);
 			overallminypos = std::min(overallminypos, var_PartC[i].pos.y);
 			overallminzpos = std::min(overallminzpos, var_PartC[i].pos.z);
-			if (var_PartC[i].index == observing && observing != var_MaxParticles + 1) {
+			if (var_PartC[i].index == observing && observing < (var_MaxParticles + 1)) {
+				observingposx = var_PartC[i].pos.x;
+				observingposy = var_PartC[i].pos.y;
+				observingposz = var_PartC[i].pos.z;
+
 				var_PartC[i].r = 255;
 				var_PartC[i].g = 0;
 				var_PartC[i].b = 0;
+				var_PartC[i].drawme = true;
 				numNeighofobserving = 0;
 				sumkernelderobserving = 0;
+				sumkernelderobservingy = 0;
+				sumkernelderobservingz = 0;
 				for (std::tuple<int, glm::vec3, glm::vec3>& neigh : var_PartC[i].IdNSubKernelder) {
-					var_PartC[std::get<0>(neigh)].r = 0;
-					var_PartC[std::get<0>(neigh)].g = 255;
-					var_PartC[std::get<0>(neigh)].b = 0;
-					numNeighofobserving += 1;
+					if (var_PartC[std::get<0>(neigh)].index != observing) {
+						var_PartC[std::get<0>(neigh)].r = 0;
+						var_PartC[std::get<0>(neigh)].g = 255;
+						var_PartC[std::get<0>(neigh)].b = 0;
+						var_PartC[std::get<0>(neigh)].a = 255;
+						var_PartC[std::get<0>(neigh)].drawme = true;
+						numNeighofobserving += 1;
+					}
+					
 					sumkernelderobserving += std::get<2>(neigh).x;
+					sumkernelderobservingy += std::get<2>(neigh).y;
+					sumkernelderobservingz += std::get<2>(neigh).z;
 				}
 				sumkernelobserving = 0;
 				for (auto& neigh : var_PartC[i].Kernel) {
@@ -1120,7 +1162,7 @@ int main(void)
 				presaobserving = glm::length(var_PartC[i].presA);
 				nonpresaobserving = glm::length(var_PartC[i].nonpresA);
 			}
-			if (var_PartC[i].isboundary == false) {
+			if (var_PartC[i].isboundary == false && var_PartC[i].isfloatingboundary == false) {
 				for (std::tuple<int, glm::vec3, glm::vec3>& neigh : var_PartC[i].IdNSubKernelder) {
 					neighbouraverage += 1;
 				}
@@ -1135,7 +1177,7 @@ int main(void)
 				}
 			}
 		}
-		neighbouraverage = neighbouraverage / var_fluidpart;
+		neighbouraverage = (neighbouraverage-var_fluidpart) / var_fluidpart;
 		// Simulate all particles
 		auto start_d = std::chrono::high_resolution_clock::now();
 		int ParticlesCount = 0;
@@ -1145,7 +1187,7 @@ int main(void)
 				g_particule_position_size_data[4 * ParticlesCount + 0] = p.pos.x * sizefac;
 				g_particule_position_size_data[4 * ParticlesCount + 1] = p.pos.y * sizefac;
 				g_particule_position_size_data[4 * ParticlesCount + 2] = p.pos.z * sizefac;
-				g_particule_position_size_data[4 * ParticlesCount + 3] = p.size * sizefac;
+				g_particule_position_size_data[4 * ParticlesCount + 3] = p.size * sizefac*1;
 
 				g_particule_color_data[4 * ParticlesCount + 0] = p.r;
 				g_particule_color_data[4 * ParticlesCount + 1] = p.g;
@@ -1580,12 +1622,17 @@ int main(void)
 			ImGui::Text("current torque: %.1f", torque.length);
 		}
 		if (ImGui::CollapsingHeader("single stats")) {
+			ImGui::Text("pos x: %.1f", observingposx/h);
+			ImGui::Text("pos y % .1f", observingposy/h);
+			ImGui::Text("pos z % .6f", observingposz/h);
 			ImGui::Text("number of neighbours: %.1f", numNeighofobserving);
 			ImGui::Text("density % .1f", densobserving);
 			ImGui::Text("mass % .6f", massobserving);
 			ImGui::Text("pressure accellatation % .6f", presaobserving);
 			ImGui::Text("nonpressure accelaration % .6f", nonpresaobserving);
 			ImGui::Text("sum kernel der x % .6f", sumkernelderobserving);
+			ImGui::Text("sum kernel der y % .6f", sumkernelderobservingy);
+			ImGui::Text("sum kernel der z % .6f", sumkernelderobservingz);
 			ImGui::Text("sum kernel  % .6f", sumkernelobserving);
 			ImGui::InputInt("osverving", &observing, 1, var_MaxParticles);
 		}

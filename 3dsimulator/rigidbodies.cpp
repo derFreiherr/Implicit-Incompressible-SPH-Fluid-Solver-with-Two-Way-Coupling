@@ -58,7 +58,7 @@ void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, 
 		if (Part.isfloatingboundary) {
 			glm::vec3 r = Part.pos - xCM;
 			Part.relpos = r;
-			float mass = Part.m;
+			float mass = Part.m *massfac;
 			glm::mat3 rr = glm::outerProduct(r, r);
 			inertiaTensor -= mass * rr;
 		}
@@ -160,7 +160,7 @@ void updaterigidbody2d(std::vector<iisphparticle>& PartC) {
 
 	torque = torque * 0.1f;
 	//torque = -torque;
-	vCM += glm::vec3(1, 1, 0) * (deltaT * linforce / allrigidmass);
+	vCM += glm::vec3(1, 1, 0) * (deltaT * linforce / (allrigidmass));
 	xCM += glm::vec3(1, 1, 0) * (deltaT * vCM);
 
 	// Orientierungsmatrix aktualisieren

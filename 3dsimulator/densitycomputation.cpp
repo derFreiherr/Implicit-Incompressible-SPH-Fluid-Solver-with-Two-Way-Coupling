@@ -11,7 +11,7 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
 		Part.density = 0;
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false /* || Part.ismovingboundary == true*/) {
 			Part.denstolow = true;
 			float dens = 0;
 			
@@ -24,7 +24,7 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 			}
 			*/
 			Part.density = dens;
-			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord && Part.isfloatingboundary == false) {
+			if (dens >= p0 && Part.pos.y < upperviualbord && Part.pos.y > lowervisualbord && Part.isfloatingboundary == false && Part.ismovingboundary==false) {
 				Part.denstolow = false;
 				numofp0high++;
 				if (absinterrupt) {
@@ -56,7 +56,7 @@ void computeAllDens(std::vector<iisphparticle>& var_PartC) {
 			}
 			*/
 		}
-		if (Part.isboundary == true) {
+		if (Part.isboundary == true/* && Part.ismovingboundary == false*/) {
 			Part.density = p0;
 			Part.denstolow = true;
 		}
@@ -162,7 +162,7 @@ void computeAllDensErr(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 	for (int i = 0; i < var_MaxParticles; i++) {
 		iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false) {
+		if (Part.isboundary == false ) {
 			Part.densityerror = (Part.AP - Part.sf) / p0;
 		}
 	}

@@ -97,7 +97,7 @@ void makepartmass(std::vector<iisphparticle>& var_PartC, std::unordered_map<int,
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
 				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
-				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1));
+				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)) * 0.9991389780816045467516953288829;
 			}
 			Part.m = p0 / std::max(gammapart * kernsum, 0.0000000000000001f);
 		}
@@ -199,8 +199,8 @@ void makepartmassTwoD(std::vector<iisphparticle>& var_PartC, std::unordered_map<
 				float t1 = std::max((1 - d), 0.f);
 				float t2 = std::max((2 - d), 0.f);
 				Part.Kernel.push_back(alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
-				kernsum += alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1));
-			}
+				kernsum += alphaTwoD * ((t2 * t2 * t2) - (4 * t1 * t1 * t1))* 0.99913884;
+			}// 0.9991389780816045467516953288829
 			Part.m = p0 / std::max(gammapart * kernsum, 0.0000000000000001f);
 		}
 

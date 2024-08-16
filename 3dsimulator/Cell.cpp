@@ -20,7 +20,7 @@ void makeAllA(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
 for (int i = 0; i < var_PartC.size(); ++i) {
 	iisphparticle& Part = var_PartC[i];
-		if (Part.isboundary == false || Part.isfloatingboundary) {
+		if (Part.isboundary == false  || Part.isfloatingboundary) {
 			Part.presA = glm::vec3(0, 0, 0);
 			glm::vec3 PresAf(0.f, 0.f, 0.f);
 			glm::vec3 PresAb(0.f, 0.f, 0.f);
@@ -481,6 +481,7 @@ void makeAllVandP(std::vector<iisphparticle>& var_PartC) {
 			Part.pos = glm::vec3(rotatedPosition) + glm::vec3((1) * h / 2.0f, (1) * h / 2.0f, 0.0f);
 			Part.vel = (Part.pos - oldpos) / deltaT;
 		}
+		
 	}
 }
 
