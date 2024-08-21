@@ -150,14 +150,14 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 	ParticlesContainer.resize(0);
 	var_spezialboundpart = 0;
 	gammafloat = 1.f;
-	var_fluidpart = 8 * 9 * 195;
+	var_fluidpart = 8 * 9 * 245;
 	// fluid + startfloor + (start walls) + big floor + big walls + obstacles
-	var_MaxParticles = 8 * 9 * 195 + 48392+ 72;
+	var_MaxParticles = 8 * 9 * 245 + 48392+ 72+7000+192;
 	hashsize = var_MaxParticles;
 	ParticlesContainer.resize(var_MaxParticles);
 	int i = 0;
 	for (int x = -1; x < (8 - 1); x++) {
-		for (int y = -1; y < (195 - 1); y++) {
+		for (int y = -1; y < (245 - 1); y++) {
 			for (int z = -1; z < (9 - 1); z++) {
 				//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 				ParticlesContainer[i].pos = glm::vec3((x + 2) * h, (y + 2) * h, (z + 3) * h);
@@ -181,6 +181,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//first2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -188,6 +189,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//second1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -195,6 +197,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//second2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -202,6 +205,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//third1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -209,6 +213,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//third2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -216,6 +221,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//forth1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -223,6 +229,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//forth2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -230,6 +237,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 
 		}
@@ -246,6 +254,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//first2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -253,6 +262,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//second1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -260,6 +270,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//second2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -267,6 +278,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//third1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -274,6 +286,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//third2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -281,6 +294,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//forth1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -288,6 +302,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//forth2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -295,6 +310,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 
 		}
@@ -305,12 +321,29 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 	goback = 0;
 	for (int ii = 0; ii < 8; ii++) {
 		for (int j = 0; j < 6; j++) {
+			//zero1
+			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii + 20) * h, (j - 1) * h, (3 + goback) * h);
+			ParticlesContainer[i].index = i;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
+			i += 1;
+			//zero2
+			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii + 21) * h, (j - 1) * h, (3 + goback) * h);
+			ParticlesContainer[i].index = i;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
+			i += 1;
 			//first1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 			ParticlesContainer[i].pos = glm::vec3((ii + 50) * h, (j - 1) * h, (3 + goback) * h);
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//first2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -318,6 +351,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//second1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -325,6 +359,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//second2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -332,6 +367,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//third1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -339,6 +375,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//third2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -346,6 +383,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//forth1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -353,6 +391,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//forth2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -360,22 +399,40 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 
 		}
 		goback -= 0.5;
 
 	}
-	// front long obstacle
+	// front short obstacle
 	gofront = 0;
 	for (int ii = 0; ii < 8; ii++) {
 		for (int j = 0; j < 6; j++) {
+			//zeero1
+			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii + 20) * h, (j - 1) * h, (9 + gofront) * h);
+			ParticlesContainer[i].index = i;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
+			i += 1;
+			//teero2
+			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii + 21) * h, (j - 1) * h, (9 + gofront) * h);
+			ParticlesContainer[i].index = i;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
+			i += 1;
 			//first1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 			ParticlesContainer[i].pos = glm::vec3((ii + 50) * h, (j - 1) * h, (9 + gofront) * h);
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//first2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -383,6 +440,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//second1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -390,6 +448,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//second2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -397,6 +456,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//third1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -404,6 +464,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//third2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -411,6 +472,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//forth1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -418,6 +480,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 			//forth2
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
@@ -425,6 +488,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 			ParticlesContainer[i].index = i;
 			ParticlesContainer[i].isboundary = true;
 			ParticlesContainer[i].a = obstaclea;
+			ParticlesContainer[i].isobstacle = true;
 			i += 1;
 
 		}
@@ -454,7 +518,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 	}
 	//startcontainer walls right
 	for (int ii = 0; ii < 10; ii++) {
-		for (int j = 0; j < 201; j++) {
+		for (int j = 0; j < 251; j++) {
 			//2back
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 			ParticlesContainer[i].pos = glm::vec3((ii + 160) * h, (j - 1) * h, 0);
@@ -672,7 +736,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 	}
 	//startcontainer walls left
 	for (int ii = 0; ii < 10; ii++) {
-		for (int j = 0; j < 201; j++) {
+		for (int j = 0; j < 251; j++) {
 			//2back
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 			ParticlesContainer[i].pos = glm::vec3(ii * h, (j - 1) * h, 0);
@@ -735,7 +799,7 @@ void var_teslavalveclosed(glm::vec3 CameraPosition, std::vector<iisphparticle>& 
 		overallminypos = std::min(overallminypos, ParticlesContainer[i].pos.y);
 		overallminzpos = std::min(overallminzpos, ParticlesContainer[i].pos.z);
 		if (ParticlesContainer[i].isboundary) {
-			ParticlesContainer[i].a = boundarya;
+			//ParticlesContainer[i].a = boundarya;
 		}
 		else
 		{
@@ -751,14 +815,14 @@ void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& Partic
 	ParticlesContainer.resize(0);
 	var_spezialboundpart = 0;
 	gammafloat = 1.f;
-	var_fluidpart = 8 * 9 * 195;
+	var_fluidpart = 8 * 9 * 245;
 	// fluid + startfloor + (start walls) + big floor + big walls + obstacles
-	var_MaxParticles = 8 * 9 * 195 +48392+72;
+	var_MaxParticles = 8 * 9 * 245 +48392+72 + 7000 + 192;
 	hashsize = var_MaxParticles;
 	ParticlesContainer.resize(var_MaxParticles);
 	int i = 0;
 	for (int x = -1; x < (8 - 1); x++) {
-		for (int y = -1; y < (195 - 1); y++) {
+		for (int y = -1; y < (245 - 1); y++) {
 			for (int z = -1; z < (9 - 1); z++) {
 				//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 				ParticlesContainer[i].pos = glm::vec3((x + 162) * h, (y + 2) * h, (z + 3) * h);
@@ -905,6 +969,20 @@ void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& Partic
 	goback = 0;
 	for (int ii = 0; ii < 8; ii++) {
 		for (int j = 0; j < 6; j++) {
+			//zero1
+			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii + 20) * h, (j - 1) * h, (3 + goback) * h);
+			ParticlesContainer[i].index = i;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].a = obstaclea;
+			i += 1;
+			//zero2
+			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii + 21) * h, (j - 1) * h, (3 + goback) * h);
+			ParticlesContainer[i].index = i;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].a = obstaclea;
+			i += 1;
 			//first1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 			ParticlesContainer[i].pos = glm::vec3((ii + 50) * h, (j - 1) * h, (3 + goback) * h);
@@ -966,10 +1044,24 @@ void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& Partic
 		goback -= 0.5;
 
 	}
-	// front long obstacle
+	// front short obstacle
 	gofront = 0;
 	for (int ii = 0; ii < 8; ii++) {
 		for (int j = 0; j < 6; j++) {
+			//zeero1
+			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii + 20) * h, (j - 1) * h, (9 + gofront) * h);
+			ParticlesContainer[i].index = i;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].a = obstaclea;
+			i += 1;
+			//teero2
+			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+			ParticlesContainer[i].pos = glm::vec3((ii + 21) * h, (j - 1) * h, (9 + gofront) * h);
+			ParticlesContainer[i].index = i;
+			ParticlesContainer[i].isboundary = true;
+			ParticlesContainer[i].a = obstaclea;
+			i += 1;
 			//first1
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 			ParticlesContainer[i].pos = glm::vec3((ii + 50) * h, (j - 1) * h, (9 + gofront) * h);
@@ -1054,7 +1146,7 @@ void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& Partic
 	}
 	//startcontainer walls right
 	for (int ii = 0; ii < 10; ii++) {
-		for (int j = 0; j < 201; j++) {
+		for (int j = 0; j < 251; j++) {
 			//2back
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 			ParticlesContainer[i].pos = glm::vec3((ii + 160) * h, (j - 1) * h, 0);
@@ -1272,7 +1364,7 @@ void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& Partic
 	}
 	//startcontainer walls left
 	for (int ii = 0; ii < 10; ii++) {
-		for (int j = 0; j < 201; j++) {
+		for (int j = 0; j < 251; j++) {
 			//2back
 			//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
 			ParticlesContainer[i].pos = glm::vec3(ii * h, (j - 1) * h, 0);
@@ -1324,6 +1416,7 @@ void var_teslavalve(glm::vec3 CameraPosition, std::vector<iisphparticle>& Partic
 			i += 1;
 		}
 	}
+
 
 
 
@@ -2099,11 +2192,11 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	ParticlesContainer.resize(0);
 
 	// Define boundary and fluid parameters
-	int var_boundarypart = 10 + 19 * 19 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20);
+	int var_boundarypart =  19 * 19 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20);
 	gammafloat = 0.7;
 	if (!singlewall) {
 		//gammafloat = 1;
-		var_boundarypart = 10 + 19 * 19 * 2 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 19 * 2 * (watercolheight + 20);
+		var_boundarypart =  19 * 19 * 2 + 15 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 17 * 2 * (watercolheight + 20) + 19 * 2 * (watercolheight + 20);
 	}
 
 	// Parameters for the fluid particles
@@ -2113,6 +2206,7 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	var_spezialboundpart = 0;
 	if (addfloating) {
 		var_spezialboundpart += 125;
+		var_boundarypart += 10;
 	}
 	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
 	hashsize = var_MaxParticles;
@@ -2156,23 +2250,21 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 				}
 			}
 		}
-		std::cout << "Number of particles: " << i << std::endl;
-	}
-	
-
-	for (float xi = 0; xi < 5; xi += 1) {
-		for (float yi = 0; yi < 2; yi += 1) {
-			ParticlesContainer[i].pos = glm::vec3((xi + 5 + offset) * h, (9 + watercolheight + offset) * h, (yi + 5 + offset) * h);
-			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
-			ParticlesContainer[i].a = boundarya;
-			ParticlesContainer[i].isboundary = true;
-			ParticlesContainer[i].isfloatingboundary = false;
-			ParticlesContainer[i].index = i;
-			i++;
+		std::cout << "Number of rigidboundary particles: " << i << std::endl;
+		for (float xi = 0; xi < 5; xi += 1) {
+			for (float yi = 0; yi < 2; yi += 1) {
+				ParticlesContainer[i].pos = glm::vec3((xi + 5 + offset) * h, (9 + watercolheight + offset) * h, (yi + 5 + offset) * h);
+				ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = true;
+				ParticlesContainer[i].isfloatingboundary = false;
+				ParticlesContainer[i].index = i;
+				i++;
+			}
 		}
 	}
-	std::cout << "Number of bound particles: " << i << std::endl;
+	
 
 	float boden = 0;
 	// Create bottom boundary particles
@@ -2323,7 +2415,7 @@ void moving_boundary(glm::vec3 CameraPosition, std::vector<iisphparticle>& Parti
 	var_spezialboundpart = 0/*num_rot_part*/;
 	var_nx = var_oneway - 2;
 	var_nz = var_oneway - 2;
-	var_ny = 10;
+	var_ny = 20;
 	var_fluidpart = var_nx * var_ny * var_nz - std::min(num_rot_part, (var_ny-1) * num_rot_part / 8);
 	if (singlewall) {
 		gammafloat = 0.7;
@@ -2535,7 +2627,7 @@ void dambreaktest(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particle
 			if (singlewall == false) {
 				//7back2
 				//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
-				ParticlesContainer[i].pos = glm::vec3((ii - 1) * h, (j - 1) * h, (0 - 1));
+				ParticlesContainer[i].pos = glm::vec3((ii - 1) * h, (j - 1) * h, (0 - 1)*h);
 				ParticlesContainer[i].index = i;
 				ParticlesContainer[i].isboundary = true;
 				i += 1;
@@ -2572,7 +2664,7 @@ void dambreaktest(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particle
 				i += 1;
 				//11 left2
 				//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
-				ParticlesContainer[i].pos = glm::vec3((0 - 1), (ii - 1) * h, (j - 1) * h);
+				ParticlesContainer[i].pos = glm::vec3((0 - 1)*h, (ii - 1) * h, (j - 1) * h);
 				ParticlesContainer[i].index = i;
 				ParticlesContainer[i].isboundary = true;
 				i += 1;

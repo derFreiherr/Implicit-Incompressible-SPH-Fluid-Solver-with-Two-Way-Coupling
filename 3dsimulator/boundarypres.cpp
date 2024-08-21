@@ -21,9 +21,7 @@ void makeBoundPres(std::vector<iisphparticle>& var_PartC) {
 }
 void makeBoundPres2D(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
-	for (int i = 
-		
-		+ var_spezialboundpart; i < var_MaxParticles; i++) {
+	for (int i = var_fluidpart + var_spezialboundpart; i < var_MaxParticles; i++) {
 		iisphparticle& Part = var_PartC[i];
 		float firstsum = 0;
 		float secondsum = 0;

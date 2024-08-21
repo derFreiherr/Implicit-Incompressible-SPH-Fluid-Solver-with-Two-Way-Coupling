@@ -202,7 +202,7 @@ void computeAllSF(std::vector<iisphparticle>& var_PartC) {
 					tmpf += var_PartC[std::get<0>(neig)].m * glm::dot((var_PartC[i].predictedVel - var_PartC[std::get<0>(neig)].predictedVel), std::get<2>(neig));
 				}
 			}
-			var_PartC[i].sf = p0  - var_PartC[i].density - (deltaT * tmpf) - (deltaT * tmpb);
+			var_PartC[i].sf = p0 - var_PartC[i].density - (deltaT * tmpf) - (deltaT * tmpb);
 		}
 	}
 }
@@ -418,7 +418,7 @@ void secondloop(std::vector<iisphparticle>& var_PartC) {
 	}
 }
 void makeAllVandP(std::vector<iisphparticle>& var_PartC) {
-	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.00f), baseRotationSpeed * deltaT, glm::vec3(0, 1, 0));
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.00f), baseRotationSpeed * h, glm::vec3(0, 1, 0));
 
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {

@@ -107,6 +107,7 @@ float searchRadius = 2 * h;
 std::vector<float> densitys;
 std::vector<float> densitysnew;
 std::vector<float> currenttimes; 
+std::vector<float> convergence;
 float currentdens;
 float neighbouraverage = 0;
 float maxvel = 0.f;
@@ -177,7 +178,6 @@ int maxiter = 0;
 float avgcomptime = 0;
 float maxcomptime = 0;
 int animationstep = 0;
-bool clampp0 = false;
 int watercolheight = 50;
 float totaltimeanimated = 0;
 float simcomptime= 0; 
@@ -195,26 +195,19 @@ glm::vec3 oldpos;
 bool showallpart = true;
 bool showboundandouter = false;
 bool showouter = false;
-float clampfac =1;
 bool absinterrupt = false;
-int compbord = 26;
-int totalcomp = 0;
 bool fixeddt = false; 
 float maxdenserralltime = 0; 
 bool paussimul = true;
 float oldanimstep = -1;
 float totalComputationTime = 0;
 float overallmaxcfl = 0;
-bool ignoreincomplete= false; 
-int numunderpop = 0;
 float surfacetension = 0;
 bool highlightunderpop = false;
 bool highlightextremefast = false;
 int numofp0high = 0;
-bool ignorep0tolow = true;
 float upperviualbord = 100; 
 float lowervisualbord = -10;
-bool clamptolow = false;
 bool colorvel = true;
 bool colordens = false;
 bool colorpres = false;
@@ -248,7 +241,8 @@ float allrigidmass = 0;
 float observingposx = 0;
 float observingposy = 0;
 float observingposz = 0;
-
+bool exportconvergence = false;
+int currentitermin = 2;
 glm::vec3 posofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
 glm::vec3 velofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
 glm::mat3x3 rotMat = glm::mat3x3(0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
@@ -268,6 +262,13 @@ float overallminxpos = 0.f;
 float overallminypos = 0.f;
 float overallminzpos = 0.f;
 float massfac = 1;
+float avgsincomptime = 0;
+float avgfps = 0;
+int simstepcnter = 0;
+float fps = 0;
+bool exportcfl = false;
+bool usewholefluidforcalc = false;
+bool usewholefluidtodevide = false;
 //_________________________________________________________________________________
 int windowedWidth = 2048;//small1600;
 int windowedHeight = 1152;//small900;
@@ -488,15 +489,14 @@ int main(void)
 			gridhöhe = 200;
 			cellsize = 2 * h;
 			uniformgidvec1D.resize((200) * gridbreite * gridhöhe);
-			upperviualbord = 100;
-			lowervisualbord = -10;
+			upperviualbord = 58*h;
+			lowervisualbord = -1*h;
 			fixeddt = false;
 			currentitermax = 100;
 			denistyerrormax = 0.1;
-			visc_fluid = 0.11;
-			visc_boundary = 0.11;
+			visc_fluid = 0.025;
+			visc_boundary = 0.0000025;
 			absinterrupt = false;
-			singlewall =false;
 			if (updateviewpos) {
 				position = glm::vec3(14, 5, 50);
 			}
@@ -505,7 +505,7 @@ int main(void)
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
 			gammafloat = 1;
-			deltaTmax = 0.01;
+			deltaTmax = 0.001;
 			cfl_max = 0.79;
 			deltaT = 0.02;
 			dambreaktest(CameraPosition, var_PartC);
@@ -532,7 +532,6 @@ int main(void)
 			firstdatapath = "breakingDamTestSmall";
 			firstdatapath.copy(changename, 127);
 			fixeddt = false;
-			clampfac = 0.;
 			//surfacetension = 0.08;
 			currentitermax = 1000;
 			denistyerrormax = 0.1;
@@ -547,7 +546,6 @@ int main(void)
 			deltaTmax = 0.0009;
 			cfl_max = 0.5;
 			deltaT = 0.01;
-			clampfac = 0;
 			//gammapresup = 0.7;
 			smalldambreaktest(CameraPosition, var_PartC);
 			smalldambreaktestscen = false;
@@ -566,37 +564,7 @@ int main(void)
 			makefloatingpartmass(var_PartC, hashmap);
 			initrigidbodies(var_PartC, hashmap);
 		}
-		if (tesla) {
-			firstdatapath = "Obstacles";
-			var_teslavalve(CameraPosition, var_PartC);
-			tesla = false;
-			maketesla = true;
-			maketeslaclosed = false;
-			TwoDsimul = false;
-			gridbreite = 250;
-			gridhöhe = 200;
-			cellsize = 2 * h;
-			uniformgidvec1D.resize((200)* gridbreite* gridhöhe);
-			upperviualbord = 210 * h;
-			lowervisualbord = -10 * h;
-			obstaclea = 50;
-			if (updateviewpos) {
-				position = glm::vec3(12, 6, 40);
-			}
-
-			firstdatapath.copy(changename, 127);
-			gammafloat = 1.0;
-			deltaTmax = 0.001;
-			deltaT = 0.01;
-			visc_boundary = 0.0003;
-			visc_fluid = 0.01;
-			if (setboundmass) {
-				makeboundmass(var_PartC, hashmap);
-			}
-			if (setpartmass) {
-				makepartmass(var_PartC, hashmap);
-			}
-		}
+		
 		if (realtesla) {
 			gridbreite = 250;
 			gridhöhe = 200;
@@ -626,6 +594,36 @@ int main(void)
 			if (setpartmass) {
 				makepartmass(var_PartC, hashmap);
 			}
+		}if (tesla) {
+			firstdatapath = "Obstacles";
+			var_teslavalve(CameraPosition, var_PartC);
+			tesla = false;
+			maketesla = true;
+			maketeslaclosed = false;
+			TwoDsimul = false;
+			gridbreite = 250;
+			gridhöhe = 250;
+			cellsize = 2 * h;
+			uniformgidvec1D.resize((200) * gridbreite * gridhöhe);
+			upperviualbord = 310 * h;
+			lowervisualbord = -10 * h;
+			obstaclea = 50;
+			if (updateviewpos) {
+				position = glm::vec3(12, 6, 40);
+			}
+
+			firstdatapath.copy(changename, 127);
+			gammafloat = 1.0;
+			deltaTmax = 0.001;
+			deltaT = 0.01;
+			visc_boundary = 0.0003;
+			visc_fluid = 0.01;
+			if (setboundmass) {
+				makeboundmass(var_PartC, hashmap);
+			}
+			if (setpartmass) {
+				makepartmass(var_PartC, hashmap);
+			}
 		}
 		if (teslaclosed) {
 			firstdatapath = "ObstaclesClosed";
@@ -638,10 +636,10 @@ int main(void)
 			var_teslavalveclosed(CameraPosition, var_PartC);
 
 			gridbreite = 250;
-			gridhöhe = 200;
+			gridhöhe = 250;
 			cellsize = 2 * h;
 			uniformgidvec1D.resize((200)* gridbreite* gridhöhe);
-			upperviualbord = 210*h;
+			upperviualbord = 310*h;
 			lowervisualbord = -10*h;
 			obstaclea = 50;
 			if (updateviewpos) {
@@ -679,12 +677,10 @@ int main(void)
 			firstdatapath = "WaterColumn";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
-			clampfac = 1;
 			boundarya = 70;
 			absinterrupt = true;
 			paussimul = true;
 			singlewall = true;
-			compbord = 26;
 			denistyerrormax = 0.1;
 			visc_fluid = 0.025;
 			visc_boundary = 0.0025;
@@ -711,22 +707,20 @@ int main(void)
 			//gammabound = 1.3;
 			deltaTmax = 0.001;
 			upperviualbord = 200 + watercolheight*h;
-			lowervisualbord = -10;
-			k = 500000;
+			lowervisualbord = -1*h;
+			k = 5500000;
 			if (updateviewpos) {
 				position = glm::vec3(1, 7, 45);
 			}
 			firstdatapath = "SmallWaterColumn";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
-			clampfac = 0;
 			//boundarya = 70;
 			absinterrupt = true;
 			paussimul = true;
 			//jitterfac = 0;
 			gammapres = 0.7;
 			//setboundmass = true;
-			compbord = 26;
 			denistyerrormax = 0.1;
 			visc_fluid = 0.025;
 			visc_boundary = 0.0000025;
@@ -765,7 +759,7 @@ int main(void)
 			//setboundmass = true;
 			upperviualbord = (watercolheight+200)*h;
 			lowervisualbord = 0;
-			k = 400000000;
+			k = 6000000;
 			if (updateviewpos) {
 				position = glm::vec3(1, 4, 25);
 			}
@@ -773,11 +767,9 @@ int main(void)
 			firstdatapath = "/2dWatercol50/gammabound" + std::to_string(gammabound) +"gammapres"+ std::to_string(gammapres);
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
-			clampfac = 0;
 			boundarya = 70;
 			absinterrupt = true;
 			paussimul = true;
-			compbord = 26;
 			denistyerrormax = 0.1;
 			visc_fluid = 0.0025;
 			visc_boundary = 0.0000025;
@@ -815,20 +807,18 @@ int main(void)
 			gammapres = 0.5;
 			//setpartmass = true;
 			//setboundmass = true;
-			upperviualbord =150;
-			lowervisualbord = -10;
-			k = 400000000;
+			upperviualbord =150*h;
+			lowervisualbord = -1*h;
+			k = 6000000;
 			if (updateviewpos) {
 				position = glm::vec3(10, 5, 35);
 			}
 			firstdatapath = "SmallWaterColumn";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
-			clampfac = 0;
 			boundarya = 70;
 			absinterrupt = true;
 			paussimul = true;
-			compbord = 26;
 			denistyerrormax = 0.1;
 			visc_fluid = 0.0025;
 			visc_boundary = 0.0000025;
@@ -947,9 +937,44 @@ int main(void)
 			}
 			file_out.flush();
 			file_out.close();
-			std::cout << "finito" << std::endl;
-			std::cout << "Scene exported!" << std::endl;
+			std::cout << "Density exported!" << std::endl;
 			exportdens = false;
+		}
+		if (exportconvergence) {
+			std::string filenamefirst(changename);
+			std::cout << firstdatapath << std::endl;
+			std::string filename("../exportdata/convergence" + filenamefirst + ".csv");
+			std::fstream file_out;
+			file_out.open(filename, std::ios_base::out);
+			if (!file_out.is_open()) {
+				std::cerr << "Fehler beim Öffnen der Datei." << std::endl;
+				return -1;
+			}
+			for (int i = 0; i < convergence.size(); i++) {
+				file_out << i << ";" << convergence[i] << "\n";
+			}
+			file_out.flush();
+			file_out.close();
+			std::cout << "Convergence exported!" << std::endl;
+			exportconvergence = false;
+		}
+		if (exportcfl) {
+			std::string filenamefirst(changename);
+			std::cout << firstdatapath << std::endl;
+			std::string filename("../exportdata/cfl" + filenamefirst + ".csv");
+			std::fstream file_out;
+			file_out.open(filename, std::ios_base::out);
+			if (!file_out.is_open()) {
+				std::cerr << "Fehler beim Öffnen der Datei." << std::endl;
+				return -1;
+			}
+			for (int i = 0; i < cfls.size(); i++) {
+				file_out << i << ";" << cfls[i] << "\n";
+			}
+			file_out.flush();
+			file_out.close();
+			std::cout << "cfl exported!" << std::endl;
+			exportcfl = false;
 		}
 		if (importscene) {
 			std::string filenamefirst(changename);
@@ -1029,8 +1054,8 @@ int main(void)
 //#pragma omp parallel for
 				for (int i = 0; i < var_PartC.size(); ++i) {
 					iisphparticle& part = var_PartC[i];
-				//if(part.isboundary == true ){
-				if (((part.isboundary == true && part.ismovingboundary == true) || part.drawme == true) && part.pos.y < upperviualbord && part.pos.y > lowervisualbord ) {
+				if(part.isboundary == true ){
+				//if (((part.isboundary == true && part.ismovingboundary == true) || part.drawme == true) && part.pos.y < upperviualbord && part.pos.y > lowervisualbord ) {
 					std::string xPos = std::to_string(part.pos.x);
 					std::string yPos = std::to_string(part.pos.y);
 					std::string zPos = std::to_string(part.pos.z);
@@ -1038,11 +1063,11 @@ int main(void)
 					if (part.ismovingboundary == false) {
 						isbound = std::to_string(part.isfloatingboundary);
 					}
-					/*
-					if (part.a == obstaclea) {
+					
+					if (part.isobstacle == true) {
 						isbound = std::to_string(1);
 					}
-					*/
+					
 					file_out << xPos << ";" << yPos << ";" << zPos << ";" << isbound << "\n";
 				}
 			}
@@ -1075,8 +1100,6 @@ int main(void)
 		//endIISPH___________________________________________________________________________________________________________________________________________________________________________________________________
 		//SESPH___________________________________________________________________________________________________________________________________________________________________________________________________
 		if ((ssph && paussimul == false  && TwoDsimul == false)|| (ssph && animationstep == 0 && TwoDsimul == false)) {
-			deltaTmax = 0.09;
-			cfl_max = 0.1;
 			ssphAlgo(var_PartC, hashmap);
 			//SSPHalgorythm(ParticlesContainer, hashmap);
 			animationstep++;
@@ -1108,7 +1131,7 @@ int main(void)
 		neighbouraverage = 0;
 //#pragma omp parallel for
 		for (int i = 0; i < var_MaxParticles; i++) {
-			var_PartC[i].drawme = false;
+			//var_PartC[i].drawme = false;
 			if (var_PartC[i].isboundary) {
 				var_PartC[i].r = 44;
 				var_PartC[i].g = 2;
@@ -1117,9 +1140,6 @@ int main(void)
 			}
 			if (var_PartC[i].ismovingboundary || var_PartC[i].isfloatingboundary) {
 				var_PartC[i].a = obstaclea;
-			}
-			if (i == 11428) {
-				iisphparticle& INterPart = var_PartC[i];
 			}
 		}
 		for (int i = 0; i < var_MaxParticles; i++) {
@@ -1299,8 +1319,8 @@ int main(void)
 		auto duration_d = std::chrono::duration_cast<std::chrono::microseconds>(end_d - start_d);
 		auto duration_alltime = std::chrono::duration_cast<std::chrono::microseconds>(end_d - start_alltime);
 		if (oldanimstep != animationstep) {
+			simstepcnter += 1;
 			maxdenserrold = std::max(maxdenserrold, denserrold);
-			numunderpop = var_fluidpart - totalcomp;
 			overallmaxcfl = std::max(cfl, overallmaxcfl);
 			drawingTime = duration_d.count();
 			if (densitysnew.back()  > maxavgdensdeviation) {
@@ -1318,7 +1338,10 @@ int main(void)
 			}
 			avgcomptime += totalComputationTime;
 			totaltimeanimated += deltaT;
-			simcomptime = avgcomptime / totaltimeanimated;
+			simcomptime = deltaT / (totalComputationTime / 1000000);
+			avgsincomptime += simcomptime;
+			fps = 1 / (totalComputationTime / 1000000);
+			avgfps += fps;
 			maxdenserralltime = std::max(maxdenserralltime, max_singledens);
 			cfls.push_back(cfl);
 			iterations.push_back(currentiter);
@@ -1327,9 +1350,13 @@ int main(void)
 			maxvels.push_back(maxvel);
 		}
 		if (resetvalues) {
+			fps = 0;
+			simstepcnter = 0;
+			avgsincomptime = 0;
+			avgfps = 0;
 			maxdenserrold = 0;
-			numunderpop = 0;
 			overallmaxcfl = 0;
+			currenttimes.clear();
 			densitysnew.clear();
 			densitys.clear();
 			cfls.clear();
@@ -1386,27 +1413,25 @@ int main(void)
 		}
 		ImGui::Checkbox("pause", &paussimul);
 		ImGui::Checkbox("update Pos", &updateviewpos);
-		ImGui::Text("fps: %.4f", 1 / (totalComputationTime/1000000));
+		ImGui::Text("fps: %.4f",fps);
+		ImGui::Text("avg fps: %.4f",avgfps/simstepcnter);
 		ImGui::Checkbox("reset stats", &resetvalues);
-		ImGui::Text("density deviation: %.3f %%", densitysnew.back() );
-		ImGui::Text("density deviation old: %.3f %%", densitys.back());
-		ImGui::Text("max density deviation: %.3f %%", maxavgdensdeviation);
-		ImGui::Text("max density deviation old: %.3f %%", maxdenserrold);
+		ImGui::Text("estimated density deviation: %.3f %%", densitysnew.back() );
+		ImGui::Text("density deviation: %.3f %%", densitys.back());
+		ImGui::Text("max estimated density deviation: %.3f %%", maxavgdensdeviation);
+		ImGui::Text("max density deviation: %.3f %%", maxdenserrold);
 		ImGui::Text("used iterations: %i", currentiter);
 		ImGui::Text("average comp time  %.1f ms", avgcomptime/animationstep);
 		ImGui::Text("average iterations    %.1d", avgiter / animationstep);
 		ImGui::Text("max comp time    %.1f ms",maxcomptime);
 		ImGui::Text("max iterations    %.1d",maxiter);
-		ImGui::Text("total simulation time    %.1f", totaltimeanimated);
-		ImGui::Text("simtime per sec    %.3f", deltaT/(totalComputationTime/1000000));
-		//ImGui::Text("simtime/comptime    %.1f", simcomptime);
+		ImGui::Text("total simulation time    %.3f", totaltimeanimated);
+		ImGui::Text("simtime per sec    %.3f", simcomptime);
+		ImGui::Text("avg simtime per s    %.3f", avgsincomptime/simstepcnter);
 		ImGui::Text("maximum density current: %.3f %%", max_singledens);
 		ImGui::Text("maximum density ever: %.3f %%",maxdenserralltime);
-		ImGui::Text("clamp to  : %.3f ", p0 - p0 * denistyerrormax / 100 * clampfac);
-		ImGui::Text("underpopulated fluidpart % .1d", numunderpop);
-		ImGui::Text("underpopulated fluidpart percent % .1d%%", 100*numunderpop/var_fluidpart);
-		ImGui::Text("fluidpart with a density lower then p0% .1d", var_fluidpart-numofp0high);
-		ImGui::Text("fluidpart with a to low density in percent % .1d%%", 100 * (var_fluidpart - numofp0high) / var_fluidpart);
+		ImGui::Text("fluidparticles with a density lower then p0% .1d", var_fluidpart-numofp0high);
+		ImGui::Text("fluidparticles unused for computation percent % .1d%%", 100 * (var_fluidpart - usemefordens.size()) / var_fluidpart);
 		// Start a new ImGui table with 3 columns
 		
 
@@ -1556,13 +1581,14 @@ int main(void)
 			
 		}
 		if (ImGui::CollapsingHeader("simulation setting technical")) {
-			ImGui::Checkbox("ignore to low denitys", &ignorep0tolow);
-			ImGui::Checkbox("ignore underpopulated", &ignoreincomplete);
 			ImGui::Checkbox("dont adapt dt to cfl", &fixeddt);
 			ImGui::Checkbox("add pseudomass", &setboundmass);
 			ImGui::Checkbox("add particlemass ", &setpartmass);
-			ImGui::InputFloat("deltaTmax", &deltaTmax, 0.001f, 0.1f, "% .4f");
-			ImGui::SliderFloat("cflmax", &cfl_max, 0.1f, 1.f);
+			ImGui::Checkbox("use absolut density deviation", &absinterrupt);
+			ImGui::Checkbox("use the whole fluid for density deviation", &usewholefluidforcalc);
+			ImGui::Checkbox("usewhole fluid for density division", &usewholefluidtodevide);
+			ImGui::InputFloat("deltaTmax", &deltaTmax, 0.001f, 0.1f, "% .7f");
+			ImGui::InputFloat("cflmax", &cfl_max, 0.1f, 1.f);
 			ImGui::SliderFloat("deltaT", &deltaT, 0.00001f, 0.1f);
 			ImGui::SliderFloat("k", &k, 10000, 10000000);
 			ImGui::InputFloat("gamma1 density", &gammadens, 0.1, 2);
@@ -1571,18 +1597,15 @@ int main(void)
 			ImGui::InputFloat("jitterfactor ", &jitterfac, 0, 1);
 			ImGui::InputFloat("rigidboundarymass", &massfac, 0.1, 2);
 			ImGui::InputFloat("gamma particled", &gammapart, 0.1, 2);
-			ImGui::SliderFloat("omega ", &omega, 0.1, 1);
+			ImGui::InputFloat("omega ", &omega, 0.1, 1);
 			ImGui::InputFloat("surfacetension ", &surfacetension, 0, 1);
 			ImGui::SliderInt("maximum iterations ", &currentitermax, 1, 1000);
+			ImGui::SliderInt("minimum iterations ", &currentitermin, 1, 1000);
 			ImGui::SliderFloat("maximum density deviation ", &denistyerrormax,0.01,1);
 			ImGui::SliderFloat("gravity ", &gravity, -19.81, 19.81);
 			ImGui::InputFloat("boundary viscosity ", &visc_boundary, 0.001, 10, "% .8f");
 			ImGui::InputFloat("particle viscosity ", &visc_fluid, 0.001, 10, "% .8f");
-			ImGui::Checkbox("clamp all densitys", &clampp0);
-			ImGui::Checkbox("clamp to low densities", &clamptolow);
-			ImGui::SliderFloat("Clampfactor ", &clampfac, 0.1, 10);
-			ImGui::Checkbox("interrupt at abs", &absinterrupt);
-			ImGui::SliderInt("Minimum neighbours ", &compbord, 0, 30);
+
 		}
 
 		if (ImGui::CollapsingHeader("simulation setting visual")) {
@@ -1641,6 +1664,8 @@ int main(void)
 			ImGui::Checkbox("export scene", &exportscene);
 			ImGui::Checkbox("export densitys", &exportdens);
 			ImGui::Checkbox("export animation", &exportanimation);
+			ImGui::Checkbox("export convergence", &exportconvergence);
+			ImGui::Checkbox("export cfl", &exportcfl);
 			ImGui::InputText("ExportName", changename, 128);
 		}
 		if (ImGui::CollapsingHeader("import")) {

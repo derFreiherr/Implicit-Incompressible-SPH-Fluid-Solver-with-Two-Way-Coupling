@@ -24,7 +24,6 @@ unsigned int uniformgridhash(float x, float y, float z) {
 }
 
 void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC) {
-	totalcomp = 0;
 #pragma omp parallel for
 	for (int i = 0; i < (var_MaxParticles); ++i) {
 		iisphparticle& Part = var_PartC[i];
@@ -50,14 +49,9 @@ void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC) {
 		if (Part.IdNdistNsub.size() < animationneighbourscount) {
 			Part.drawme = true;
 		}
-		if (Part.IdNdistNsub.size() > compbord) {
-			Part.computeme = true;
-			totalcomp++;
-		}
 	}
 }
 void findAllNeighbourscompact3D(std::vector<iisphparticle>& var_PartC) {
-	totalcomp = 0;
 #pragma omp parallel for
 	for (int i = 0; i < (var_PartC.size()); ++i) {
 		iisphparticle& Part = var_PartC[i];
@@ -80,10 +74,6 @@ void findAllNeighbourscompact3D(std::vector<iisphparticle>& var_PartC) {
 		}
 		if (Part.IdNdistNsub.size() < animationneighbourscount && (Part.isboundary == false || Part.ismovingboundary == true)) {
 			Part.drawme = true;
-		}
-		if (Part.IdNdistNsub.size() > compbord) {
-			Part.computeme = true;
-			totalcomp++;
 		}
 	}
 }
@@ -131,7 +121,6 @@ void insertAllParticlesIntoHashmap2D(std::vector<iisphparticle>& var_PartC, std:
 }
 
 void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
-	totalcomp = 0;
 #pragma omp parallel for
 	for (int i = 0; i < var_PartC.size(); ++i) {
 		iisphparticle& Part = var_PartC[i];
@@ -166,10 +155,6 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 		if (Part.IdNdistNsub.size() < animationneighbourscount && (Part.isboundary == false || Part.ismovingboundary == true)) {
 			Part.drawme = true;
 		}
-		if (Part.IdNdistNsub.size() > compbord) {
-			Part.computeme = true;
-			totalcomp++;
-		}
 	}
 }
 
@@ -177,7 +162,6 @@ void findAllNeighbours(std::vector<iisphparticle>& var_PartC, std::unordered_map
 
 
 void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unordered_map<int, Cell>& hashmap) {
-	totalcomp = 0;
 #pragma omp parallel for
 	for (int i = 0; i < (var_fluidpart + var_spezialboundpart); ++i) {
 		iisphparticle& Part = var_PartC[i];
@@ -210,11 +194,6 @@ void findAllNeighbours2D(std::vector<iisphparticle>& var_PartC, std::unordered_m
 		if (Part.IdNdistNsub.size() < animationneighbourscount) {
 			Part.drawme = true;
 		}
-		if (Part.IdNdistNsub.size() > compbord) {
-			Part.computeme = true;
-			totalcomp++;
-		}
-
 	}
 }
 

@@ -90,7 +90,6 @@ void ssphAlgotwoD(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cel
 void var_iisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap) {
 	auto start_o = std::chrono::high_resolution_clock::now();
 	makecfltrue(PartC);
-
 	auto start_n = std::chrono::high_resolution_clock::now();
 	if (uniformgridneighsearch) {
 		clearuniformgrid();
@@ -135,8 +134,10 @@ void var_iisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 		}
 	}
 	computeAllDensErr(PartC);
+	convergence.clear();
+	convergence.push_back(makeAlldenserrAvg(PartC));
 	int l = 1;
-	while (makeAlldenserrAvg(PartC) > denistyerrormax || l < 2/* || 100 * max_singledens / p0 > 50*/) {
+	while (makeAlldenserrAvg(PartC) > denistyerrormax || l < currentitermin/* || 100 * max_singledens / p0 > 50*/) {
 		//first for
 		if (pressuredextrapolatebound) {
 			makeBoundPres(PartC);
@@ -152,6 +153,7 @@ void var_iisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 			//paussimul = true;
 			break;
 		}
+		convergence.push_back(makeAlldenserrAvg(PartC));
 	}
 	auto end_loop = std::chrono::high_resolution_clock::now();
 	currentiter = l;
@@ -230,8 +232,10 @@ void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 		}
 	}
 	computeAllDensErr(PartC);
+	convergence.clear();
+	convergence.push_back(makeAlldenserrAvg(PartC));
 	int l = 1;
-	while (makeAlldenserrAvg(PartC) > denistyerrormax || l < 2 || max_singledens > 100) {
+	while (makeAlldenserrAvg(PartC) > denistyerrormax || l < currentitermin || max_singledens > 100) {
 		if (pressuredextrapolatebound) {
 			makeBoundPres2D(PartC);
 			makeAllPresAwithboundtwoD(PartC);
@@ -246,6 +250,7 @@ void twoDiisph(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>&
 			//paussimul = true;
 			break;
 		}
+		convergence.push_back(makeAlldenserrAvg(PartC));
 	}
 	auto end_loop = std::chrono::high_resolution_clock::now();
 	currentiter = l;

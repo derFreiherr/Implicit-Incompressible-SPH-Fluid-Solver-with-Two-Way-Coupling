@@ -49,6 +49,7 @@ public:
 	glm::vec3 relpos = glm::vec3(0.f, 0.f, 0.f);
 	double mass;
 	bool isfloatingboundary = false;
+	bool isobstacle = false;
 	bool denstolow = false;
 	bool computeme = true;
 	bool drawme = false;
