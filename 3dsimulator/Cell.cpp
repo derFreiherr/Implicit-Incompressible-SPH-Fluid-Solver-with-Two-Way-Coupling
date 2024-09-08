@@ -96,7 +96,7 @@ void MakeAllNonpresA(std::vector<iisphparticle>& var_PartC ) {
 						ViscAf += (var_PartC[std::get<0>(neig)].m / p0) * ((Part.vel - var_PartC[std::get<0>(neig)].vel) * makesinglekernel(Part.pos, var_PartC[std::get<0>(neig)].pos));
 					}
 				}
-				Part.nonpresA = (.01f * ViscAb + .01f * ViscAf) + gravity * glm::vec3(0, 1, 0);
+				Part.nonpresA = (.1f * ViscAb + .1f * ViscAf) + gravity * glm::vec3(0, 1, 0);
 			}
 			else {
 				for (const auto& neig : Part.IdNSubKernelder) {

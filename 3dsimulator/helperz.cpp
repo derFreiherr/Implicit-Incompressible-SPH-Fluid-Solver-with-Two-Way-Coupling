@@ -6,7 +6,7 @@ void makecfltrue(std::vector<iisphparticle>& ParticlesContainer) {
 	maxvel = 0;
 
 	for (int i = 0; i < var_MaxParticles; i++) {
-		if (glm::length(ParticlesContainer[i].vel) > maxvel && (ParticlesContainer[i].pos.y < upperviualbord && ParticlesContainer[i].pos.y > lowervisualbord)) {
+		if (glm::length(ParticlesContainer[i].vel) > maxvel && (ParticlesContainer[i].pos.y < (upperviualbord-h) && ParticlesContainer[i].pos.y > (lowervisualbord+h))) {
 			maxvel = glm::length(ParticlesContainer[i].vel);
 		}
 	}
@@ -16,18 +16,6 @@ void makecfltrue(std::vector<iisphparticle>& ParticlesContainer) {
 		}
 		deltaT = glm::min(deltaT, deltaTmax);
 	}
-	/*
-	if (exportanimation) {
-		if (animationtime + deltaT > 0.039998) {
-			float dtold = deltaT;
-			deltaT = 0.040002 - animationtime;
-			if (deltaT < 0.002) {
-				animationtime = 0.04;
-				deltaT = dtold;
-			}
-		}
-	}
-	*/
 	cfl = maxvel * deltaT / h;
 }
 

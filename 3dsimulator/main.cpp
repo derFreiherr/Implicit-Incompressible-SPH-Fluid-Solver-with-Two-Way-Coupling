@@ -168,7 +168,7 @@ bool maketesla = false;
 bool maketeslaclosed = false;
 int itertesla = 0;
 int boundarya = 10;
-int obstaclea = 10;
+int obstaclea = 200;
 const int overallmaxpart = 18*(50 * 50 * 50 + (55 * 55 * 12));
 float denserrold = 0.f;
 float maxavgdensdeviation = 0.f;
@@ -243,9 +243,6 @@ float observingposy = 0;
 float observingposz = 0;
 bool exportconvergence = false;
 int currentitermin = 2;
-glm::vec3 posofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
-glm::vec3 velofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
-glm::mat3x3 rotMat = glm::mat3x3(0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
 glm::vec3 xCM = glm::vec3(0.f,0.f,0.f);
 glm::vec3 vCM = glm::vec3(0.f, 0.f, 0.f);
 glm::mat3 A(0.f);
@@ -518,6 +515,8 @@ int main(void)
 			if (setpartmass) {
 				makepartmass(var_PartC, hashmap);
 			}
+			makefloatingpartmass(var_PartC, hashmap);
+			initrigidbodies(var_PartC, hashmap);
 		}if (smalldambreaktestscen) {
 			gridbreite = 250;
 			gridhöhe = 200;
@@ -803,6 +802,8 @@ int main(void)
 			cfl_max = 0.7;
 			var_nx = 20;
 			var_ny = 80;
+			//var_nx = 50;
+			//var_ny = 90;
 			gammabound = 0.7;
 			gammapres = 0.5;
 			//setpartmass = true;
@@ -816,7 +817,7 @@ int main(void)
 			firstdatapath = "SmallWaterColumn";
 			firstdatapath.copy(changename, 127);
 			exportanimation = false;
-			boundarya = 70;
+			boundarya = 200;
 			absinterrupt = true;
 			paussimul = true;
 			denistyerrormax = 0.1;
@@ -1040,7 +1041,7 @@ int main(void)
 			importscene = false;
 			exportanimation = false;
 		}
-		if ((exportanimation && animationtime >=0.04)) {
+		if (((exportanimation && animationtime >=0.04)|| (exportanimation && simstepcnter ==1))) {
 			std::string filenamefirst(changename);
 			std::string filename("../exportdata/Scene" + filenamefirst + std::to_string(animationneighbourscount) + std::to_string(numexport) + ".csv");
 			//std::string filename("../exportdata/"+ firstdatapath + std::to_string(animationneighbourscount)+ std::to_string(numexport) + ".csv");
@@ -1054,8 +1055,8 @@ int main(void)
 //#pragma omp parallel for
 				for (int i = 0; i < var_PartC.size(); ++i) {
 					iisphparticle& part = var_PartC[i];
-				if(part.isboundary == true ){
-				//if (((part.isboundary == true && part.ismovingboundary == true) || part.drawme == true) && part.pos.y < upperviualbord && part.pos.y > lowervisualbord ) {
+				//if(part.isboundary == true ){
+				if (((part.isboundary == true && part.ismovingboundary == true) || part.drawme == true) && part.pos.y < upperviualbord && part.pos.y > lowervisualbord ) {
 					std::string xPos = std::to_string(part.pos.x);
 					std::string yPos = std::to_string(part.pos.y);
 					std::string zPos = std::to_string(part.pos.z);

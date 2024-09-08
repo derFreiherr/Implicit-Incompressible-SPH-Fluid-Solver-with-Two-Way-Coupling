@@ -20,17 +20,9 @@ glm::mat3 skewSymmetricMatrix2d(const glm::vec3& v) {
 }
 
 void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, Cell>& hashmap) {
-	posofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
-	velofcenterofmass = glm::vec3(0.f, 0.f, 0.f);
-	rotMat = glm::mat3(1.0f); // Identity matrix
 	xCM = glm::vec3(0.f, 0.f, 0.f);
 	vCM = glm::vec3(0.f, 0.f, 0.f);
-	//A = glm::mat3(1.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 1.f); // Identity matrix
 	A = glm::mat3(1.f);
-	//A[0][0] = 1.f;
-	//A[1][1] = 1.f;
-	//A[2][2] = 1.f;
-	//A = glm::mat3(2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f, 2.0f);
 	L = glm::vec3(0.f, 0.f, 0.f);
 	I_inv = glm::mat3(1.0f); // Identity matrix
 	inertiaTensor = glm::mat3(0.0f);
@@ -51,7 +43,7 @@ void initrigidbodies(std::vector<iisphparticle>& PartC, std::unordered_map<int, 
 		xCM /= allrigidmass;
 	}
 	//std::cout << "Center of mass: (" << xCM.x << ", " << xCM.y << ", " << xCM.z << "), Total mass: " << allrigidmass << std::endl;
-
+	//xCM += glm::vec3(0, 11*h, 0);
 	// Compute inertia tensor
 	for (int i = 0; i < PartC.size(); ++i) {
 		iisphparticle& Part = PartC[i];
@@ -85,7 +77,7 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 	glm::vec3 linforce(0.f, 0.f, 0.f);
 	// Parallelisierte Schleife mit OpenMP
 //#pragma omp parallel for private(torque, linforce)
-	for (int i = var_fluidpart; i < PartC.size(); ++i) {
+	for (int i = var_fluidpart; i < (var_fluidpart+ var_spezialboundpart); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
 			glm::vec3 force = ((Part.presA) + Part.nonpresA * massfac) * Part.m ; // Annahme, dass Kräfte Beschleunigungen sind
@@ -96,7 +88,7 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 	}
 
 
-	//torque = torque * 0.9f;
+	//torque = torque * massfac;
 
 	vCM += (deltaT * linforce / allrigidmass);
 	xCM += (deltaT * vCM);
@@ -132,7 +124,7 @@ void updaterigidbody(std::vector<iisphparticle>& PartC) {
 	}
 	// Partikelpositionen und -geschwindigkeiten aktualisieren
 //#pragma omp parallel for
-	for (int i = var_fluidpart; i < PartC.size(); ++i) {
+	for (int i = var_fluidpart; i < (var_fluidpart + var_spezialboundpart); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
 			glm::vec3 relpostmp = A * (Part.relpos);
@@ -147,7 +139,7 @@ void updaterigidbody2d(std::vector<iisphparticle>& PartC) {
 	glm::vec3 linforce(0.f, 0.f, 0.f);
 	// Parallelisierte Schleife mit OpenMP
 //#pragma omp parallel for private(torque, linforce)
-	for (int i = var_fluidpart; i < PartC.size(); ++i) {
+	for (int i = var_fluidpart; i < (var_fluidpart + var_spezialboundpart); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
 			glm::vec3 force = ((Part.presA) + Part.nonpresA * massfac) * Part.m ; // Annahme, dass Kräfte Beschleunigungen sind
@@ -194,7 +186,7 @@ void updaterigidbody2d(std::vector<iisphparticle>& PartC) {
 	}
 	// Partikelpositionen und -geschwindigkeiten aktualisieren
 //#pragma omp parallel for
-	for (int i = var_fluidpart; i < PartC.size(); ++i) {
+	for (int i = var_fluidpart; i < (var_fluidpart + var_spezialboundpart); ++i) {
 		iisphparticle& Part = PartC[i];
 		if (Part.isfloatingboundary) {
 			glm::vec3 relpostmp = A * (Part.relpos);
@@ -250,7 +242,7 @@ void makefloatingpartmass(std::vector<iisphparticle>& var_PartC, std::unordered_
 				Part.Kernel.push_back(alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1)));
 				kernsum += alpha * ((t2 * t2 * t2) - (4 * t1 * t1 * t1));
 			}
-			Part.m = 0.7 * p0 / std::max(kernsum, 0.0000000000000001f);
+			Part.m = 0.8 * p0 / std::max(kernsum, 0.0000000000000001f);
 		}
 
 	}

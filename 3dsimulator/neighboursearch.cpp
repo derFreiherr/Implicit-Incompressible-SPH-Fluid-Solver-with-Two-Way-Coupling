@@ -53,7 +53,7 @@ void findAllNeighbourscompact2D(std::vector<iisphparticle>& var_PartC) {
 }
 void findAllNeighbourscompact3D(std::vector<iisphparticle>& var_PartC) {
 #pragma omp parallel for
-	for (int i = 0; i < (var_PartC.size()); ++i) {
+	for (int i = 0; i < (/*var_fluidpart + var_spezialboundpart*/var_MaxParticles); ++i) {
 		iisphparticle& Part = var_PartC[i];
 		Part.IdNdistNsub.clear();
 		Part.drawme = false;

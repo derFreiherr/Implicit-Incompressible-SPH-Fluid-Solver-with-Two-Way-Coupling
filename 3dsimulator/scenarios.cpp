@@ -2205,7 +2205,7 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	var_fluidpart = var_nx * watercolheight * var_nz;
 	var_spezialboundpart = 0;
 	if (addfloating) {
-		var_spezialboundpart += 125;
+		var_spezialboundpart += 175;
 		var_boundarypart += 10;
 	}
 	var_MaxParticles = var_fluidpart + var_boundarypart + var_spezialboundpart;
@@ -2237,7 +2237,7 @@ void watercolumnsmall(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	}
 	if (addfloating) {
 		for (float xi = 0; xi < 5; xi += 1) {
-			for (float yi = 0; yi < 5; yi += 1) {
+			for (float yi = 0; yi < 7; yi += 1) {
 				for (float zi = 0; zi < 5; zi += 1) {
 					ParticlesContainer[i].pos = glm::vec3((xi + 5 + offset) * h, (10 + watercolheight + yi + offset) * h, (zi + 5 + offset) * h);
 					ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
@@ -2591,6 +2591,13 @@ void dambreaktest(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particle
 		gammafloat = 1;
 		var_MaxParticles = var_nx * var_ny * var_nz + 2 * (180 * 70 + 2 * 180 * 60 + 2 * 70 * 60);
 	}
+	var_spezialboundpart = 0;
+	if (addfloating) {
+		var_spezialboundpart = (2 * 10 * 20 + 2*10 * 20 + 2 * 10 * 10);
+	}
+
+	var_MaxParticles += var_spezialboundpart;
+	hashsize = var_MaxParticles;
 
 	hashsize = var_MaxParticles;
 	ParticlesContainer.resize(var_MaxParticles);
@@ -2609,6 +2616,67 @@ void dambreaktest(glm::vec3 CameraPosition, std::vector<iisphparticle>& Particle
 			}
 		}
 	}
+
+	if (addfloating) {
+		// box
+		for (int ii = 0; ii < 10; ii++) {
+			for (int j = 0; j < 20; j++) {
+				//upper
+				////ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+				ParticlesContainer[i].pos = glm::vec3((ii + 80) * h, (10 + 1) * h, (j + 5+10) * h);
+				ParticlesContainer[i].index = i;
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = false;
+				ParticlesContainer[i].isfloatingboundary = true;
+				i += 1;
+				//lower
+				////ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+				ParticlesContainer[i].pos = glm::vec3((ii + 80) * h, ( 1) * h, (j + 5+10) * h);
+				ParticlesContainer[i].index = i;
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = false;
+				ParticlesContainer[i].isfloatingboundary = true;
+				i += 1;
+				//8right2
+				//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+				ParticlesContainer[i].pos = glm::vec3((90 - 1) * h, (ii + 1) * h, (j + 5+10) * h);
+				ParticlesContainer[i].index = i;
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = false;
+				ParticlesContainer[i].isfloatingboundary = true;
+				i += 1;
+				//11 left2
+				//ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+				ParticlesContainer[i].pos = glm::vec3((80) * h, (ii + 1) * h, (j + 5+10) * h);
+				ParticlesContainer[i].index = i;
+				ParticlesContainer[i].a = boundarya;
+				ParticlesContainer[i].isboundary = false;
+				ParticlesContainer[i].isfloatingboundary = true;
+				i += 1;
+				if (j < 10) {
+					//2back
+				////ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+					ParticlesContainer[i].pos = glm::vec3((ii + 80) * h, (j + 1) * h, (5+10) * h);
+					ParticlesContainer[i].index = i;
+					ParticlesContainer[i].a = boundarya;
+					ParticlesContainer[i].isboundary = false;
+					ParticlesContainer[i].isfloatingboundary = true;
+					i += 1;
+					//5front
+					////ParticlesContainer[i].cameradistance = glm::length2(ParticlesContainer[i].pos - CameraPosition);
+					ParticlesContainer[i].pos = glm::vec3((ii + 80) * h, (j + 1) * h, (24+10) * h);
+					ParticlesContainer[i].index = i;
+					ParticlesContainer[i].a = boundarya;
+					ParticlesContainer[i].isboundary = false;
+					ParticlesContainer[i].isfloatingboundary = true;
+					i += 1;
+				}
+			}
+		}
+	}
+
+
+
 	//border back and front
 	for (int ii = 0; ii < 180; ii++) {
 		for (int j = 0; j < 60; j++) {
@@ -3109,7 +3177,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 	}
 	if (addfloating) {
 		for (float xi = 0; xi < 4.5; xi = xi + 0.5) {
-			ParticlesContainer[i].pos = glm::vec3((xi + 2 + var_nx + offset) * h, (1 + var_ny + offset) * h, 0 * h);
+			ParticlesContainer[i].pos = glm::vec3((xi + 10 + var_nx + offset) * h, (1 + 0 + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = boundarya;
@@ -3118,7 +3186,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 			ParticlesContainer[i].index = i;
 			i++;
 
-			ParticlesContainer[i].pos = glm::vec3((0 + 2 + var_nx + offset) * h, (1 + xi + var_ny + offset) * h, 0 * h);
+			ParticlesContainer[i].pos = glm::vec3((0 + 10 + var_nx + offset) * h, (1 + xi + 0 + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = boundarya;
@@ -3126,7 +3194,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 			ParticlesContainer[i].isfloatingboundary = true;
 			ParticlesContainer[i].index = i;
 			i++;
-			ParticlesContainer[i].pos = glm::vec3((4 + 2 + var_nx + offset) * h, (1 + xi + var_ny + offset) * h, 0 * h);
+			ParticlesContainer[i].pos = glm::vec3((4 + 10 + var_nx + offset) * h, (1 + xi + 0 + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = boundarya;
@@ -3134,7 +3202,7 @@ void DambreaktestTwoD(glm::vec3 CameraPosition, std::vector<iisphparticle>& Part
 			ParticlesContainer[i].isfloatingboundary = true;
 			ParticlesContainer[i].index = i;
 			i++;
-			ParticlesContainer[i].pos = glm::vec3((xi + 2 + var_nx + offset) * h, (1 + 4 + var_ny + offset) * h, 0 * h);
+			ParticlesContainer[i].pos = glm::vec3((xi + 10 + var_nx + offset) * h, (1 + 4 + 0 + offset) * h, 0 * h);
 			ParticlesContainer[i].vel = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].acc = glm::vec3(0, 0, 0);
 			ParticlesContainer[i].a = boundarya;

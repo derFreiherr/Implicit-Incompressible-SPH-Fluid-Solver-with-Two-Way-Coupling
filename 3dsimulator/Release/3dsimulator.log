@@ -1,9 +1,10 @@
-﻿  densitycomputation.cpp
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\densitycomputation.cpp(10,21): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\densitycomputation.cpp(42,21): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\densitycomputation.cpp(87,21): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\densitycomputation.cpp(119,21): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
-C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\densitycomputation.cpp(202,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+﻿  rigidbodies.cpp
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\rigidbodies.cpp(33,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\rigidbodies.cpp(48,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\rigidbodies.cpp(204,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\rigidbodies.cpp(245,22): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\rigidbodies.cpp(254,20): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+C:\Users\owald\OneDrive\alte cloud+\embeddedSystems\8.Semester\gitbachelor\3dsimulator\rigidbodies.cpp(295,22): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
 Release\part.obj : warning LNK4042: Objekt mehrmals angegeben; zusätzliche Objekte werden ignoriert.
   Code wird generiert.
   5 of 3185 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
